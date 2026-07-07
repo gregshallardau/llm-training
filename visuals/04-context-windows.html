@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 04: Context Windows</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 900px; width: 100%; }
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+  
+  .context-diagram {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid #334155;
+  }
+  
+  .window-visual {
+    background: #0f172a;
+    border: 3px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+  }
+  .window-label {
+    position: absolute;
+    top: -12px;
+    left: 20px;
+    background: #3b82f6;
+    color: #fff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+  .window-content {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+  .window-section {
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+  }
+  .system-prompt { background: #1e40af; color: #93c5fd; }
+  .conversation { background: #3730a3; color: #a5b4fc; }
+  .documents { background: #7e22ce; color: #c4b5fd; }
+  .response { background: #065f46; color: #6ee7b7; }
+  
+  .attention-curve {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .attention-curve h3 { color: #f8fafc; margin-bottom: 1rem; }
+  .curve-visual {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 60px;
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 0 1rem;
+    position: relative;
+  }
+  .curve-start, .curve-end {
+    background: #48bb78;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+  }
+  .curve-middle {
+    background: #fc8181;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    flex: 1;
+    margin: 0 1rem;
+    text-align: center;
+  }
+  
+  .model-comparison {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .model-card {
+    background: #334155;
+    border-radius: 12px;
+    padding: 1rem;
+    text-align: center;
+  }
+  .model-card h4 { color: #93c5fd; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .model-card .size { color: #f8fafc; font-size: 1.2rem; font-weight: bold; margin-bottom: 0.25rem; }
+  .model-card .year { color: #94a3b8; font-size: 0.75rem; }
+  
+  .key-insight {
+    background: #1e40af;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .key-insight h3 { color: #93c5fd; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .key-insight p { color: #bfdbfe; font-size: 0.95rem; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>Context Windows</h1>
+    <p>How much can it hold in its head?</p>
+  </div>
+  
+  <div class="context-diagram">
+    <div class="window-visual">
+      <div class="window-label">128K Token Context Window</div>
+      <div class="window-content">
+        <div class="window-section system-prompt">
+          <strong>System Prompt / Base Layer</strong> (~2-4K tokens) — 3%
+        </div>
+        <div class="window-section conversation">
+          <strong>Conversation History</strong> (~20-40K tokens) — 25%
+        </div>
+        <div class="window-section documents">
+          <strong>Pasted Documents</strong> (~50-80K tokens) — 60%
+        </div>
+        <div class="window-section response">
+          <strong>Response Budget</strong> (~4-16K tokens) — 12%
+        </div>
+      </div>
+    </div>
+    
+    <div class="attention-curve">
+      <h3>The U-Shaped Attention Curve</h3>
+      <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.9rem;">Models attend most strongly to beginning and end, weakly to middle</p>
+      <div class="curve-visual">
+        <div class="curve-start">STRONG<br/>Beginning</div>
+        <div class="curve-middle">WEAK<br/>Middle (Dead Zone)</div>
+        <div class="curve-end">STRONG<br/>End</div>
+      </div>
+    </div>
+    
+    <div class="model-comparison">
+      <div class="model-card">
+        <h4>GPT-2</h4>
+        <div class="size">1K</div>
+        <div class="year">2019</div>
+      </div>
+      <div class="model-card">
+        <h4>GPT-3.5</h4>
+        <div class="size">4K</div>
+        <div class="year">2023</div>
+      </div>
+      <div class="model-card">
+        <h4>GPT-4 Turbo</h4>
+        <div class="size">128K</div>
+        <div class="year">2023</div>
+      </div>
+      <div class="model-card">
+        <h4>Claude 3.5</h4>
+        <div class="size">200K</div>
+        <div class="year">2024</div>
+      </div>
+      <div class="model-card">
+        <h4>Gemini 1.5</h4>
+        <div class="size">1M</div>
+        <div class="year">2024</div>
+      </div>
+    </div>
+    
+    <div class="key-insight">
+      <h3>🎯 Practical Implication</h3>
+      <p>Don't dump 100K tokens of documents and expect the model to find a needle in the middle. Put the most important context at the <strong>beginning</strong> (base layer) and your specific request at the <strong>end</strong>. The middle is a dead zone.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

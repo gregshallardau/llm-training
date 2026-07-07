@@ -1,0 +1,70 @@
+/*
+ * EDIT ME — Master Deck Theme Variables
+ * ======================================
+ * Variables guide:
+ *   --bg           Main slide background
+ *   --bg-deep      Deepest background (title gradients)
+ *   --surface      Card / panel background
+ *   --text         Primary text colour
+ *   --text-muted   Secondary / subdued text
+ *   --text-dim     Dim hint text
+ *   --brand        Primary accent (blue default)
+ *   --brand-2      Secondary accent (purple default)
+ *   --accent-green Success highlights
+ *   --accent-warm  Warning highlights
+ *   --accent-red   Error highlights
+ *   --border       Divider/card border
+ *   --badge-plain / --badge-plain-fg   Plain English badge
+ *   --badge-tech  / --badge-tech-fg    Technical badge
+ *   --badge-phd   / --badge-phd-fg     PhD badge
+ *   --font-body    Body typeface stack
+ *   --font-heading Heading typeface stack
+ *   --font-mono    Monospace typeface stack
+ *   --radius       Default border-radius
+ *
+ * LIGHT MODE: toggle by adding class "light" to <body>
+ * CUSTOM THEME: copy file, rename, update <link> in present.html
+ */
+
+:root {
+  --bg: #0f172a;
+  --bg-deep: #020617;
+  --surface: #1e293b;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+  --brand: #3b82f6;
+  --brand-2: #8b5cf6;
+  --accent-green: #10b981;
+  --accent-warm: #f59e0b;
+  --accent-red: #ef4444;
+  --border: #334155;
+  --badge-plain: #064e3b;
+  --badge-plain-fg: #6ee7b7;
+  --badge-tech: #1e3a5f;
+  --badge-tech-fg: #93c5fd;
+  --badge-phd: #3b0764;
+  --badge-phd-fg: #c084fc;
+  --font-body: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-heading: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+  --radius: 8px;
+}
+
+body.light {
+  --bg: #f8fafc;
+  --bg-deep: #e2e8f0;
+  --surface: #ffffff;
+  --text: #0f172a;
+  --text-muted: #475569;
+  --text-dim: #94a3b8;
+  --brand: #2563eb;
+  --brand-2: #7c3aed;
+  --border: #cbd5e1;
+  --badge-plain: #d1fae5;
+  --badge-plain-fg: #065f46;
+  --badge-tech: #dbeafe;
+  --badge-tech-fg: #1e40af;
+  --badge-phd: #ede9fe;
+  --badge-phd-fg: #5b21b6;
+}

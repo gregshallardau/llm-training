@@ -1,0 +1,46 @@
+/* swap the theme.css link in present.html to use this file, or copy values across. */
+/*
+ * EDIT ME — Corporate Light Theme
+ */
+:root {
+  --bg: #0a2744;
+  --bg-deep: #051626;
+  --surface: #0d3561;
+  --text: #f0f4f8;
+  --text-muted: #9ab3cc;
+  --text-dim: #6b8fa9;
+  --brand: #1e90ff;
+  --brand-2: #00b4d8;
+  --accent-green: #00c896;
+  --accent-warm: #ffa726;
+  --accent-red: #ef5350;
+  --border: #1a4a7a;
+  --badge-plain: #003d1f;
+  --badge-plain-fg: #6ee7b7;
+  --badge-tech: #0a3d62;
+  --badge-tech-fg: #90caf9;
+  --badge-phd: #2d0052;
+  --badge-phd-fg: #ce93d8;
+  --font-body: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-heading: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'Consolas', 'Courier New', monospace;
+  --radius: 6px;
+}
+
+body.light {
+  --bg: #ffffff;
+  --bg-deep: #f0f4f8;
+  --surface: #f8fafc;
+  --text: #0a2744;
+  --text-muted: #4a6c8a;
+  --text-dim: #8aabcc;
+  --brand: #0a3d62;
+  --brand-2: #1565c0;
+  --border: #c5d8e8;
+  --badge-plain: #e8f5e9;
+  --badge-plain-fg: #1b5e20;
+  --badge-tech: #e3f2fd;
+  --badge-tech-fg: #0d47a1;
+  --badge-phd: #f3e5f5;
+  --badge-phd-fg: #4a148c;
+}

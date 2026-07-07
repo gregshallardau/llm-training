@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 06: Hallucinations</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 900px; width: 100%; }
+  .title { text-align: center; margin-bottom: 2rem; }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+  .diagram { background: #1e293b; border-radius: 16px; padding: 2rem; border: 1px solid #334155; }
+  .cause-flow { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .cause-step { background: #334155; border-radius: 12px; padding: 1rem; text-align: center; flex: 1; min-width: 140px; }
+  .cause-step h4 { color: #f8fafc; font-size: 0.85rem; margin-bottom: 0.25rem; }
+  .cause-step p { color: #94a3b8; font-size: 0.75rem; }
+  .cause-arrow { color: #64748b; font-size: 1.2rem; }
+  .types-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .type-card { background: #451a03; border: 1px solid #f59e0b; border-radius: 12px; padding: 1.25rem; }
+  .type-card h4 { color: #fbbf24; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .type-card p { color: #fcd34d; font-size: 0.8rem; line-height: 1.4; }
+  .prevention { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .prev-card { background: #064e3b; border: 1px solid #10b981; border-radius: 12px; padding: 1.25rem; text-align: center; }
+  .prev-card .icon { font-size: 1.5rem; margin-bottom: 0.5rem; }
+  .prev-card h4 { color: #34d399; font-size: 0.85rem; margin-bottom: 0.25rem; }
+  .prev-card p { color: #6ee7b7; font-size: 0.75rem; }
+  .insight-box { background: #1e40af; border: 2px solid #3b82f6; border-radius: 12px; padding: 1.5rem; }
+  .insight-box h3 { color: #93c5fd; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .insight-box p { color: #bfdbfe; font-size: 0.95rem; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>Hallucinations & Limitations</h1>
+    <p>Why does it make stuff up?</p>
+  </div>
+  <div class="diagram">
+    <div class="cause-flow">
+      <div class="cause-step">
+        <h4>User asks question</h4>
+        <p>Model has no direct answer</p>
+      </div>
+      <div class="cause-arrow">→</div>
+      <div class="cause-step">
+        <h4>Must generate</h4>
+        <p>Something plausible</p>
+      </div>
+      <div class="cause-arrow">→</div>
+      <div class="cause-step">
+        <h4>Confident output</h4>
+        <p>But incorrect</p>
+      </div>
+    </div>
+    <div class="types-grid">
+      <div class="type-card">
+        <h4>Factual Errors</h4>
+        <p>Wrong dates, names, statistics</p>
+      </div>
+      <div class="type-card">
+        <h4>Fabricated Sources</h4>
+        <p>Fake citations, URLs, papers</p>
+      </div>
+      <div class="type-card">
+        <h4>Plausible Nonsense</h4>
+        <p>Sounds right, completely wrong</p>
+      </div>
+      <div class="type-card">
+        <h4>Overconfident Guessing</h4>
+        <p>States uncertainty as fact</p>
+      </div>
+    </div>
+    <div class="prevention">
+      <div class="prev-card">
+        <div class="icon">📋</div>
+        <h4>Provide Context</h4>
+        <p>Base layer + docs</p>
+      </div>
+      <div class="prev-card">
+        <div class="icon">📚</div>
+        <h4>Ask for Sources</h4>
+        <p>"Cite your references"</p>
+      </div>
+      <div class="prev-card">
+        <div class="icon">🔍</div>
+        <h4>Use RAG</h4>
+        <p>Ground in real data</p>
+      </div>
+      <div class="prev-card">
+        <div class="icon">✓</div>
+        <h4>Verify Facts</h4>
+        <p>Don't trust blindly</p>
+      </div>
+      <div class="prev-card">
+        <div class="icon">🌡️</div>
+        <h4>Lower Temp</h4>
+        <p>More deterministic</p>
+      </div>
+    </div>
+    <div class="insight-box">
+      <h3>🎯 Key Insight</h3>
+      <p>Hallucinations happen because the model is designed to generate plausible text, not necessarily truthful text. It favours confident-sounding responses. Always verify critical facts, especially dates, names, and statistics.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

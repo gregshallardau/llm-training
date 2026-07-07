@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 00: LLM Lecture Series — Roadmap</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 960px; width: 100%; }
+
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+
+  /* Phase tabs */
+  .phase-tabs {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .phase-tab {
+    padding: 0.5rem 1.1rem;
+    border-radius: 8px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: #94a3b8;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: all 0.2s;
+  }
+  .phase-tab:hover { border-color: #64748b; color: #e2e8f0; }
+  .phase-tab.active { color: #fff; }
+  .phase-tab.active.p1 { background: #1e3a5f; border-color: #3b82f6; }
+  .phase-tab.active.p2 { background: #3b1f00; border-color: #f59e0b; }
+  .phase-tab.active.p3 { background: #1b3a1b; border-color: #22c55e; }
+  .phase-tab.active.p4 { background: #2d1b4e; border-color: #a855f7; }
+  .phase-tab.active.all { background: #1e293b; border-color: #64748b; color: #e2e8f0; }
+
+  /* Module grid */
+  .module-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .mod-card {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .mod-card:hover { transform: translateY(-2px); border-color: #64748b; }
+  .mod-card.hidden { display: none; }
+
+  .mod-card.phase-foundations { border-left: 3px solid #3b82f6; }
+  .mod-card.phase-craft       { border-left: 3px solid #f59e0b; }
+  .mod-card.phase-practice    { border-left: 3px solid #22c55e; }
+  .mod-card.phase-horizon     { border-left: 3px solid #a855f7; }
+
+  .mod-num { font-size: 0.7rem; color: #64748b; font-weight: 700; margin-bottom: 0.25rem; }
+  .mod-title { font-size: 0.9rem; font-weight: 600; color: #f1f5f9; margin-bottom: 0.3rem; line-height: 1.3; }
+  .mod-q { font-size: 0.75rem; color: #94a3b8; line-height: 1.4; }
+
+  /* Detail popover */
+  .detail-popover {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1.75rem;
+    border: 1px solid #475569;
+    margin-bottom: 1.5rem;
+    display: none;
+  }
+  .detail-popover.visible { display: block; }
+  .pop-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem; }
+  .pop-title h2 { font-size: 1.15rem; color: #f8fafc; }
+  .pop-title .pop-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 0.25rem; }
+  .pop-close {
+    background: #334155;
+    border: none;
+    color: #94a3b8;
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .pop-close:hover { background: #475569; color: #e2e8f0; }
+  .pop-body { font-size: 0.88rem; color: #cbd5e1; line-height: 1.6; }
+
+  /* Phase legend */
+  .legend {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    border: 1px solid #334155;
+  }
+  .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #94a3b8; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 2px; flex-shrink: 0; }
+  .dot-f { background: #3b82f6; }
+  .dot-c { background: #f59e0b; }
+  .dot-p { background: #22c55e; }
+  .dot-h { background: #a855f7; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>LLM Lecture Series — The Roadmap</h1>
+    <p>Click a phase to filter · Click any module to preview it</p>
+  </div>
+
+  <div class="phase-tabs">
+    <button class="phase-tab active all" onclick="filterPhase('all')">All modules</button>
+    <button class="phase-tab p1" onclick="filterPhase('foundations')">Phase 1: Foundations</button>
+    <button class="phase-tab p2" onclick="filterPhase('craft')">Phase 2: The Craft</button>
+    <button class="phase-tab p3" onclick="filterPhase('practice')">Phase 3: Practice</button>
+    <button class="phase-tab p4" onclick="filterPhase('horizon')">Phase 4: Horizon</button>
+  </div>
+
+  <div class="detail-popover" id="popover">
+    <div class="pop-header">
+      <div class="pop-title">
+        <h2 id="pop-title">Module title</h2>
+        <div class="pop-sub" id="pop-sub">Core question</div>
+      </div>
+      <button class="pop-close" onclick="closePopover()">✕</button>
+    </div>
+    <div class="pop-body" id="pop-body">Description here.</div>
+  </div>
+
+  <div class="module-grid" id="module-grid">
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot dot-f"></div>Phase 1: Foundations — how it works</div>
+    <div class="legend-item"><div class="legend-dot dot-c"></div>Phase 2: The Craft — how to prompt well</div>
+    <div class="legend-item"><div class="legend-dot dot-p"></div>Phase 3: Practice — using it at work</div>
+    <div class="legend-item"><div class="legend-dot dot-h"></div>Phase 4: Horizon — agents, future, ethics</div>
+  </div>
+</div>
+
+<script>
+const modules = [
+  { num:"00", title:"Think of It as a Brain", q:"The unified metaphor for the whole series", phase:"foundations", desc:"The memory hook that threads through everything. Before jargon comes in, establish what an LLM actually is: a pattern machine trained on text, not a database, not a search engine, not a sentient mind." },
+  { num:"01", title:"What is an LLM?", q:"What am I actually talking to?", phase:"foundations", desc:"The big-picture answer: a language model trained to predict the next token. Covers what it is, what it isn't, and where it sits relative to search, databases, and traditional software." },
+  { num:"01b", title:"How It's Trained", q:"Where does it get its knowledge?", phase:"foundations", desc:"The three-stage pipeline: pretraining (reading the whole library) → fine-tuning (apprenticeship) → RLHF (learning manners). Explains the knowledge cutoff, hallucinations, and why different models feel different." },
+  { num:"02", title:"Tokenisation", q:"How does it read my words?", phase:"foundations", desc:"Words aren't words to the model — they're tokens. Why 'insurance' might be one token but 'reinsurance' is two. How tokenisation shapes what the model sees, and why it sometimes gets arithmetic wrong." },
+  { num:"03", title:"The Attention Mechanism", q:"How does it decide what matters?", phase:"foundations", desc:"The mathematical trick that lets the model link 'the client' to 'their' four sentences later. Why your system prompt at position 1 has maximum influence. The heatmap you can visualise." },
+  { num:"04", title:"Context Windows", q:"How much can it hold in its head?", phase:"foundations", desc:"The working memory of the model. Everything it knows about *your* conversation lives here — and it forgets everything when the window closes. Why pasting huge documents can hurt more than help." },
+  { num:"04b", title:"The Plumbing", q:"Why can't AI just read my files?", phase:"foundations", desc:"The infrastructure layer: why the model can't access your SharePoint by default, what RAG is, how copilots get connected to your company's data, and why 'it knows our policies' takes real work." },
+  { num:"05", title:"How Generation Works", q:"How does it write its answers?", phase:"foundations", desc:"Token-by-token sampling, temperature, and why the same prompt can give different answers. Why asking it to 'be confident' doesn't actually make it more accurate." },
+  { num:"06", title:"Hallucinations & Limitations", q:"Why does it make stuff up?", phase:"foundations", desc:"Pretraining rewards fluent next-token prediction, not truth. A plausible-sounding wrong answer is a *good guess* by its training objective. The structural reasons hallucinations happen and when to trust vs verify." },
+  { num:"07", title:"Prompt Fundamentals", q:"Why context beats templates", phase:"craft", desc:"The mental model for prompting: you're shaping the probability distribution of the next token, not issuing commands. Why more specific context beats clever wording every time." },
+  { num:"08", title:"The Base Layer", q:"Teaching the AI who you are", phase:"craft", desc:"The centrepiece module. A persistent system prompt that tells the model your role, your context, your preferences. The single highest-leverage thing you can build. Every session benefits from it." },
+  { num:"09", title:"The 3 Context Levels", q:"Raw vs dump vs distilled", phase:"craft", desc:"Not all context is equal. Raw paste vs structured dump vs distilled summary — each has a different cost and benefit. How to decide which to give the model for any task." },
+  { num:"10", title:"The Prompt Blueprint", q:"How to THINK about prompts", phase:"craft", desc:"A framework for thinking about prompts, not a template to copy. Role → task → context → format → constraints. Understanding the why behind each element." },
+  { num:"11", title:"Advanced Techniques", q:"Chain of thought, few-shot, etc.", phase:"craft", desc:"The power moves: chain of thought, few-shot examples, role assignment, ask-before-assume, structured output. Each one explained as a thinking pattern, not a template." },
+  { num:"12", title:"Base Layer Workshop", q:"Build yours in 15 minutes", phase:"craft", desc:"Hands-on: build your own base layer document. The facilitator-led interview that turns your role, context, and preferences into a reusable system prompt." },
+  { num:"13", title:"Privacy, Ethics & What Not to Share", q:"What to never put in a prompt", phase:"practice", desc:"Client data, PII, commercially sensitive information, regulated content. The practical line between helpful and risky. How to use AI tools without violating your obligations." },
+  { num:"14", title:"Making It Stick", q:"Building the daily habit", phase:"practice", desc:"Behaviour change, not skill transfer. The twice rule, the friction log, narrating the reframe. How to turn occasional use into a reflex — and how to measure whether it's working." },
+  { num:"15", title:"Copilot in Context", q:"Why in-app AI beats standalone chat", phase:"practice", desc:"Copilot in Word vs Copilot in Outlook vs standalone GPT — why context and integration matter. What each tool is actually good at and where to reach for which." },
+  { num:"20", title:"Practical Copilot Lab", q:"Making things, not just prompting", phase:"practice", desc:"The hands-on lab. Conductor mode: you supply the hands the AI is missing. File generation (ICS, CSV, SVG, HTML, PS1). The six escalating builds from warm-up triage through to cross-app pipelines." },
+  { num:"21", title:"Thinking Like a Power User", q:"Seeing the pattern, not the task", phase:"practice", desc:"The six-question reflex: have I done this before? Is it a pattern? Is this data wearing a costume? What file would save the most clicks? The shift from doing work to directing work." },
+  { num:"16", title:"Model Choices", q:"GPT vs Claude vs Gemini — what's different?", phase:"horizon", desc:"Same pretraining idea, different fine-tuning and RLHF. Why they feel different, what each is good at, how to choose, and when paying for a better model is worth it." },
+  { num:"17", title:"RAG & Search", q:"How does AI know about MY company's data?", phase:"horizon", desc:"Retrieval-Augmented Generation: bolt a search engine onto the model so it can reference documents it was never trained on. How Copilot's enterprise search works under the hood." },
+  { num:"18", title:"Agents & Automation", q:"Can AI actually DO things?", phase:"horizon", desc:"The difference between talking and acting. Agents plan, tool-call, and loop — they're conductor mode with the human step automated. What's possible now, what's coming." },
+  { num:"19", title:"The Future & Trajectory", q:"Is this hype, or is my job about to change?", phase:"horizon", desc:"Honest assessment: what's real progress, what's hype, what the scaling laws suggest, and what skills remain durable no matter what happens to the tools." },
+];
+
+let activePhase = 'all';
+let activeIdx = null;
+
+function renderGrid() {
+  const grid = document.getElementById('module-grid');
+  grid.innerHTML = '';
+  modules.forEach((m, i) => {
+    const card = document.createElement('div');
+    card.className = `mod-card phase-${m.phase}` + (activePhase !== 'all' && m.phase !== activePhase ? ' hidden' : '');
+    card.innerHTML = `<div class="mod-num">Module ${m.num}</div><div class="mod-title">${m.title}</div><div class="mod-q">${m.q}</div>`;
+    card.onclick = () => openPopover(i);
+    grid.appendChild(card);
+  });
+}
+
+function filterPhase(phase) {
+  activePhase = phase;
+  // Update tabs
+  document.querySelectorAll('.phase-tab').forEach(t => t.classList.remove('active'));
+  const map = { all:'all', foundations:'p1', craft:'p2', practice:'p3', horizon:'p4' };
+  document.querySelectorAll('.phase-tab').forEach(t => {
+    if ((phase === 'all' && t.classList.contains('all')) ||
+        (phase !== 'all' && t.classList.contains(map[phase]))) {
+      t.classList.add('active');
+    }
+  });
+  closePopover();
+  renderGrid();
+}
+
+function openPopover(i) {
+  const m = modules[i];
+  document.getElementById('pop-title').textContent = `Module ${m.num}: ${m.title}`;
+  document.getElementById('pop-sub').textContent = m.q;
+  document.getElementById('pop-body').textContent = m.desc;
+  document.getElementById('popover').classList.add('visible');
+  document.getElementById('popover').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function closePopover() {
+  document.getElementById('popover').classList.remove('visible');
+}
+
+renderGrid();
+</script>
+</body>
+</html>

@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 01b: How an LLM Is Trained</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 960px; width: 100%; }
+
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+
+  /* Pipeline arrow row */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 2rem;
+    flex-wrap: nowrap;
+  }
+  .stage-btn {
+    background: #1e293b;
+    border: 2px solid #334155;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.25s;
+    flex: 1;
+    max-width: 220px;
+  }
+  .stage-btn:hover { border-color: #64748b; }
+  .stage-btn.active-pt  { border-color: #3b82f6; background: #1e3a5f; }
+  .stage-btn.active-ft  { border-color: #a855f7; background: #2d1b4e; }
+  .stage-btn.active-rl  { border-color: #10b981; background: #0d3327; }
+  .stage-btn .icon { font-size: 1.8rem; margin-bottom: 0.4rem; }
+  .stage-btn .label { font-size: 0.85rem; font-weight: 600; color: #f1f5f9; }
+  .stage-btn .sub { font-size: 0.72rem; color: #94a3b8; margin-top: 0.2rem; }
+
+  .arrow {
+    font-size: 1.4rem;
+    color: #475569;
+    padding: 0 0.5rem;
+    flex-shrink: 0;
+  }
+
+  /* Detail panel */
+  .detail-panel {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid #334155;
+    margin-bottom: 1.5rem;
+    min-height: 260px;
+    transition: border-color 0.25s;
+  }
+  .detail-panel.pt { border-top: 3px solid #3b82f6; }
+  .detail-panel.ft { border-top: 3px solid #a855f7; }
+  .detail-panel.rl { border-top: 3px solid #10b981; }
+
+  .panel-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+  .panel-icon { font-size: 2rem; }
+  .panel-title h2 { font-size: 1.25rem; color: #f8fafc; }
+  .panel-title .output-tag {
+    font-size: 0.72rem;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+    font-weight: 600;
+    margin-top: 0.3rem;
+    display: inline-block;
+  }
+  .tag-pt { background: #1e3a5f; color: #93c5fd; }
+  .tag-ft { background: #2d1b4e; color: #d8b4fe; }
+  .tag-rl { background: #0d3327; color: #6ee7b7; }
+
+  .analogy-box {
+    background: #334155;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+    line-height: 1.55;
+    color: #cbd5e1;
+    border-left: 4px solid #64748b;
+  }
+  .analogy-box strong { color: #f1f5f9; }
+
+  .details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+  .detail-card {
+    background: #0f172a;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+    border: 1px solid #334155;
+  }
+  .detail-card .card-label { font-size: 0.7rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.3rem; }
+  .detail-card .card-val { font-size: 0.88rem; color: #e2e8f0; line-height: 1.4; }
+
+  .key-point {
+    background: #1e40af;
+    border: 2px solid #3b82f6;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-size: 0.9rem;
+    color: #bfdbfe;
+    line-height: 1.5;
+  }
+  .key-point.rl { background: #064e3b; border-color: #10b981; color: #a7f3d0; }
+  .key-point.ft { background: #3b0764; border-color: #a855f7; color: #e9d5ff; }
+
+  /* Output flow */
+  .output-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1.25rem 2rem;
+    border: 1px solid #334155;
+  }
+  .output-node {
+    text-align: center;
+    padding: 0.75rem 1.25rem;
+    border-radius: 10px;
+    flex: 1;
+  }
+  .on-base { background: #1e3a5f; border: 1px solid #3b82f6; }
+  .on-instruct { background: #2d1b4e; border: 1px solid #a855f7; }
+  .on-aligned { background: #0d3327; border: 1px solid #10b981; }
+  .output-node .on-label { font-size: 0.75rem; color: #94a3b8; margin-bottom: 0.25rem; }
+  .output-node .on-name { font-size: 0.95rem; font-weight: 700; }
+  .on-base .on-name { color: #93c5fd; }
+  .on-instruct .on-name { color: #d8b4fe; }
+  .on-aligned .on-name { color: #6ee7b7; }
+  .output-node .on-desc { font-size: 0.72rem; color: #94a3b8; margin-top: 0.25rem; }
+  .flow-arrow { color: #475569; font-size: 1.2rem; padding: 0 0.5rem; }
+
+  /* hidden panels */
+  .panel-content { display: none; }
+  .panel-content.active { display: block; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>How an LLM Is Trained</h1>
+    <p>Three stages — click each to explore</p>
+  </div>
+
+  <!-- Pipeline selector -->
+  <div class="pipeline">
+    <button class="stage-btn active-pt" id="btn-pt" onclick="showStage('pt')">
+      <div class="icon">📚</div>
+      <div class="label">Stage 1 — Pretraining</div>
+      <div class="sub">Reading the whole library</div>
+    </button>
+    <div class="arrow">→</div>
+    <button class="stage-btn" id="btn-ft" onclick="showStage('ft')">
+      <div class="icon">🎓</div>
+      <div class="label">Stage 2 — Fine-tuning</div>
+      <div class="sub">The apprenticeship</div>
+    </button>
+    <div class="arrow">→</div>
+    <button class="stage-btn" id="btn-rl" onclick="showStage('rl')">
+      <div class="icon">👍</div>
+      <div class="label">Stage 3 — RLHF</div>
+      <div class="sub">Learning manners from feedback</div>
+    </button>
+  </div>
+
+  <!-- Detail panel -->
+  <div class="detail-panel" id="detail-panel">
+
+    <!-- Pretraining content -->
+    <div class="panel-content active" id="content-pt">
+      <div class="panel-header">
+        <div class="panel-icon">📚</div>
+        <div class="panel-title">
+          <h2>Stage 1: Pretraining</h2>
+          <span class="output-tag tag-pt">Produces → Base Model</span>
+        </div>
+      </div>
+      <div class="analogy-box">
+        <strong>The analogy:</strong> Lock a brilliant reader in the world's biggest library. Give them one game played a trillion times: <em>cover the next word and guess it.</em> Do that across essentially the whole internet and something remarkable happens — to get good at guessing, the reader is <strong>forced to learn grammar, facts, reasoning, and patterns.</strong> Nobody teaches it insurance; it reads millions of pages where insurance comes up, and the patterns stick.
+      </div>
+      <div class="details-grid">
+        <div class="detail-card">
+          <div class="card-label">Training objective</div>
+          <div class="card-val">Predict the next token — self-supervised, no human labels needed</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Data scale</div>
+          <div class="card-val">Trillions of tokens — much of the crawlable web, books, and code</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Example guess</div>
+          <div class="card-val">"The client's insurance policy expires on June ___" → 30th</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Cost</div>
+          <div class="card-val">Thousands of GPUs for weeks–months — the expensive part</div>
+        </div>
+      </div>
+      <div class="key-point">
+        <strong>Why the knowledge cutoff exists:</strong> The reading stops at some date. Ask about anything after that and it's genuinely never seen it — like a colleague who's been on a desert island since January. The base model is fluent and knowledgeable, but <em>not yet helpful</em>. Ask it a question and it might respond with more questions, because that's what internet text does.
+      </div>
+    </div>
+
+    <!-- Fine-tuning content -->
+    <div class="panel-content" id="content-ft">
+      <div class="panel-header">
+        <div class="panel-icon">🎓</div>
+        <div class="panel-title">
+          <h2>Stage 2: Fine-tuning (SFT)</h2>
+          <span class="output-tag tag-ft">Produces → Instruct Model</span>
+        </div>
+      </div>
+      <div class="analogy-box">
+        <strong>The analogy:</strong> The base model is a brilliant graduate who's read everything but never had a job. Fine-tuning is the <strong>apprenticeship</strong>: show them thousands of worked examples — <em>"here's a request, here's a good response"</em> — until they learn the shape of being useful. Same knowledge as before; brand-new behaviour.
+      </div>
+      <div class="details-grid">
+        <div class="detail-card">
+          <div class="card-label">Training data</div>
+          <div class="card-val">Curated (instruction, ideal response) pairs — written or vetted by humans</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Data scale</div>
+          <div class="card-val">Thousands to millions of examples — tiny vs pretraining</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">What changes</div>
+          <div class="card-val">Behaviour: follow instructions, helpful register, respect format — not new knowledge</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Cost</div>
+          <div class="card-val">Hours to days — cheap relative to pretraining</div>
+        </div>
+      </div>
+      <div class="key-point ft">
+        <strong>Example exchange it's trained on:</strong><br>
+        Request: "Summarise this policy in three bullet points."<br>
+        Good response: "• Covers… • Excludes… • Expires on 30 June."<br><br>
+        Show enough of these and the model stops <em>completing</em> your text and starts <em>helping</em> you. This is also where domain fine-tuning lives — specialise the model on insurance-broking text so it speaks the dialect.
+      </div>
+    </div>
+
+    <!-- RLHF content -->
+    <div class="panel-content" id="content-rl">
+      <div class="panel-header">
+        <div class="panel-icon">👍</div>
+        <div class="panel-title">
+          <h2>Stage 3: RLHF</h2>
+          <span class="output-tag tag-rl">Produces → Aligned Model</span>
+        </div>
+      </div>
+      <div class="analogy-box">
+        <strong>The analogy:</strong> The apprentice is now useful — but useful isn't the same as <em>good</em>. Two answers can both follow the instruction while one is clear and honest and the other is waffly or reckless. Teaching that difference is <strong>Reinforcement Learning from Human Feedback</strong>. Exactly how you teach a person manners: <em>feedback</em>. This is where the model's "personality" comes from.
+      </div>
+      <div class="details-grid">
+        <div class="detail-card">
+          <div class="card-label">Step 1</div>
+          <div class="card-val">Humans compare pairs of model outputs and pick the better one — thousands of times</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Step 2</div>
+          <div class="card-val">A reward model learns to predict which outputs humans prefer — turning judgement into a score</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Step 3</div>
+          <div class="card-val">The LLM is fine-tuned with reinforcement learning (PPO) to score highly on the reward model</div>
+        </div>
+        <div class="detail-card">
+          <div class="card-label">Why models feel different</div>
+          <div class="card-val">Same base knowledge, different RLHF feedback — different "manners"</div>
+        </div>
+      </div>
+      <div class="key-point rl">
+        <strong>The personality insight:</strong> Helpfulness, caution, refusal to do harmful things — none of this is baked into the knowledge. It was <em>taught by feedback afterwards.</em> The same underlying knowledge can feel very different across models because they were given different manners during this stage. That's half of what you're choosing between when you pick a model.
+      </div>
+    </div>
+
+  </div><!-- /detail-panel -->
+
+  <!-- Output flow -->
+  <div class="output-flow">
+    <div class="output-node on-base">
+      <div class="on-label">After Stage 1</div>
+      <div class="on-name">Base Model</div>
+      <div class="on-desc">Fluent, knowledgeable<br>not yet helpful</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="output-node on-instruct">
+      <div class="on-label">After Stage 2</div>
+      <div class="on-name">Instruct Model</div>
+      <div class="on-desc">Follows instructions<br>answers questions</div>
+    </div>
+    <div class="flow-arrow">→</div>
+    <div class="output-node on-aligned">
+      <div class="on-label">After Stage 3</div>
+      <div class="on-name">Aligned Model</div>
+      <div class="on-desc">Helpful, honest, safe<br>the model you use</div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function showStage(stage) {
+  // Reset buttons
+  document.getElementById('btn-pt').className = 'stage-btn';
+  document.getElementById('btn-ft').className = 'stage-btn';
+  document.getElementById('btn-rl').className = 'stage-btn';
+
+  // Reset panel border
+  const panel = document.getElementById('detail-panel');
+  panel.className = 'detail-panel ' + stage;
+
+  // Set active button
+  document.getElementById('btn-' + stage).className = 'stage-btn active-' + stage;
+
+  // Hide all content
+  document.querySelectorAll('.panel-content').forEach(el => el.classList.remove('active'));
+
+  // Show selected
+  document.getElementById('content-' + stage).classList.add('active');
+}
+// Init
+document.getElementById('detail-panel').className = 'detail-panel pt';
+</script>
+</body>
+</html>

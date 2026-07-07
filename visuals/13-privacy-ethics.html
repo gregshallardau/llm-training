@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 13: Privacy, Ethics &amp; What Not To Share</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .title h1 {
+    font-size: 1.8rem;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+  .title p {
+    color: #94a3b8;
+    font-size: 1rem;
+  }
+
+  .diagram {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  /* Section labels */
+  .section-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #94a3b8;
+    margin-bottom: 0.75rem;
+  }
+
+  /* Section spacing */
+  .section {
+    margin-bottom: 2rem;
+  }
+
+  /* ---- Data Flow Diagram ---- */
+  .flow-diagram {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .flow-node {
+    background: #334155;
+    border-radius: 12px;
+    padding: 0.85rem 1.1rem;
+    text-align: center;
+    min-width: 130px;
+    flex-shrink: 0;
+  }
+  .flow-node .node-icon {
+    font-size: 1.4rem;
+    margin-bottom: 0.3rem;
+  }
+  .flow-node .node-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #f8fafc;
+  }
+  .flow-node .node-sub {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    margin-top: 0.2rem;
+  }
+
+  .flow-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 0.4rem;
+    color: #3b82f6;
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .flow-training-note {
+    margin-top: 1rem;
+    background: #451a03;
+    border: 1px solid #f59e0b;
+    border-radius: 10px;
+    padding: 0.75rem 1rem;
+    font-size: 0.82rem;
+    color: #fbbf24;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .flow-training-note .note-icon {
+    font-size: 1.1rem;
+    flex-shrink: 0;
+  }
+
+  /* ---- Danger Grid ---- */
+  .danger-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+  }
+
+  .danger-card {
+    background: #7f1d1d;
+    border: 1px solid #fc8181;
+    border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+  .danger-card .d-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    margin-top: 0.1rem;
+  }
+  .danger-card .d-content .d-title {
+    font-size: 0.88rem;
+    font-weight: 700;
+    color: #fc8181;
+    margin-bottom: 0.25rem;
+  }
+  .danger-card .d-content .d-desc {
+    font-size: 0.78rem;
+    color: #fca5a5;
+    line-height: 1.45;
+  }
+
+  /* ---- Traffic Light Spectrum ---- */
+  .spectrum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 1rem;
+  }
+
+  .spectrum-card {
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+  .spectrum-card.green {
+    background: #064e3b;
+    border: 1px solid #10b981;
+  }
+  .spectrum-card.amber {
+    background: #451a03;
+    border: 1px solid #f59e0b;
+  }
+  .spectrum-card.red {
+    background: #7f1d1d;
+    border: 1px solid #fc8181;
+  }
+
+  .spectrum-header {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 0.75rem;
+  }
+  .traffic-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .traffic-dot.green { background: #10b981; }
+  .traffic-dot.amber { background: #f59e0b; }
+  .traffic-dot.red   { background: #fc8181; }
+
+  .spectrum-header .s-title {
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+  .spectrum-card.green  .s-title { color: #6ee7b7; }
+  .spectrum-card.amber  .s-title { color: #fbbf24; }
+  .spectrum-card.red    .s-title { color: #fc8181; }
+
+  .spectrum-items {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+  }
+  .spectrum-items li {
+    font-size: 0.8rem;
+    line-height: 1.4;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .spectrum-items li::before {
+    content: "•";
+    position: absolute;
+    left: 0;
+  }
+  .spectrum-card.green  .spectrum-items li { color: #a7f3d0; }
+  .spectrum-card.amber  .spectrum-items li { color: #fde68a; }
+  .spectrum-card.red    .spectrum-items li { color: #fca5a5; }
+
+  /* ---- Checklist ---- */
+  .checklist {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .checklist-item {
+    background: #334155;
+    border-radius: 12px;
+    padding: 1rem 1.1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .check-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #1e40af;
+    border: 2px solid #3b82f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.75rem;
+    color: #93c5fd;
+    font-weight: 700;
+    margin-top: 0.05rem;
+  }
+
+  .check-text .check-title {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #f8fafc;
+    margin-bottom: 0.2rem;
+  }
+  .check-text .check-desc {
+    font-size: 0.77rem;
+    color: #94a3b8;
+    line-height: 1.45;
+  }
+
+  /* ---- Key Insight ---- */
+  .key-insight {
+    background: #1e40af;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .key-insight h3 {
+    color: #93c5fd;
+    font-size: 1.1rem;
+    margin-bottom: 0.6rem;
+  }
+  .key-insight p {
+    color: #bfdbfe;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="title">
+    <h1>Module 13: Privacy, Ethics &amp; What Not To Share</h1>
+    <p>What's safe to share with AI?</p>
+  </div>
+
+  <div class="diagram">
+
+    <!-- Section 1: Data Flow Diagram -->
+    <div class="section">
+      <div class="section-label">Where your prompt goes</div>
+      <div class="flow-diagram">
+        <div class="flow-node">
+          <div class="node-icon">&#9000;&#65039;</div>
+          <div class="node-label">Your Prompt</div>
+          <div class="node-sub">Text you type</div>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-node">
+          <div class="node-icon">&#127760;</div>
+          <div class="node-label">AI Provider Servers</div>
+          <div class="node-sub">Transit &amp; storage</div>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-node">
+          <div class="node-icon">&#129504;</div>
+          <div class="node-label">Language Model</div>
+          <div class="node-sub">Processes input</div>
+        </div>
+        <div class="flow-arrow">&#8594;</div>
+        <div class="flow-node">
+          <div class="node-icon">&#128172;</div>
+          <div class="node-label">Response</div>
+          <div class="node-sub">Returned to you</div>
+        </div>
+      </div>
+      <div class="flow-training-note">
+        <span class="note-icon">&#9888;&#65039;</span>
+        <span>Prompts <strong>may be used for model training</strong> depending on your plan and provider settings. Enterprise/API tiers typically opt out by default — always check your org's deployment settings.</span>
+      </div>
+    </div>
+
+    <!-- Section 2: What to Never Share -->
+    <div class="section">
+      <div class="section-label">Never share with AI — danger categories</div>
+      <div class="danger-grid">
+        <div class="danger-card">
+          <div class="d-icon">&#129657;</div>
+          <div class="d-content">
+            <div class="d-title">Personal Health Info</div>
+            <div class="d-desc">Medical records, diagnoses, prescriptions, patient data — protected by law in most jurisdictions.</div>
+          </div>
+        </div>
+        <div class="danger-card">
+          <div class="d-icon">&#128272;</div>
+          <div class="d-content">
+            <div class="d-title">Passwords &amp; Credentials</div>
+            <div class="d-desc">API keys, login passwords, tokens, SSH keys, database credentials of any kind.</div>
+          </div>
+        </div>
+        <div class="danger-card">
+          <div class="d-icon">&#128100;</div>
+          <div class="d-content">
+            <div class="d-title">Client PII</div>
+            <div class="d-desc">Real names, home addresses, ID numbers, email addresses linked to identifiable individuals.</div>
+          </div>
+        </div>
+        <div class="danger-card">
+          <div class="d-icon">&#128181;</div>
+          <div class="d-content">
+            <div class="d-title">Financial Account Details</div>
+            <div class="d-desc">Bank account numbers, credit card numbers, BSBs, trading account data.</div>
+          </div>
+        </div>
+        <div class="danger-card">
+          <div class="d-icon">&#128196;</div>
+          <div class="d-content">
+            <div class="d-title">Confidential Contracts</div>
+            <div class="d-desc">NDAs, client agreements, unreleased deal terms, or proprietary legal documents.</div>
+          </div>
+        </div>
+        <div class="danger-card">
+          <div class="d-icon">&#128737;&#65039;</div>
+          <div class="d-content">
+            <div class="d-title">Internal Security Info</div>
+            <div class="d-desc">Network diagrams, vulnerability reports, firewall rules, incident response plans.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3: Traffic Light Spectrum -->
+    <div class="section">
+      <div class="section-label">Safe vs unsafe — sharing spectrum</div>
+      <div class="spectrum-grid">
+        <div class="spectrum-card green">
+          <div class="spectrum-header">
+            <div class="traffic-dot green"></div>
+            <span class="s-title">Safe to Share</span>
+          </div>
+          <ul class="spectrum-items">
+            <li>General writing and editing tasks</li>
+            <li>Publicly available information</li>
+            <li>Fully anonymized examples</li>
+            <li>Generic code and technical questions</li>
+            <li>Brainstorming with no real data</li>
+          </ul>
+        </div>
+        <div class="spectrum-card amber">
+          <div class="spectrum-header">
+            <div class="traffic-dot amber"></div>
+            <span class="s-title">Use Caution</span>
+          </div>
+          <ul class="spectrum-items">
+            <li>Internal processes (no proprietary detail)</li>
+            <li>Anonymized client scenarios</li>
+            <li>Business logic with names removed</li>
+            <li>Drafts referencing internal policy</li>
+            <li>Check your org's AI policy first</li>
+          </ul>
+        </div>
+        <div class="spectrum-card red">
+          <div class="spectrum-header">
+            <div class="traffic-dot red"></div>
+            <span class="s-title">Do Not Share</span>
+          </div>
+          <ul class="spectrum-items">
+            <li>Real client data or records</li>
+            <li>Credentials and secrets</li>
+            <li>Sensitive financial details</li>
+            <li>Confidential business info</li>
+            <li>Health or legal records</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 4: Privacy Best Practices Checklist -->
+    <div class="section">
+      <div class="section-label">Privacy best practices</div>
+      <div class="checklist">
+        <div class="checklist-item">
+          <div class="check-badge">1</div>
+          <div class="check-text">
+            <div class="check-title">Use enterprise or private deployment</div>
+            <div class="check-desc">Org-managed AI tools have data retention controls. Prefer these over personal consumer accounts.</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-badge">2</div>
+          <div class="check-text">
+            <div class="check-title">Anonymize before pasting</div>
+            <div class="check-desc">Replace real names, IDs, and addresses with placeholders like [CLIENT_NAME] before submitting.</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-badge">3</div>
+          <div class="check-text">
+            <div class="check-title">Check your org's AI policy</div>
+            <div class="check-desc">Many organisations have specific rules about what data may be sent to external AI services.</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-badge">4</div>
+          <div class="check-text">
+            <div class="check-title">Opt out of training if available</div>
+            <div class="check-desc">Most providers allow you to disable use of your data for training — enable this in account settings.</div>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-badge">5</div>
+          <div class="check-text">
+            <div class="check-title">Treat prompts like emails</div>
+            <div class="check-desc">Assume your prompt could be seen by others. If you'd hesitate to send it in email, don't type it in a prompt.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Insight -->
+    <div class="key-insight">
+      <h3>&#128161; Key Insight</h3>
+      <p>The rule of thumb: if you wouldn't paste it into an email to a stranger, don't paste it into an AI prompt. Use anonymized examples. Your org's data is your responsibility.</p>
+    </div>
+
+  </div><!-- /.diagram -->
+</div><!-- /.container -->
+</body>
+</html>

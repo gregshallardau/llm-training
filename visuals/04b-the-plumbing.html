@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 04b: The Plumbing</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 900px; width: 100%; }
+  .title { text-align: center; margin-bottom: 2rem; }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+  .diagram { background: #1e293b; border-radius: 16px; padding: 2rem; border: 1px solid #334155; }
+  .problem-box { background: #451a03; border: 2px solid #f59e0b; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; text-align: center; }
+  .problem-box h3 { color: #fbbf24; font-size: 1.2rem; margin-bottom: 0.5rem; }
+  .problem-box p { color: #fcd34d; font-size: 0.95rem; line-height: 1.5; }
+  .flow-diagram { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem; }
+  .flow-step { background: #334155; border-radius: 12px; padding: 1.25rem; text-align: center; flex: 1; min-width: 120px; }
+  .flow-step .icon { font-size: 2rem; margin-bottom: 0.5rem; }
+  .flow-step h4 { color: #f8fafc; font-size: 0.9rem; margin-bottom: 0.25rem; }
+  .flow-step p { color: #94a3b8; font-size: 0.75rem; }
+  .flow-arrow { color: #64748b; font-size: 1.5rem; }
+  .comparison { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .comp-card { border-radius: 12px; padding: 1.5rem; }
+  .comp-card.fine-tune { background: #451a03; border: 1px solid #f59e0b; }
+  .comp-card.rag { background: #064e3b; border: 1px solid #10b981; }
+  .comp-card h4 { font-size: 1rem; margin-bottom: 0.75rem; }
+  .comp-card.fine-tune h4 { color: #fbbf24; }
+  .comp-card.rag h4 { color: #34d399; }
+  .comp-card ul { list-style: none; }
+  .comp-card li { color: #e2e8f0; font-size: 0.85rem; margin-bottom: 0.5rem; padding-left: 1.5rem; position: relative; }
+  .comp-card.fine-tune li::before { content: "✗"; position: absolute; left: 0; color: #f59e0b; }
+  .comp-card.rag li::before { content: "✓"; position: absolute; left: 0; color: #10b981; }
+  .analogy-box { background: #1e40af; border: 2px solid #3b82f6; border-radius: 12px; padding: 1.5rem; }
+  .analogy-box h3 { color: #93c5fd; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .analogy-box p { color: #bfdbfe; font-size: 0.95rem; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>The Plumbing</h1>
+    <p>Why can't AI just read my files?</p>
+  </div>
+  <div class="diagram">
+    <div class="problem-box">
+      <h3>The Fundamental Problem</h3>
+      <p>An LLM is trained once, on a snapshot of the world. After training, it knows nothing new. It cannot look at your SharePoint, read your internal policies, or know what happened in a meeting yesterday.</p>
+    </div>
+    <div class="flow-diagram">
+      <div class="flow-step">
+        <div class="icon">📄</div>
+        <h4>Your Files</h4>
+        <p>SharePoint, Drive, Local</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="icon">🔍</div>
+        <h4>RAG Pipeline</h4>
+        <p>Retrieve relevant docs</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="icon">🧠</div>
+        <h4>AI Model</h4>
+        <p>Answer using context</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <div class="icon">✅</div>
+        <h4>Response</h4>
+        <p>With your data</p>
+      </div>
+    </div>
+    <div class="comparison">
+      <div class="comp-card fine-tune">
+        <h4>Option A: Fine-Tuning</h4>
+        <ul>
+          <li>Train model on your data</li>
+          <li>Expensive and slow</li>
+          <li>Data gets stale quickly</li>
+          <li>Model memorises everything</li>
+          <li>Hard to update</li>
+        </ul>
+      </div>
+      <div class="comp-card rag">
+        <h4>Option B: RAG</h4>
+        <ul>
+          <li>Retrieve relevant documents</li>
+          <li>Cheap and fast</li>
+          <li>Always current</li>
+          <li>Model uses retrieved context</li>
+          <li>Easy to update</li>
+        </ul>
+      </div>
+    </div>
+    <div class="analogy-box">
+      <h3>🎯 The Filing Cabinet Analogy</h3>
+      <p>Imagine you've hired a brilliant new analyst. They're smart, great at writing, excellent at summarising — but they've never worked at your company before. You can either spend months training them (fine-tuning), or before every meeting, hand them the relevant files from the filing cabinet (RAG). RAG is Option B — it's always current, cheap, and fast.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

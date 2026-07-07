@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 05: How Generation Works</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 900px; width: 100%; }
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+  
+  .generation-diagram {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 2rem;
+    border: 1px solid #334155;
+  }
+  
+  .step-flow {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    flex-wrap: wrap;
+  }
+  .step {
+    background: #334155;
+    border-radius: 8px;
+    padding: 0.75rem;
+    text-align: center;
+    min-width: 100px;
+  }
+  .step .step-num {
+    background: #3b82f6;
+    color: #fff;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    font-weight: bold;
+    margin: 0 auto 0.5rem;
+  }
+  .step h4 { color: #f8fafc; font-size: 0.8rem; margin-bottom: 0.25rem; }
+  .step p { color: #94a3b8; font-size: 0.7rem; }
+  .step-arrow { color: #64748b; font-size: 1.2rem; }
+  
+  .probability-demo {
+    background: #0f172a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  .probability-demo h3 { color: #f8fafc; margin-bottom: 1rem; font-size: 1rem; }
+  .prob-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+  }
+  .prob-word {
+    background: #334155;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    color: #f8fafc;
+    font-weight: bold;
+    min-width: 100px;
+    text-align: center;
+  }
+  .prob-bar-container {
+    flex: 1;
+    height: 24px;
+    background: #1e293b;
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+  .prob-bar {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 0.75rem;
+    font-size: 0.75rem;
+    color: #fff;
+    font-weight: bold;
+  }
+  .prob-high { background: #48bb78; }
+  .prob-medium { background: #ed8936; }
+  .prob-low { background: #64748b; }
+  
+  .sampling-strategies {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+  }
+  .strategy-card {
+    background: #334155;
+    border-radius: 12px;
+    padding: 1.25rem;
+    text-align: center;
+  }
+  .strategy-card h4 { color: #93c5fd; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .strategy-card p { color: #cbd5e1; font-size: 0.8rem; line-height: 1.4; }
+  .strategy-card .temp { color: #fbbf24; font-size: 0.85rem; font-weight: bold; margin-top: 0.5rem; }
+  
+  .key-insight {
+    background: #1e40af;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+  .key-insight h3 { color: #93c5fd; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .key-insight p { color: #bfdbfe; font-size: 0.95rem; line-height: 1.5; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>How Generation Works</h1>
+    <p>How does it write its answers?</p>
+  </div>
+  
+  <div class="generation-diagram">
+    <h3 style="color: #f8fafc; margin-bottom: 1rem;">Autoregressive Generation</h3>
+    <div class="step-flow">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h4>Prompt</h4>
+        <p>"The client's property insurance"</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h4>Predict</h4>
+        <p>"policy" 34%, "program" 22%...</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h4>Sample</h4>
+        <p>Pick "policy"</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <h4>Repeat</h4>
+        <p>Add token, predict next</p>
+      </div>
+      <div class="step-arrow">→</div>
+      <div class="step">
+        <div class="step-num">✓</div>
+        <h4>Complete</h4>
+        <p>Full response generated</p>
+      </div>
+    </div>
+    
+    <div class="probability-demo">
+      <h3>Probability Distribution Example</h3>
+      <p style="color: #94a3b8; margin-bottom: 1rem; font-size: 0.9rem;">After "The client's property insurance":</p>
+      
+      <div class="prob-row">
+        <div class="prob-word">policy</div>
+        <div class="prob-bar-container">
+          <div class="prob-bar prob-high" style="width: 34%;">34%</div>
+        </div>
+      </div>
+      <div class="prob-row">
+        <div class="prob-word">program</div>
+        <div class="prob-bar-container">
+          <div class="prob-bar prob-medium" style="width: 22%;">22%</div>
+        </div>
+      </div>
+      <div class="prob-row">
+        <div class="prob-word">coverage</div>
+        <div class="prob-bar-container">
+          <div class="prob-bar prob-medium" style="width: 18%;">18%</div>
+        </div>
+      </div>
+      <div class="prob-row">
+        <div class="prob-word">premium</div>
+        <div class="prob-bar-container">
+          <div class="prob-bar prob-low" style="width: 8%;">8%</div>
+        </div>
+      </div>
+      <div class="prob-row">
+        <div class="prob-word">...and thousands more</div>
+        <div class="prob-bar-container">
+          <div class="prob-bar prob-low" style="width: 18%;">18%</div>
+        </div>
+      </div>
+    </div>
+    
+    <div class="sampling-strategies">
+      <div class="strategy-card">
+        <h4>Greedy</h4>
+        <p>Always pick #1</p>
+        <div class="temp">Most predictable</div>
+      </div>
+      <div class="strategy-card">
+        <h4>Temperature</h4>
+        <p>Scale by 1/T</p>
+        <div class="temp">T&lt;1 = focused<br/>T&gt;1 = creative</div>
+      </div>
+      <div class="strategy-card">
+        <h4>Top-k</h4>
+        <p>Only top k options</p>
+        <div class="temp">Prevents unlikely</div>
+      </div>
+      <div class="strategy-card">
+        <h4>Top-p</h4>
+        <p>Cumulative ≤ p</p>
+        <div class="temp">Adaptive window</div>
+      </div>
+    </div>
+    
+    <div class="key-insight">
+      <h3>🎯 Why You Get Different Answers</h3>
+      <p>The model rolls the dice (weighted by percentages) and picks one. This is why you get slightly different answers every time you ask the same question — <strong>the dice land differently</strong>.</p>
+    </div>
+  </div>
+</div>
+</body>
+</html>

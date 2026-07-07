@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Module 15: Copilot in Context</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f172a;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: #f8fafc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 2rem;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .header h1 {
+      font-size: 1.8rem;
+      color: #f8fafc;
+      margin-bottom: 0.5rem;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 1rem;
+    }
+
+    .module-badge {
+      display: inline-block;
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 0.75rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 999px;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    /* Main card wrapper */
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .section-title {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #94a3b8;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: #334155;
+    }
+
+    /* ── Section 1: Standalone vs In-App ── */
+    .compare-grid {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 1rem;
+      align-items: stretch;
+    }
+
+    .compare-col {
+      background: #334155;
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .compare-col.standalone {
+      border-top: 3px solid #94a3b8;
+    }
+
+    .compare-col.inapp {
+      border-top: 3px solid #3b82f6;
+    }
+
+    .compare-col h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .compare-col.standalone h3 { color: #cbd5e1; }
+    .compare-col.inapp h3 { color: #93c5fd; }
+
+    .compare-col .subtitle {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-bottom: 1rem;
+    }
+
+    .compare-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .compare-list li {
+      font-size: 0.85rem;
+      color: #cbd5e1;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+
+    .compare-list li .icon {
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    .vs-divider {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+    }
+
+    .vs-circle {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      background: #0f172a;
+      border: 2px solid #334155;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #94a3b8;
+    }
+
+    /* ── Section 2: M365 Ecosystem ── */
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+
+    .app-card {
+      background: #334155;
+      border-radius: 12px;
+      padding: 1.25rem;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.5rem;
+      border-bottom: 3px solid transparent;
+      transition: border-color 0.2s;
+    }
+
+    .app-card.word   { border-bottom-color: #2563eb; }
+    .app-card.excel  { border-bottom-color: #16a34a; }
+    .app-card.teams  { border-bottom-color: #7c3aed; }
+    .app-card.outlook{ border-bottom-color: #0891b2; }
+    .app-card.ppt    { border-bottom-color: #dc2626; }
+
+    .app-icon {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .app-icon.word    { background: #2563eb; }
+    .app-icon.excel   { background: #16a34a; }
+    .app-icon.teams   { background: #7c3aed; }
+    .app-icon.outlook { background: #0891b2; }
+    .app-icon.ppt     { background: #dc2626; }
+
+    .app-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+
+    .app-action {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .app-tag {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+      font-weight: 600;
+    }
+
+    .app-tag.draft    { background: #1e3a5f; color: #93c5fd; }
+    .app-tag.analyze  { background: #14532d; color: #86efac; }
+    .app-tag.summary  { background: #3b0764; color: #e9d5ff; }
+    .app-tag.compose  { background: #0c4a6e; color: #bae6fd; }
+    .app-tag.create   { background: #450a0a; color: #fca5a5; }
+
+    /* ── Section 3: Context Advantage ── */
+    .context-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .flow-box {
+      background: #334155;
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .flow-box h4 {
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .flow-box.manual h4 { color: #fbbf24; }
+    .flow-box.auto h4   { color: #34d399; }
+
+    .flow-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .flow-step {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 0.82rem;
+      color: #cbd5e1;
+    }
+
+    .step-num {
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    .flow-box.manual .step-num { background: #451a03; color: #fbbf24; border: 1px solid #f59e0b; }
+    .flow-box.auto   .step-num { background: #064e3b; color: #34d399; border: 1px solid #10b981; }
+
+    .flow-arrow {
+      text-align: center;
+      color: #475569;
+      font-size: 0.8rem;
+      padding: 0.1rem 0;
+    }
+
+    .friction-badge {
+      margin-top: 0.75rem;
+      padding: 0.4rem 0.75rem;
+      border-radius: 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .friction-badge.high { background: #451a03; color: #fbbf24; border: 1px solid #f59e0b; }
+    .friction-badge.low  { background: #064e3b; color: #34d399; border: 1px solid #10b981; }
+
+    /* ── Section 4: Decision Guide ── */
+    .decision-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+    }
+
+    .decision-card {
+      background: #334155;
+      border-radius: 12px;
+      padding: 1.25rem;
+      border-left: 4px solid transparent;
+    }
+
+    .decision-card.standalone-card { border-left-color: #94a3b8; }
+    .decision-card.inapp-card      { border-left-color: #3b82f6; }
+    .decision-card.secure-card     { border-left-color: #10b981; }
+
+    .decision-scenario {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-bottom: 0.4rem;
+      font-style: italic;
+    }
+
+    .decision-action {
+      font-size: 0.9rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .decision-card.standalone-card .decision-action { color: #cbd5e1; }
+    .decision-card.inapp-card      .decision-action { color: #93c5fd; }
+    .decision-card.secure-card     .decision-action { color: #34d399; }
+
+    .decision-desc {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    .arrow-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      background: #0f172a;
+      border-radius: 6px;
+      padding: 0.25rem 0.5rem;
+      font-size: 0.72rem;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .arrow-badge.grey   { color: #94a3b8; }
+    .arrow-badge.blue   { color: #60a5fa; }
+    .arrow-badge.green  { color: #34d399; }
+
+    /* ── Key Insight ── */
+    .key-insight {
+      background: #1e40af;
+      border: 2px solid #3b82f6;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-top: 1.5rem;
+    }
+
+    .key-insight h3 {
+      color: #93c5fd;
+      font-size: 1.1rem;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .key-insight p {
+      color: #bfdbfe;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .highlight {
+      color: #93c5fd;
+      font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+      .compare-grid {
+        grid-template-columns: 1fr;
+      }
+      .vs-divider {
+        flex-direction: row;
+      }
+      .context-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+
+    <!-- Header -->
+    <div class="header">
+      <div class="module-badge">Module 15</div>
+      <h1>Copilot in Context</h1>
+      <p>How is Copilot different from ChatGPT?</p>
+    </div>
+
+    <!-- Section 1: Standalone vs In-App -->
+    <div class="card">
+      <div class="section-title">1 &nbsp; Standalone Chat vs In-App AI</div>
+      <div class="compare-grid">
+
+        <!-- Standalone -->
+        <div class="compare-col standalone">
+          <h3>Standalone Chat</h3>
+          <div class="subtitle">ChatGPT &nbsp;·&nbsp; Claude.ai &nbsp;·&nbsp; Gemini</div>
+          <ul class="compare-list">
+            <li>
+              <span class="icon" style="color:#f59e0b;">⚠</span>
+              <span>You bring the context — copy &amp; paste required</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#94a3b8;">↕</span>
+              <span>Works outside your apps, in a browser tab</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#94a3b8;">✎</span>
+              <span>Great for open-ended drafting from scratch</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#f59e0b;">⚠</span>
+              <span>Data leaves your org unless enterprise plan</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#94a3b8;">↺</span>
+              <span>Manual loop: write → copy → paste → revise</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- VS -->
+        <div class="vs-divider">
+          <div class="vs-circle">VS</div>
+        </div>
+
+        <!-- In-App -->
+        <div class="compare-col inapp">
+          <h3>In-App Copilot</h3>
+          <div class="subtitle">Word &nbsp;·&nbsp; Excel &nbsp;·&nbsp; Teams &nbsp;·&nbsp; Outlook</div>
+          <ul class="compare-list">
+            <li>
+              <span class="icon" style="color:#34d399;">✔</span>
+              <span>Context already there — Copilot sees the doc/email</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#34d399;">✔</span>
+              <span>Lives inside the app you're already working in</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#34d399;">✔</span>
+              <span>Aware of your meeting, spreadsheet, or inbox</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#34d399;">✔</span>
+              <span>Enterprise data protection built-in (Microsoft 365)</span>
+            </li>
+            <li>
+              <span class="icon" style="color:#34d399;">✔</span>
+              <span>Prompt in place — no copy-paste needed</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 2: M365 Ecosystem -->
+    <div class="card">
+      <div class="section-title">2 &nbsp; Copilot Across Microsoft 365</div>
+      <div class="apps-grid">
+
+        <div class="app-card word">
+          <div class="app-icon word">W</div>
+          <div class="app-name">Word</div>
+          <span class="app-tag draft">Draft / Edit</span>
+          <div class="app-action">Draft documents, rewrite sections, adjust tone, summarise long docs</div>
+        </div>
+
+        <div class="app-card excel">
+          <div class="app-icon excel">X</div>
+          <div class="app-name">Excel</div>
+          <span class="app-tag analyze">Analyze Data</span>
+          <div class="app-action">Explain formulas, generate insights, create charts from natural language</div>
+        </div>
+
+        <div class="app-card teams">
+          <div class="app-icon teams">T</div>
+          <div class="app-name">Teams</div>
+          <span class="app-tag summary">Summarise Meeting</span>
+          <div class="app-action">Recap meeting in real-time, surface action items, catch you up if you're late</div>
+        </div>
+
+        <div class="app-card outlook">
+          <div class="app-icon outlook">O</div>
+          <div class="app-name">Outlook</div>
+          <span class="app-tag compose">Draft / Summarise</span>
+          <div class="app-action">Draft replies, summarise long threads, suggest meeting times</div>
+        </div>
+
+        <div class="app-card ppt">
+          <div class="app-icon ppt">P</div>
+          <div class="app-name">PowerPoint</div>
+          <span class="app-tag create">Create Slides</span>
+          <div class="app-action">Build a presentation from an outline or Word doc, add speaker notes</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 3: Context Advantage -->
+    <div class="card">
+      <div class="section-title">3 &nbsp; The Context Advantage</div>
+      <div class="context-grid">
+
+        <div class="flow-box manual">
+          <h4>⚠ Standalone — Manual Context</h4>
+          <div class="flow-steps">
+            <div class="flow-step">
+              <div class="step-num">1</div>
+              <span>Open document in Word / Gmail / etc.</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">2</div>
+              <span>Select &amp; copy relevant text</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">3</div>
+              <span>Switch to ChatGPT/Claude tab</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">4</div>
+              <span>Paste text into prompt</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">5</div>
+              <span>Write your question &amp; submit</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">6</div>
+              <span>Copy response back to document</span>
+            </div>
+          </div>
+          <div class="friction-badge high">High friction workflow — extract &amp; prompt</div>
+        </div>
+
+        <div class="flow-box auto">
+          <h4>✔ In-App Copilot — Context Automatic</h4>
+          <div class="flow-steps">
+            <div class="flow-step">
+              <div class="step-num">1</div>
+              <span>Open document / email / meeting in M365</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">2</div>
+              <span>Copilot already sees the full content</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">3</div>
+              <span>Open Copilot pane (or click Copilot button)</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">4</div>
+              <span>Type your question or select an action</span>
+            </div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">
+              <div class="step-num">5</div>
+              <span>Result appears inline in your document</span>
+            </div>
+          </div>
+          <div class="friction-badge low">Low friction — prompt in place</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Section 4: When to Use What -->
+    <div class="card">
+      <div class="section-title">4 &nbsp; When to Use What</div>
+      <div class="decision-grid">
+
+        <div class="decision-card standalone-card">
+          <div class="arrow-badge grey">→ Standalone</div>
+          <div class="decision-scenario">"I need to generate something from scratch"</div>
+          <div class="decision-action">Use ChatGPT, Claude.ai, or Copilot Chat</div>
+          <div class="decision-desc">No existing document to reference. You're exploring ideas, brainstorming structures, or writing from a blank canvas.</div>
+        </div>
+
+        <div class="decision-card inapp-card">
+          <div class="arrow-badge blue">→ In-App Copilot</div>
+          <div class="decision-scenario">"I'm already working in a doc, email, or meeting"</div>
+          <div class="decision-action">Use Copilot in Word / Outlook / Teams</div>
+          <div class="decision-desc">The context is right there. Let Copilot read your document and act on it — no copy-paste, no context switching.</div>
+        </div>
+
+        <div class="decision-card secure-card">
+          <div class="arrow-badge green">→ In-App Copilot</div>
+          <div class="decision-scenario">"My data is sensitive or work-confidential"</div>
+          <div class="decision-action">Use M365 Copilot (enterprise plan)</div>
+          <div class="decision-desc">Your data stays within Microsoft's enterprise boundary. It is not used to train models and is covered by your organisation's compliance policies.</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Key Insight -->
+    <div class="key-insight">
+      <h3>
+        <span>&#128161;</span>
+        Key Insight
+      </h3>
+      <p>
+        The power of in-app Copilot is that <span class="highlight">the context is already there</span>.
+        You don't need to copy-paste your document — Copilot can see it.
+        This changes the workflow from <span class="highlight">"extract and prompt"</span> to
+        <span class="highlight">"prompt in place"</span>, cutting out the friction steps that slow
+        down standalone chat tools and keeping you focused inside the app where the work actually happens.
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>

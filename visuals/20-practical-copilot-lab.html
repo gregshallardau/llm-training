@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 20: Practical Copilot Lab</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 960px; width: 100%; }
+
+  .title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+
+  /* Conductor loop */
+  .conductor-section {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1.75rem;
+    border: 1px solid #334155;
+    margin-bottom: 1.5rem;
+  }
+  .conductor-section h2 { color: #93c5fd; font-size: 1.1rem; margin-bottom: 0.3rem; }
+  .conductor-section .sub { color: #64748b; font-size: 0.82rem; margin-bottom: 1.25rem; }
+
+  .loop-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .loop-node {
+    border-radius: 12px;
+    padding: 0.9rem 1.1rem;
+    text-align: center;
+    flex: 1;
+    min-width: 140px;
+    max-width: 200px;
+  }
+  .ln-copilot { background: #1e3a5f; border: 2px solid #3b82f6; }
+  .ln-you     { background: #064e3b; border: 2px solid #10b981; }
+  .loop-node .ln-icon { font-size: 1.5rem; margin-bottom: 0.35rem; }
+  .loop-node .ln-title { font-size: 0.88rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .ln-copilot .ln-title { color: #93c5fd; }
+  .ln-you .ln-title { color: #6ee7b7; }
+  .loop-node .ln-desc { font-size: 0.75rem; color: #94a3b8; line-height: 1.4; }
+  .loop-arrow { color: #475569; font-size: 1.4rem; flex-shrink: 0; }
+
+  /* Demo transcript */
+  .demo-transcript {
+    background: #0f172a;
+    border-radius: 10px;
+    padding: 1.1rem 1.25rem;
+    border: 1px solid #334155;
+    margin-bottom: 1rem;
+  }
+  .demo-transcript .demo-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: #64748b;
+  }
+  .transcript-line {
+    display: flex;
+    gap: 0.75rem;
+    margin-bottom: 0.65rem;
+    font-size: 0.83rem;
+    line-height: 1.5;
+  }
+  .tl-speaker {
+    font-weight: 700;
+    flex-shrink: 0;
+    width: 80px;
+    padding-top: 0.1rem;
+  }
+  .tl-copilot .tl-speaker { color: #93c5fd; }
+  .tl-you .tl-speaker { color: #6ee7b7; }
+  .tl-text { color: #cbd5e1; }
+
+  .kickoff-box {
+    background: #1e3a5f;
+    border: 1px solid #3b82f6;
+    border-radius: 10px;
+    padding: 1rem 1.25rem;
+    font-size: 0.85rem;
+    color: #bfdbfe;
+    line-height: 1.55;
+    margin-bottom: 1rem;
+  }
+  .kickoff-box .kb-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700; color: #60a5fa; margin-bottom: 0.4rem; }
+
+  /* Six builds */
+  .builds-section {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1.75rem;
+    border: 1px solid #334155;
+    margin-bottom: 1.5rem;
+  }
+  .builds-section h2 { color: #f8fafc; font-size: 1.1rem; margin-bottom: 0.3rem; }
+  .builds-section .sub { color: #64748b; font-size: 0.82rem; margin-bottom: 1.25rem; }
+
+  .builds-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .build-item {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 10px;
+    padding: 0.9rem 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .build-item:hover { border-color: #64748b; }
+  .build-item.active { border-color: #f59e0b; background: #1c1200; }
+
+  .build-num {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    background: #334155;
+    color: #94a3b8;
+    font-weight: 700;
+    font-size: 0.9rem;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .build-item.active .build-num { background: #f59e0b; color: #000; }
+
+  .build-body { flex: 1; }
+  .build-title { font-size: 0.9rem; font-weight: 600; color: #f1f5f9; margin-bottom: 0.15rem; }
+  .build-tag { font-size: 0.72rem; color: #94a3b8; }
+  .build-reveal {
+    font-size: 0.82rem;
+    color: #fde68a;
+    margin-top: 0.5rem;
+    display: none;
+    line-height: 1.5;
+  }
+  .build-item.active .build-reveal { display: block; }
+
+  .run-order {
+    background: #064e3b;
+    border: 1px solid #10b981;
+    border-radius: 10px;
+    padding: 0.85rem 1.1rem;
+    font-size: 0.83rem;
+    color: #a7f3d0;
+    margin-top: 1rem;
+    line-height: 1.5;
+  }
+  .run-order strong { color: #6ee7b7; }
+
+  /* File types */
+  .files-section {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 1.5rem;
+    border: 1px solid #334155;
+  }
+  .files-section h2 { color: #f8fafc; font-size: 1.05rem; margin-bottom: 0.3rem; }
+  .files-section .sub { color: #64748b; font-size: 0.82rem; margin-bottom: 1rem; }
+  .file-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  .chip {
+    padding: 0.35rem 0.85rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    font-family: "SF Mono", "Fira Code", monospace;
+    border: 1px solid;
+  }
+  .chip-everyday { background: #1e3a5f; border-color: #3b82f6; color: #93c5fd; }
+  .chip-power    { background: #2d1b4e; border-color: #a855f7; color: #d8b4fe; }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>Practical Copilot Lab</h1>
+    <p>Making things, not just prompting — you become the hands it's missing</p>
+  </div>
+
+  <!-- Conductor loop -->
+  <div class="conductor-section">
+    <h2>Conductor Mode — the centrepiece ⭐</h2>
+    <div class="sub">You hand Copilot the baton and it conducts you through a workflow, one beat at a time.</div>
+
+    <div class="loop-diagram">
+      <div class="loop-node ln-copilot">
+        <div class="ln-icon">🎼</div>
+        <div class="ln-title">Copilot</div>
+        <div class="ln-desc">Holds the whole plan<br>Gives one instruction<br>Waits for you to act</div>
+      </div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node ln-you">
+        <div class="ln-icon">🙋</div>
+        <div class="ln-title">You</div>
+        <div class="ln-desc">Fetch the file<br>Paste the result<br>Take the action</div>
+      </div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node ln-copilot">
+        <div class="ln-icon">🎼</div>
+        <div class="ln-title">Copilot</div>
+        <div class="ln-desc">Processes your output<br>Gives the next beat<br>Moves the workflow on</div>
+      </div>
+      <div class="loop-arrow">↺</div>
+    </div>
+
+    <div class="kickoff-box">
+      <div class="kb-label">The kickoff — say something like this</div>
+      "You're the conductor. We're going to build the quote comparison. Walk me through it <strong>one step at a time</strong>. For each step, tell me the single action to take, wait for me to do it and paste back what I get, then move on. If you need something only I can fetch, ask me for it. <strong>One beat, then wait.</strong>"
+    </div>
+
+    <div class="demo-transcript">
+      <div class="demo-label">Live demo — quote comparison across three apps</div>
+      <div class="transcript-line tl-copilot">
+        <span class="tl-speaker">Copilot</span>
+        <span class="tl-text">Step 1 — open the first quote PDF and paste me its text. I'll pull insurer, premium, excess, cover limit, and exclusions.</span>
+      </div>
+      <div class="transcript-line tl-you">
+        <span class="tl-speaker">You</span>
+        <span class="tl-text"><em>[paste]</em></span>
+      </div>
+      <div class="transcript-line tl-copilot">
+        <span class="tl-speaker">Copilot</span>
+        <span class="tl-text">Quote 1 = Insurer A, $2,400, $500 excess, $2m cover, flood excluded. Step 2 — paste quote 2.</span>
+      </div>
+      <div class="transcript-line tl-you">
+        <span class="tl-speaker">You</span>
+        <span class="tl-text"><em>[paste]</em></span>
+      </div>
+      <div class="transcript-line tl-copilot">
+        <span class="tl-speaker">Copilot</span>
+        <span class="tl-text">Got it. Step 3 — here's a clean comparison table. Copy it into Excel at cell A1 and tell me when it's in.</span>
+      </div>
+      <div class="transcript-line tl-you">
+        <span class="tl-speaker">You</span>
+        <span class="tl-text">done</span>
+      </div>
+      <div class="transcript-line tl-copilot">
+        <span class="tl-speaker">Copilot</span>
+        <span class="tl-text">Step 4 — select the table, open Copilot in Excel, and say 'chart premium vs cover by insurer.' Paste me what it makes, or tell me if it errors.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Six builds -->
+  <div class="builds-section">
+    <h2>The Six Builds — escalating hands-on exercises</h2>
+    <div class="sub">Click any build to see the reveal — what it teaches. Suggested run order: 6 → 1 → 2 → 3 → 4 → 5</div>
+
+    <div class="builds-list">
+      <div class="build-item" onclick="toggleBuild(0)">
+        <div class="build-num">1</div>
+        <div class="build-body">
+          <div class="build-title">Generate a file, not text</div>
+          <div class="build-tag">Outlook → .ics calendar file from a "let's meet Tuesday" email</div>
+          <div class="build-reveal">Reveal: Copilot outputs <em>downloadable artefacts</em>, not just text you paste. One file drops a whole schedule of renewals into Outlook, Apple, or Google Calendar.</div>
+        </div>
+      </div>
+      <div class="build-item" onclick="toggleBuild(1)">
+        <div class="build-num">2</div>
+        <div class="build-body">
+          <div class="build-title">Transform, don't retype</div>
+          <div class="build-tag">Word — six rushed bullets → a client letter, then same content in three registers</div>
+          <div class="build-reveal">Reveal: You steer with <em>input structure</em>, then iterate. Formal / plain / warm are not three documents — they're one source, three prompts. The source is gold; the output is disposable.</div>
+        </div>
+      </div>
+      <div class="build-item" onclick="toggleBuild(2)">
+        <div class="build-num">3</div>
+        <div class="build-body">
+          <div class="build-title">Interactive artefact from plain words</div>
+          <div class="build-tag">A fillable form, a Copilot Page, or a self-contained HTML tool from a description</div>
+          <div class="build-reveal">Reveal: Copilot <em>builds tools, not just documents</em>. A premium calculator or onboarding checklist that actually runs when you double-click it — written in seconds, not hours in a dev tool.</div>
+        </div>
+      </div>
+      <div class="build-item" onclick="toggleBuild(3)">
+        <div class="build-num" style="background:#f59e0b;color:#000;">4</div>
+        <div class="build-body">
+          <div class="build-title">Extract structure from chaos ⭐ centrepiece</div>
+          <div class="build-tag">Excel — design schema → extract from 3–5 quote PDFs → comparison charts</div>
+          <div class="build-reveal">Reveal: Copilot reads your <em>unstructured documents</em> and turns them into structured, analysable data. But always verify the numbers — this is the hallucination-prone step (ties back to Module 06). Needs M365 licence + files in OneDrive/SharePoint.</div>
+        </div>
+      </div>
+      <div class="build-item" onclick="toggleBuild(4)">
+        <div class="build-num">5</div>
+        <div class="build-body">
+          <div class="build-title">Chain across apps</div>
+          <div class="build-tag">Outlook → Excel → Word — action items from thread, into tracker, into status summary</div>
+          <div class="build-reveal">Reveal: Copilot is <em>connective tissue</em>. Think in pipelines. Output from one app becomes input to the next; you're assembling a workflow, not using three separate tools.</div>
+        </div>
+      </div>
+      <div class="build-item" onclick="toggleBuild(5)">
+        <div class="build-num">6</div>
+        <div class="build-body">
+          <div class="build-title">Triage a thread — the warm-up</div>
+          <div class="build-tag">Outlook — summarise a 20-email thread, list who owes what, draft a reply</div>
+          <div class="build-reveal">Reveal: The <em>lowest-risk first win</em>. Reading and compressing — mistakes are cheap because you check before sending. This is where the room relaxes and believes it.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="run-order">
+      <strong>Suggested run order (~60 min):</strong> 6 (warm-up, low stakes) → 1 (first artefact) → 2 (transform) → 3 (build a tool) → <strong>4 (the centrepiece — give it the most time)</strong> → 5 if time allows
+    </div>
+  </div>
+
+  <!-- File types -->
+  <div class="files-section">
+    <h2>File types Copilot can write for you</h2>
+    <div class="sub">If a computer can read the format, Copilot can write it — ask for the file, not the text.</div>
+    <div class="file-chips">
+      <span class="chip chip-everyday">.ics — calendar events</span>
+      <span class="chip chip-everyday">.csv — structured data</span>
+      <span class="chip chip-everyday">.vcf — contact card</span>
+      <span class="chip chip-everyday">.svg — scalable chart</span>
+      <span class="chip chip-everyday">Mermaid — flowchart</span>
+      <span class="chip chip-everyday">.html — mini tool</span>
+      <span class="chip chip-everyday">.md — structured notes</span>
+      <span class="chip chip-power">.ps1 — PowerShell script ⭐</span>
+      <span class="chip chip-power">Office Scripts / VBA</span>
+      <span class="chip chip-power">Excel formula / DAX</span>
+      <span class="chip chip-power">.json / .yaml</span>
+      <span class="chip chip-power">Regex</span>
+      <span class="chip chip-power">QR code SVG</span>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let activeBuilds = new Set();
+
+function toggleBuild(i) {
+  const items = document.querySelectorAll('.build-item');
+  const item = items[i];
+  if (item.classList.contains('active')) {
+    item.classList.remove('active');
+    activeBuilds.delete(i);
+  } else {
+    item.classList.add('active');
+    activeBuilds.add(i);
+  }
+}
+</script>
+</body>
+</html>

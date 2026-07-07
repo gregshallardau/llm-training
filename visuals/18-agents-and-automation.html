@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 18: Agents & Automation</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #e2e8f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+  .container { max-width: 900px; width: 100%; }
+  .title { text-align: center; margin-bottom: 2rem; }
+  .title h1 { font-size: 1.8rem; color: #f8fafc; margin-bottom: 0.5rem; }
+  .title p { color: #94a3b8; font-size: 1rem; }
+  .diagram { background: #1e293b; border-radius: 16px; padding: 2rem; border: 1px solid #334155; }
+
+  /* Agent Spectrum */
+  .spectrum { display: flex; align-items: stretch; gap: 0; margin-bottom: 1.5rem; flex-wrap: wrap; }
+  .spectrum-step { flex: 1; min-width: 160px; padding: 1.25rem; text-align: center; border-right: 1px solid #334155; }
+  .spectrum-step:last-child { border-right: none; }
+  .spectrum-step.chat { background: #334155; }
+  .spectrum-step.copilot { background: #1e3a5f; }
+  .spectrum-step.agent { background: #451a03; }
+  .spectrum-step.autonomous { background: #064e3b; }
+  .spectrum-step h3 { font-size: 0.9rem; margin-bottom: 0.3rem; }
+  .spectrum-step.chat h3 { color: #cbd5e1; }
+  .spectrum-step.copilot h3 { color: #93c5fd; }
+  .spectrum-step.agent h3 { color: #fbbf24; }
+  .spectrum-step.autonomous h3 { color: #6ee7b7; }
+  .spectrum-step .desc { font-size: 0.78rem; line-height: 1.4; }
+  .spectrum-step.chat .desc { color: #94a3b8; }
+  .spectrum-step.copilot .desc { color: #bfdbfe; }
+  .spectrum-step.agent .desc { color: #fcd34d; }
+  .spectrum-step.autonomous .desc { color: #a7f3d0; }
+
+  /* How Tool Use Works */
+  .tool-use-flow { margin-bottom: 1.5rem; }
+  .tool-step { display: flex; align-items: flex-start; gap: 0.75rem; margin-bottom: 0.5rem; }
+  .tool-num { width: 1.5rem; height: 1.5rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; }
+  .tool-num.user { background: #334155; color: #f8fafc; }
+  .tool-num.model { background: #1e3a5f; color: #93c5fd; }
+  .tool-num.result { background: #064e3b; color: #6ee7b7; }
+  .tool-num.tool { background: #451a03; color: #fbbf24; }
+  .tool-text { font-size: 0.85rem; color: #cbd5e1; line-height: 1.4; }
+  .tool-text strong { color: #f8fafc; }
+
+  /* Agent Loop */
+  .agent-loop { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .loop-step { background: #334155; border-radius: 12px; padding: 1.25rem; text-align: center; }
+  .loop-step .icon { font-size: 1.5rem; margin-bottom: 0.4rem; }
+  .loop-step h4 { font-size: 0.85rem; color: #f8fafc; margin-bottom: 0.25rem; }
+  .loop-step p { font-size: 0.75rem; color: #94a3b8; }
+  .loop-connector { text-align: center; color: #64748b; font-size: 1.2rem; margin: 0.25rem 0; }
+
+  /* Use Cases */
+  .use-cases { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
+  .use-case { background: #334155; border-radius: 12px; padding: 1.25rem; }
+  .use-case .icon { font-size: 1.3rem; margin-bottom: 0.4rem; }
+  .use-case h4 { color: #93c5fd; font-size: 0.85rem; margin-bottom: 0.3rem; }
+  .use-case p { color: #cbd5e1; font-size: 0.78rem; line-height: 1.4; }
+
+  .key-insight { background: #1e40af; border: 2px solid #3b82f6; border-radius: 12px; padding: 1.5rem; margin-top: 1.5rem; }
+  .key-insight h3 { color: #93c5fd; font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .key-insight p { color: #bfdbfe; font-size: 0.95rem; line-height: 1.5; }
+
+  @media (max-width: 640px) {
+    .spectrum { flex-direction: column; }
+    .spectrum-step { border-right: none; border-bottom: 1px solid #334155; }
+    .spectrum-step:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>Agents & Automation</h1>
+    <p>When does AI stop talking and start doing?</p>
+  </div>
+  <div class="diagram">
+
+    <!-- Agent Spectrum -->
+    <div class="spectrum">
+      <div class="spectrum-step chat">
+        <h3>Chat</h3>
+        <div class="desc">AI talks. You act.<br/>You copy, paste, and do everything manually.</div>
+      </div>
+      <div class="spectrum-step copilot">
+        <h3>Copilot</h3>
+        <div class="desc">AI assists while you work.<br/>Suggestions inside your apps.</div>
+      </div>
+      <div class="spectrum-step agent">
+        <h3>Agent</h3>
+        <div class="desc">AI takes actions on your behalf.<br/>Uses tools to complete tasks.</div>
+      </div>
+      <div class="spectrum-step autonomous">
+        <h3>Autonomous</h3>
+        <div class="desc">AI runs independently.<br/>Checks in occasionally for approval.</div>
+      </div>
+    </div>
+
+    <!-- How Tool Use Works -->
+    <h4 style="font-size:0.85rem; color:#f8fafc; margin-bottom:1rem; text-align:center;">How an Agent Uses Tools</h4>
+    <div class="tool-use-flow">
+      <div class="tool-step">
+        <div class="tool-num user">👤</div>
+        <div class="tool-text"><strong>You:</strong> "Check tomorrow's calendar and draft a prep note for the Acme meeting"</div>
+      </div>
+      <div class="tool-step">
+        <div class="tool-num model">🧠</div>
+        <div class="tool-text"><strong>Model thinks:</strong> "I need calendar data first" → calls tool</div>
+      </div>
+      <div class="tool-step">
+        <div class="tool-num tool">🔧</div>
+        <div class="tool-text"><strong>Tool call:</strong> get_calendar(date="tomorrow")</div>
+      </div>
+      <div class="tool-step">
+        <div class="tool-num result">📋</div>
+        <div class="tool-text"><strong>Result:</strong> 10am Client Review, 2pm Team Standup</div>
+      </div>
+      <div class="tool-step">
+        <div class="tool-num model">🧠</div>
+        <div class="tool-text"><strong>Model thinks:</strong> "Now I need meeting context" → calls another tool</div>
+      </div>
+      <div class="tool-step">
+        <div class="tool-num tool">🔧</div>
+        <div class="tool-text"><strong>Tool call:</strong> get_client_notes(client="Acme Corp")</div>
+      </div>
+      <div class="tool-step">
+        <div class="tool-num result">📝</div>
+        <div class="tool-text"><strong>Model:</strong> Drafts prep note using both calendar and notes</div>
+      </div>
+    </div>
+
+    <!-- Agent Loop -->
+    <h4 style="font-size:0.85rem; color:#f8fafc; margin-bottom:1rem; text-align:center;">The Agent Loop</h4>
+    <div class="agent-loop">
+      <div class="loop-step">
+        <div class="icon">📋</div>
+        <h4>Plan</h4>
+        <p>Break down the task into steps</p>
+      </div>
+      <div class="loop-connector">↓</div>
+      <div class="loop-step">
+        <div class="icon">⚡</div>
+        <h4>Act</h4>
+        <p>Execute one step using tools</p>
+      </div>
+      <div class="loop-connector">↓</div>
+      <div class="loop-step">
+        <div class="icon">👀</div>
+        <h4>Observe</h4>
+        <p>Check what happened</p>
+      </div>
+      <div class="loop-connector">↓</div>
+      <div class="loop-step">
+        <div class="icon">🔄</div>
+        <h4>Decide</h4>
+        <p>Done? Report result. Not done? Adjust and repeat</p>
+      </div>
+    </div>
+
+    <!-- Use Cases -->
+    <h4 style="font-size:0.85rem; color:#f8fafc; margin-bottom:1rem; text-align:center;">What Agents Can Do</h4>
+    <div class="use-cases">
+      <div class="use-case">
+        <div class="icon">🔍</div>
+        <h4>Research & Analysis</h4>
+        <p>Search, summarise, compare sources across the web or your documents</p>
+      </div>
+      <div class="use-case">
+        <div class="icon">📄</div>
+        <h4>Document Creation</h4>
+        <p>Draft, format, and send emails, reports, or proposals</p>
+      </div>
+      <div class="use-case">
+        <div class="icon">📊</div>
+        <h4>Data Processing</h4>
+        <p>Clean, transform, and analyse spreadsheets or datasets</p>
+      </div>
+      <div class="use-case">
+        <div class="icon">📅</div>
+        <h4>Scheduling</h4>
+        <p>Book meetings, reschedule, send reminders, manage calendars</p>
+      </div>
+      <div class="use-case">
+        <div class="icon">💻</div>
+        <h4>Code Execution</h4>
+        <p>Run scripts, debug errors, deploy changes</p>
+      </div>
+      <div class="use-case">
+        <div class="icon">🖥️</div>
+        <h4>Monitoring</h4>
+        <p>Check systems, alert on issues, run diagnostics</p>
+      </div>
+    </div>
+
+    <div class="key-insight">
+      <h3>🎯 Key Insight</h3>
+      <p>An agent is an AI that <strong>acts</strong>, not just talks. It can use tools — like searching the web, reading files, calling APIs, or sending emails — to complete multi-step tasks. The key difference from a chatbot is the <strong>loop</strong>: plan → act → observe → repeat. Start with agents for tasks that follow a clear sequence, and gradually increase autonomy as you build trust.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

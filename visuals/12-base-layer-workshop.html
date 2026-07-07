@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Module 12: The Base Layer Workshop</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: #0f172a;
+    color: #f8fafc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 2rem;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .title {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  .title h1 {
+    font-size: 1.8rem;
+    color: #f8fafc;
+    margin-bottom: 0.5rem;
+  }
+  .title p {
+    color: #94a3b8;
+    font-size: 1rem;
+  }
+
+  .diagram {
+    background: #1e293b;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 2rem;
+  }
+
+  .section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    margin-bottom: 1rem;
+  }
+
+  /* Workshop Timeline */
+  .timeline {
+    display: flex;
+    gap: 0;
+    margin-bottom: 2rem;
+    position: relative;
+  }
+
+  .timeline-step {
+    flex: 1;
+    position: relative;
+  }
+
+  .timeline-step:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-left: 12px solid #1e293b;
+    z-index: 2;
+  }
+
+  .timeline-step-inner {
+    margin-right: 4px;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    position: relative;
+  }
+
+  .timeline-step:last-child .timeline-step-inner {
+    margin-right: 0;
+  }
+
+  .step-0 .timeline-step-inner { background: #1e3a5f; border: 1px solid #2563eb; }
+  .step-1 .timeline-step-inner { background: #14532d; border: 1px solid #16a34a; }
+  .step-2 .timeline-step-inner { background: #451a03; border: 1px solid #f59e0b; }
+  .step-3 .timeline-step-inner { background: #3b0764; border: 1px solid #a855f7; }
+
+  .step-time {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 0.4rem;
+  }
+  .step-0 .step-time { color: #60a5fa; }
+  .step-1 .step-time { color: #4ade80; }
+  .step-2 .step-time { color: #fbbf24; }
+  .step-3 .step-time { color: #c084fc; }
+
+  .step-name {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #f8fafc;
+    margin-bottom: 0.3rem;
+  }
+
+  .step-desc {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  /* Template Structure */
+  .template-section {
+    margin-bottom: 2rem;
+  }
+
+  .template-card {
+    background: #0f172a;
+    border: 1px solid #334155;
+    border-radius: 12px;
+    padding: 1.25rem;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.8rem;
+    line-height: 1.7;
+    color: #94a3b8;
+  }
+
+  .template-field {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .field-label {
+    color: #3b82f6;
+    font-weight: 700;
+    min-width: 170px;
+    flex-shrink: 0;
+  }
+
+  .field-value {
+    color: #e2e8f0;
+  }
+
+  .field-muted {
+    color: #64748b;
+    font-style: italic;
+  }
+
+  .template-section-header {
+    color: #f59e0b;
+    font-weight: 700;
+    margin-top: 0.75rem;
+    margin-bottom: 0.25rem;
+  }
+
+  /* Before / After Comparison */
+  .comparison-section {
+    margin-bottom: 2rem;
+  }
+
+  .comparison-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1rem;
+  }
+
+  .comparison-card {
+    border-radius: 12px;
+    padding: 1.25rem;
+  }
+
+  .comparison-card.before {
+    background: #1c1917;
+    border: 1px solid #44403c;
+  }
+
+  .comparison-card.after {
+    background: #064e3b;
+    border: 1px solid #10b981;
+  }
+
+  .comparison-label {
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .comparison-card.before .comparison-label { color: #78716c; }
+  .comparison-card.after .comparison-label { color: #10b981; }
+
+  .comparison-badge {
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.6rem;
+    font-weight: 700;
+  }
+
+  .before .comparison-badge { background: #292524; color: #a8a29e; }
+  .after .comparison-badge { background: #065f46; color: #6ee7b7; }
+
+  .comparison-prompt {
+    font-size: 0.7rem;
+    color: #94a3b8;
+    background: #0f172a;
+    border-radius: 6px;
+    padding: 0.5rem 0.75rem;
+    margin-bottom: 0.75rem;
+    font-style: italic;
+  }
+
+  .comparison-response {
+    font-size: 0.78rem;
+    line-height: 1.6;
+    border-radius: 8px;
+    padding: 0.75rem;
+  }
+
+  .before .comparison-response {
+    background: #292524;
+    color: #d6d3d1;
+  }
+
+  .after .comparison-response {
+    background: #065f46;
+    color: #a7f3d0;
+  }
+
+  .highlight {
+    background: rgba(59, 130, 246, 0.25);
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #93c5fd;
+    font-weight: 600;
+  }
+
+  .highlight-green {
+    background: rgba(16, 185, 129, 0.25);
+    border-radius: 3px;
+    padding: 0 2px;
+    color: #6ee7b7;
+    font-weight: 600;
+  }
+
+  /* Checklist */
+  .checklist-section {
+    margin-bottom: 2rem;
+  }
+
+  .checklist-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .checklist-item {
+    background: #334155;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .check-icon {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #064e3b;
+    border: 2px solid #10b981;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-top: 1px;
+  }
+
+  .check-icon svg {
+    width: 10px;
+    height: 10px;
+  }
+
+  .checklist-text {
+    flex: 1;
+  }
+
+  .checklist-text strong {
+    display: block;
+    font-size: 0.82rem;
+    color: #f8fafc;
+    margin-bottom: 0.2rem;
+  }
+
+  .checklist-text span {
+    font-size: 0.72rem;
+    color: #94a3b8;
+    line-height: 1.4;
+  }
+
+  /* Word count indicator */
+  .word-count-bar {
+    margin-top: 1rem;
+    background: #334155;
+    border-radius: 12px;
+    padding: 1rem 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .word-count-label {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    min-width: 80px;
+    flex-shrink: 0;
+  }
+
+  .word-count-track {
+    flex: 1;
+    height: 8px;
+    background: #1e293b;
+    border-radius: 4px;
+    position: relative;
+  }
+
+  .word-count-fill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(90deg, #3b82f6, #10b981);
+    width: 55%;
+  }
+
+  .word-count-markers {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.3rem;
+  }
+
+  .word-count-marker {
+    font-size: 0.6rem;
+    color: #64748b;
+    position: relative;
+  }
+
+  .word-count-sweet {
+    font-size: 0.72rem;
+    color: #10b981;
+    font-weight: 600;
+    min-width: 120px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Key insight */
+  .key-insight {
+    background: #1e40af;
+    border: 2px solid #3b82f6;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+  }
+
+  .key-insight h3 {
+    color: #93c5fd;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .key-insight p {
+    color: #bfdbfe;
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  /* Section dividers */
+  .section-divider {
+    height: 1px;
+    background: #334155;
+    margin: 1.75rem 0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="title">
+    <h1>Module 12: The Base Layer Workshop</h1>
+    <p>How do I build my own?</p>
+  </div>
+
+  <div class="diagram">
+
+    <!-- Section 1: Workshop Timeline -->
+    <div class="section-title">Workshop Flow — 15 Minutes</div>
+    <div class="timeline">
+      <div class="timeline-step step-0">
+        <div class="timeline-step-inner">
+          <div class="step-time">0 – 3 min</div>
+          <div class="step-name">Context</div>
+          <div class="step-desc">Review the template. Think about your role, team, and what you actually do day-to-day.</div>
+        </div>
+      </div>
+      <div class="timeline-step step-1">
+        <div class="timeline-step-inner">
+          <div class="step-time">3 – 8 min</div>
+          <div class="step-name">Draft</div>
+          <div class="step-desc">Fill in each section honestly. Aim for 200–400 words total. Bullet points are fine.</div>
+        </div>
+      </div>
+      <div class="timeline-step step-2">
+        <div class="timeline-step-inner">
+          <div class="step-time">8 – 12 min</div>
+          <div class="step-name">Test</div>
+          <div class="step-desc">Paste your base layer into a new chat. Ask the AI a typical work question. Notice the difference.</div>
+        </div>
+      </div>
+      <div class="timeline-step step-3">
+        <div class="timeline-step-inner">
+          <div class="step-time">12 – 15 min</div>
+          <div class="step-name">Refine</div>
+          <div class="step-desc">Adjust anything that felt off. Remove filler. Keep what made the response better.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Section 2: Template Structure -->
+    <div class="template-section">
+      <div class="section-title">Template Structure — Filled Example</div>
+      <div class="template-card">
+        <div class="template-section-header">## WHO I AM</div>
+        <div class="template-field">
+          <span class="field-label">Name / Role:</span>
+          <span class="field-value">Alex Chen, Senior Operations Manager</span>
+        </div>
+        <div class="template-field">
+          <span class="field-label">Organisation / Team:</span>
+          <span class="field-value">Midlands NHS Trust — Patient Flow &amp; Scheduling (team of 12)</span>
+        </div>
+        <div class="template-section-header">## WHAT I WORK ON</div>
+        <div class="template-field">
+          <span class="field-label">Current Projects:</span>
+          <span class="field-value">Elective backlog recovery, winter capacity planning, bed management dashboard rollout</span>
+        </div>
+        <div class="template-field">
+          <span class="field-label">Regular Tasks:</span>
+          <span class="field-value">Weekly performance reports, stakeholder briefings, escalation notes, process documentation</span>
+        </div>
+        <div class="template-section-header">## HOW I COMMUNICATE</div>
+        <div class="template-field">
+          <span class="field-label">Communication Style:</span>
+          <span class="field-value">Concise, plain English. Avoid jargon. Bullet points preferred for internal docs. Formal tone for exec reports.</span>
+        </div>
+        <div class="template-field">
+          <span class="field-label">Key Stakeholders:</span>
+          <span class="field-value">Chief Operating Officer, ward sisters, GP liaison leads, IT project team</span>
+        </div>
+        <div class="template-section-header">## OUTPUT PREFERENCES</div>
+        <div class="template-field">
+          <span class="field-label">Preferred Format:</span>
+          <span class="field-value">Short paragraphs or numbered lists. Tables for comparisons. No unnecessary preamble.</span>
+        </div>
+        <div class="template-field">
+          <span class="field-label">Key Terminology:</span>
+          <span class="field-value">RTT (referral to treatment), DTOC (delayed transfer of care), four-hour standard, pathway</span>
+        </div>
+      </div>
+
+      <!-- Word count indicator -->
+      <div class="word-count-bar">
+        <span class="word-count-label">Word count</span>
+        <div style="flex:1;">
+          <div class="word-count-track">
+            <div class="word-count-fill"></div>
+          </div>
+          <div class="word-count-markers">
+            <span class="word-count-marker">0</span>
+            <span class="word-count-marker">100</span>
+            <span class="word-count-marker" style="color:#3b82f6; font-weight:700;">200</span>
+            <span class="word-count-marker" style="color:#10b981; font-weight:700;">400</span>
+            <span class="word-count-marker">600</span>
+            <span class="word-count-marker">800</span>
+          </div>
+        </div>
+        <span class="word-count-sweet">Sweet spot: 200–400 words</span>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Section 3: Before / After Comparison -->
+    <div class="comparison-section">
+      <div class="section-title">Before vs After — Same Task, Different Results</div>
+      <div style="font-size:0.75rem; color:#64748b; margin-bottom:1rem; font-style:italic;">
+        Prompt: "Help me write a quick update on this week's performance for my Monday briefing."
+      </div>
+      <div class="comparison-grid">
+        <div class="comparison-card before">
+          <div class="comparison-label">
+            <span>Without base layer</span>
+            <span class="comparison-badge">Generic</span>
+          </div>
+          <div class="comparison-response">
+            <p>Here is a draft performance update for your Monday briefing:</p>
+            <br>
+            <p>This week our team has been working hard to achieve our targets. We have made progress in several key areas and continue to monitor outcomes closely. Challenges remain in some departments and we are working to address these.</p>
+            <br>
+            <p>Please review and let me know if you would like any changes.</p>
+          </div>
+        </div>
+        <div class="comparison-card after">
+          <div class="comparison-label">
+            <span>With base layer</span>
+            <span class="comparison-badge">Personalised</span>
+          </div>
+          <div class="comparison-response">
+            <p><span class="highlight-green">Patient Flow — Week 26 Performance Update</span></p>
+            <br>
+            <p>- <span class="highlight-green">RTT</span> compliance held at 72% (target 75%) — elective backlog recovery on track for Q3 milestone</p>
+            <p>- <span class="highlight-green">DTOC</span> rate reduced to 4.1% following pathway review with GP liaison leads</p>
+            <p>- Bed management dashboard now live on 3 wards; IT rollout to continue next week</p>
+            <br>
+            <p>Key risk: <span class="highlight-green">four-hour standard</span> under pressure — escalation note sent to <span class="highlight-green">COO</span>. Follow-up required Monday.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider"></div>
+
+    <!-- Section 4: Building Checklist -->
+    <div class="checklist-section">
+      <div class="section-title">What Makes a Good Base Layer — Checklist</div>
+      <div class="checklist-grid">
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Job Title &amp; Level</strong>
+            <span>Tells the AI your seniority and what kinds of decisions you make. Shapes the register and complexity of responses.</span>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Team Size &amp; Structure</strong>
+            <span>Helps the AI understand whether you are managing others, working solo, or navigating a large hierarchy.</span>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Industry &amp; Sector</strong>
+            <span>Grounds the AI in the right regulatory, cultural, and operational context for your field.</span>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Common Tasks</strong>
+            <span>List the 3–5 things you ask AI to help with most often. The AI can anticipate your needs and defaults.</span>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Preferred Output Format</strong>
+            <span>Bullets, tables, short paragraphs, numbered steps? Stating this once means you do not need to repeat it every prompt.</span>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Tone Preference</strong>
+            <span>Formal or casual? Blunt or diplomatic? This prevents the AI defaulting to a generic corporate voice.</span>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Key Terminology</strong>
+            <span>Acronyms and domain-specific terms your colleagues use. Stops the AI explaining things you already know.</span>
+          </div>
+        </div>
+        <div class="checklist-item">
+          <div class="check-icon">
+            <svg viewBox="0 0 10 10" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 5.5L4 7.5L8 3" stroke="#10b981" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div class="checklist-text">
+            <strong>Key Stakeholders</strong>
+            <span>Names or roles of people you regularly write for or about. Saves context-setting in every individual prompt.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Key Insight -->
+    <div class="key-insight">
+      <h3>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style="flex-shrink:0;">
+          <circle cx="9" cy="9" r="8" stroke="#3b82f6" stroke-width="1.5"/>
+          <path d="M9 8v4M9 6h.01" stroke="#93c5fd" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+        Key Insight
+      </h3>
+      <p>Your base layer is like a staff profile for the AI. Once written, paste it at the start of every conversation. 200–400 words is ideal — enough context without using too much of the window.</p>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>
