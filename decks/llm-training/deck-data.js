@@ -7,8 +7,37 @@ window.__DECK__ = {
       "layout": "title",
       "eyebrow": "A practical guide",
       "heading": "Working with AI",
-      "subhead": "What it is, why it behaves the way it does, and how to get real work out of it.",
+      "subhead": "What it is, why it behaves the way it does, and how to get real work out of Microsoft Copilot.",
       "notes": "This isn't a tech talk. By the end you'll have a working mental model and a\nhandful of habits you can use tomorrow. One promise: it drafts, you decide.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "What are we trying to achieve?",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "It's not mainly about speed",
+          "body": "Copilot isn't here to help you do the same work faster. It's here to help you do better work — and to spend your time on the parts that actually need you. Often it takes about the same time; that time is just better spent.\n"
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Deeper work",
+              "body": "Explore more sources, angles and options than you'd ever have time to alone."
+            },
+            {
+              "title": "Higher quality",
+              "body": "Raise the floor on everything you ship — fewer misses, clearer structure, better writing."
+            },
+            {
+              "title": "Room to think",
+              "body": "Hand off the blank page and the busywork; keep your energy for judgement and clients."
+            }
+          ]
+        }
+      ],
+      "notes": "Set the goal before the how. Push back on \"AI = faster\" — the win is quality and\ndepth, and getting your head out of the grind so you can do the thinking only you\ncan do. Speed is a nice side effect, not the point.\n"
     },
     {
       "layout": "statement",
@@ -300,13 +329,13 @@ window.__DECK__ = {
       "layout": "visual",
       "component": "sankey",
       "props": {
-        "title": "What actually reaches the model",
-        "sub": "Everything the answer is built from must fit the context window.",
+        "title": "What actually reaches Copilot",
+        "sub": "Every Work-scope answer is built from these — and it all has to fit the context window.",
         "nodes": [
           "Your prompt",
           "Base layer",
-          "App context",
-          "Retrieved docs",
+          "The app you're in",
+          "Microsoft Graph",
           "Context window",
           "Answer"
         ],
@@ -314,22 +343,22 @@ window.__DECK__ = {
           {
             "source": "Your prompt",
             "target": "Context window",
-            "value": 20
+            "value": 18
           },
           {
             "source": "Base layer",
             "target": "Context window",
-            "value": 25
+            "value": 20
           },
           {
-            "source": "App context",
+            "source": "The app you're in",
             "target": "Context window",
-            "value": 25
+            "value": 27
           },
           {
-            "source": "Retrieved docs",
+            "source": "Microsoft Graph",
             "target": "Context window",
-            "value": 30
+            "value": 35
           },
           {
             "source": "Context window",
@@ -338,88 +367,108 @@ window.__DECK__ = {
           }
         ]
       },
-      "notes": "This ties the whole deck together: the answer is only ever as good as what\nreaches the window. Base layer, the app you're in, and retrieval all feed it.\n"
+      "notes": "This ties the whole deck together. On Work scope, Microsoft Graph (your files,\nmail, chats) is retrieved and fed in automatically — that's the grounding. The\nanswer is only ever as good as what reaches the window.\n"
     },
     {
       "layout": "compare",
-      "heading": "Copilot in your apps vs the standalone chat",
+      "heading": "Two scopes — Web vs Work",
       "left": {
-        "title": "Standalone chat",
+        "title": "Web scope",
         "items": [
-          "A stranger — knows nothing about the work in front of you.",
-          "You explain everything from scratch every time."
+          "Grounded on the public web — knows nothing about our organisation.",
+          "Fine for general knowledge; treat it like a public chatbot.",
+          "Your text leaves for the web — keep it non-sensitive."
         ]
       },
       "right": {
-        "title": "Copilot inside Excel / Word / Outlook",
+        "title": "Work scope",
         "items": [
-          "Already sees your spreadsheet, document, or email thread.",
-          "That built-in context is a base layer you got for free."
+          "Grounded on our Microsoft 365 — your files, mail, chats, Teams.",
+          "Only ever sees what you already have permission to open.",
+          "Answers come back with citations you can click and check."
         ]
       },
-      "notes": "Why in-app Copilot often feels smarter: it starts with context. Use the tool\nthat already sits closest to your data.\n"
+      "notes": "The toggle every Copilot user has. Web scope = a smart stranger; Work scope = a\ncolleague who's read (only) the files you can see. Choose it on purpose.\n"
     },
     {
-      "layout": "content",
-      "heading": "Not all AI is the same — pick the right club",
-      "blocks": [
-        {
-          "type": "table",
-          "columns": [
-            "If you need…",
-            "Reach for",
-            "Why"
-          ],
-          "rows": [
-            [
-              "A fast, cheap everyday answer",
-              "A smaller / faster model",
-              "Quick drafts, summaries, reformatting"
-            ],
-            [
-              "Careful reasoning on something hard",
-              "A frontier “thinking” model",
-              "Analysis, tricky logic, high stakes"
-            ],
-            [
-              "Work grounded in your files",
-              "Copilot / a RAG tool",
-              "It retrieves your data before answering"
-            ],
-            [
-              "Action, not just words",
-              "An agent",
-              "It carries out multi-step tasks"
-            ]
+      "layout": "visual",
+      "component": "tree",
+      "props": {
+        "title": "Which Copilot — a quick decision tree",
+        "sub": "Reach for the surface that already sits closest to the work.",
+        "data": {
+          "name": "Start here",
+          "children": [
+            {
+              "name": "In a file?",
+              "children": [
+                {
+                  "name": "Word"
+                },
+                {
+                  "name": "Excel"
+                },
+                {
+                  "name": "PowerPoint"
+                },
+                {
+                  "name": "Outlook / Teams"
+                }
+              ]
+            },
+            {
+              "name": "Across your work?",
+              "children": [
+                {
+                  "name": "Chat — Work scope"
+                }
+              ]
+            },
+            {
+              "name": "Public info only?",
+              "children": [
+                {
+                  "name": "Chat — Web scope"
+                }
+              ]
+            },
+            {
+              "name": "Repeatable job?",
+              "children": [
+                {
+                  "name": "Agent (Studio)"
+                }
+              ]
+            }
           ]
         }
-      ],
-      "notes": "Golf bag, not one club. Matching the model to the job is a genuine skill and\nsaves both money and rework.\n"
+      },
+      "notes": "The routing rule. In a file → Copilot in that app (it already has the file as\ncontext). A question across your files, mail and chats → Copilot Chat, Work scope.\nGeneral or public knowledge → Web scope. A repeatable task → build an agent in\nCopilot Studio. In-app beats chat whenever you're already in the document.\n"
     },
     {
       "layout": "content",
-      "heading": "Two ways it reaches beyond its training",
+      "heading": "How Copilot knows things it was never trained on",
       "blocks": [
         {
           "type": "cards",
           "items": [
             {
-              "title": "RAG — the open-book exam",
-              "body": "It retrieves relevant company documents first, then answers using them as context. This is how it “knows” your data."
+              "title": "Grounding (RAG) — built in",
+              "body": "On every Work-scope answer, Copilot retrieves the relevant bits of your SharePoint, OneDrive, Outlook and Teams through the semantic index, then answers with citations. You don't switch it on — it's how Copilot works."
             },
             {
               "title": "Agents — a brain with hands",
-              "body": "It doesn't just reply; it takes an action, checks the result, and loops until the task is done — then reports back."
+              "body": "In Copilot Studio you can build an agent that grounds on chosen sources and takes actions — look up, draft, update — then reports back for your sign-off."
             }
           ]
         },
         {
           "type": "callout",
           "title": "The catch",
-          "body": "Both are only as good as the data they can reach. Most company knowledge lives in formats AI reads poorly — clean, well-structured sources win.\n"
+          "body": "Copilot only sees what's in Microsoft 365 and what you already have permission to open. Files on network drives or in odd formats are invisible until they're in SharePoint / OneDrive or wired up with a connector.\n"
         }
       ],
-      "notes": "RAG fixes the \"frozen knowledge\" problem from Part 1. Agents are where this is\nheading — supervised autonomy, with a human checking the dates.\n"
+      "notes": "This is the direct answer to \"does RAG work in Copilot?\" — yes; it IS Copilot.\nGrounding is automatic on Work scope. The only limiters are what's indexed and\nthe permissions you already hold.\n"
     },
     {
       "layout": "section",
@@ -429,23 +478,52 @@ window.__DECK__ = {
     },
     {
       "layout": "content",
-      "heading": "Treat the prompt box like a public notice board",
+      "heading": "The safe place to work is licensed Copilot",
       "blocks": [
         {
           "type": "callout",
-          "title": "Assume anything you type could be stored, logged, or seen",
-          "body": "A prompt creates a record that didn't exist before. In a breach, audit, or legal request, it may be discoverable — even if the tool promises privacy.\n"
+          "title": "Inside our Microsoft 365 Copilot, your data stays ours",
+          "body": "Prompts and files you use with licensed Copilot stay within our tenant, are not used to train the AI, and respect the permissions you already have. That is the whole point of the enterprise licence.\n"
         },
         {
           "type": "list",
           "items": [
-            "Don't paste: client identifiers, personal data, credentials, anything under NDA.",
-            "Do: anonymise, summarise, or use the approved enterprise tool for sensitive work.",
-            "When in doubt, leave it out — or ask first."
+            "Do the work in Copilot — never paste work data into personal or free AI (consumer ChatGPT, Gemini, the free Copilot). Those don't have our protections.",
+            "In Web scope your text goes to the web — keep anything sensitive in Work scope.",
+            "Copilot surfaces only what you can already open — so over-shared files become easy to find. Mind what's exposed.",
+            "When in doubt, keep it in licensed Copilot — or ask first."
           ]
         }
       ],
-      "notes": "Keep this concrete and local — reference your own approved tools and data\npolicy here. Careless talk costs cases.\n"
+      "notes": "The message flips from \"assume it's public\" to \"know which tool you're in.\"\nLicensed M365 Copilot = in-tenant, not training the model. The real risk is\nconsumer / free tools and Web scope. Localise with our own DLP + approved-tool list.\n"
+    },
+    {
+      "layout": "compare",
+      "heading": "When to reach for it — and when not to",
+      "left": {
+        "title": "Skip Copilot — do it yourself",
+        "items": [
+          "A one-liner you'd type faster than you'd prompt.",
+          "A judgement call — relationships, ethics, a decision you own.",
+          "Something you're accountable to understand yourself.",
+          "When you can't verify the output and it really matters."
+        ]
+      },
+      "right": {
+        "title": "Reach for Copilot",
+        "items": [
+          "Blank-page drafts and first cuts.",
+          "Summarising long threads, documents, meetings.",
+          "Analysis and options you'll then sanity-check.",
+          "Repetitive, structured, boring work."
+        ]
+      },
+      "notes": "The left column isn't a failure to adopt AI — it's good judgement. The test:\ncould you do it well in less time than briefing and checking Copilot? If so,\njust do it. Reaching for the tool on everything is its own kind of slow.\n"
+    },
+    {
+      "layout": "statement",
+      "text": "Copilot drafts. Your judgement, your relationships, your craft are <span class=\"accent\">still yours</span> — keep them sharp.",
+      "notes": "The anti-lazy beat. It's a tool, not a crutch. If you lose the ability to do the\nthing without it, that's a problem — stay in practice on the work that matters,\nand never ship what you haven't understood.\n"
     },
     {
       "layout": "split",

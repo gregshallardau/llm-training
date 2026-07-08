@@ -68,6 +68,7 @@ ECharts-backed (rich, token-themed via the adapter):
 - `map` — `points: [{name, lng, lat, value}]` (bubbles on a world map), `title`, `sub`
 - `timeseries` — `labels`, `series: [{name, data, area?}]`, `title`, `sub` (zoomable)
 - `sankey` — `nodes: [names]`, `links: [{source, target, value}]`, `title`, `sub` (flow diagram; nodes labelled, links gradient by flow)
+- `tree` — `data: {name, children: [...]}`, `orient: LR|TB`, `title`, `sub` (hierarchy / decision tree)
 - `echarts` — `option: {…}` — a **raw ECharts option** (escape hatch for any chart type)
 
 ## Theming

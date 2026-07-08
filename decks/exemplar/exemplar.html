@@ -2062,6 +2062,33 @@ var yo={},mo={};var xo,_o=function(){function t(t,e,n){var i=this;this._sleepAft
       }]
     });
   });
+  registerVisual("tree", (host, props) => {
+    const { title, sub, data, orient = "LR" } = props;
+    return mountECharts(host, {
+      title: title ? { text: title, subtext: sub, left: 0 } : void 0,
+      tooltip: { trigger: "item", triggerOn: "mousemove" },
+      series: [{
+        type: "tree",
+        data: data ? [data] : [],
+        top: title ? 96 : 32,
+        bottom: 30,
+        left: 40,
+        right: 180,
+        layout: "orthogonal",
+        orient,
+        roam: false,
+        symbol: "circle",
+        symbolSize: 11,
+        itemStyle: { color: tok("--brand"), borderColor: tok("--surface"), borderWidth: 2 },
+        lineStyle: { color: tok("--border-strong"), width: 1.5, curveness: 0.5 },
+        label: { color: tok("--text"), fontFamily: tok("--font-family-sans"), fontSize: 15, position: "top", distance: 6 },
+        leaves: { label: { position: "right", align: "left", color: tok("--text") } },
+        emphasis: { focus: "relative" },
+        expandAndCollapse: false,
+        animationDuration: 400
+      }]
+    });
+  });
   registerVisual("image", (host, props) => {
     const { src, fit = "cover", focal = "center", scrim, alt = "" } = props;
     const bg = el("div.dk-img", { role: "img", "aria-label": alt, "data-fit": fit });
