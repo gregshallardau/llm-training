@@ -1,0 +1,23 @@
+{
+  "font-family-serif": { "$type": "fontFamily", "$value": "{font.family.sans}" },
+  "bg":            { "$type": "color", "$value": "#18181b" },
+  "bg-deep":       { "$type": "color", "$value": "#101012" },
+  "surface":       { "$type": "color", "$value": "#232327" },
+  "surface-2":     { "$type": "color", "$value": "#1d1d20" },
+  "text":          { "$type": "color", "$value": "#fafafa" },
+  "text-muted":    { "$type": "color", "$value": "#a1a1aa" },
+  "text-dim":      { "$type": "color", "$value": "#71717a" },
+  "border":        { "$type": "color", "$value": "#34343a" },
+  "border-strong": { "$type": "color", "$value": "#47474e" },
+  "brand":         { "$type": "color", "$value": "#a5b4fc" },
+  "brand-2":       { "$type": "color", "$value": "#67e8f9" },
+  "on-brand":      { "$type": "color", "$value": "#101012" },
+  "accent-green":  { "$type": "color", "$value": "#6ee7b7" },
+  "accent-warm":   { "$type": "color", "$value": "#fbbf24" },
+  "accent-red":    { "$type": "color", "$value": "#fca5a5" },
+  "depth-plain":    { "$type": "color", "$value": "#173626" }, "depth-plain-fg": { "$type": "color", "$value": "#6ee7b7" },
+  "depth-tech":     { "$type": "color", "$value": "#26264d" }, "depth-tech-fg":  { "$type": "color", "$value": "#a5b4fc" },
+  "depth-phd":      { "$type": "color", "$value": "#123c44" }, "depth-phd-fg":   { "$type": "color", "$value": "#67e8f9" },
+  "scrim":         { "$type": "color", "$value": "#0a0a0bbf" },
+  "scrim-strong":  { "$type": "color", "$value": "#0a0a0be0" }
+}

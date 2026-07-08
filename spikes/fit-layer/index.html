@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fit-layer POC</title>
+  <link rel="stylesheet" href="vendor/reveal.css">
+  <style>
+    :root {
+      --bg: #f7f4ee; --ink: #1c1917; --muted: #57534e; --accent: #2a41d8;
+      --surface: #fff; --border: #e5e0d5;
+    }
+    html.dark {
+      --bg: #17150f; --ink: #f5f1ea; --muted: #b8b2a7; --accent: #7d8cff;
+      --surface: #26231f; --border: #38332c;
+    }
+    .reveal { font-family: 'Inter', system-ui, sans-serif; color: var(--ink); background: var(--bg); }
+    .reveal .slides { text-align: left; }
+    /* section = the fixed frame; the plugin fits content inside it */
+    .reveal .slides section { padding: 0; height: 100%; }
+    .fit { position: absolute; inset: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    .fit-inner { width: 100%; padding: 48px 64px; box-sizing: border-box; }
+
+    h1 { font-size: 56px; font-weight: 800; letter-spacing: -0.02em; margin: 0 0 18px; }
+    h2 { font-size: 34px; font-weight: 700; margin: 0 0 14px; }
+    p { font-size: 22px; line-height: 1.5; color: var(--ink); margin: 0 0 14px; }
+    .muted { color: var(--muted); }
+    .hero { width: 100%; height: 220px; border-radius: 14px; margin: 16px 0;
+            background: linear-gradient(120deg, #2a41d8, #7c3aed 60%, #0ea5b7); }
+    .bars { display: flex; align-items: flex-end; gap: 12px; height: 160px; margin-top: 12px; }
+    .bar { flex: 1; background: var(--accent); border-radius: 6px 6px 0 0; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 18px; }
+    .card h3 { margin: 0 0 6px; color: var(--accent); font-size: 20px; }
+    .card p { font-size: 16px; margin: 0; }
+    .badge { position: absolute; top: 10px; left: 12px; font: 700 12px/1 ui-monospace, monospace;
+             color: var(--muted); background: var(--surface); border: 1px solid var(--border);
+             padding: 5px 9px; border-radius: 999px; z-index: 5; }
+  </style>
+</head>
+<body>
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- 1. Normal slide — should NOT be scaled (fits naturally, scale = 1) -->
+      <section>
+        <span class="badge">normal · expect scale 1.000</span>
+        <div class="fit"><div class="fit-inner">
+          <h1>A calm, normal slide</h1>
+          <p class="muted">Just a heading and a couple of lines. This fits the frame comfortably, so the fit layer leaves it alone.</p>
+          <div class="hero"></div>
+        </div></div>
+      </section>
+
+      <!-- 2. DENSE slide — must be auto-shrunk to fit; nothing may overflow -->
+      <section>
+        <span class="badge">dense · expect scale &lt; 1</span>
+        <div class="fit"><div class="fit-inner">
+          <h1>An overloaded slide that would normally spill off the bottom</h1>
+          <p>Insurance runs on documents, and a broker's day is a stream of renewals, endorsements, and client questions that never quite fit a template. This slide deliberately packs far more than a 16:9 frame can hold at native size.</p>
+          <div class="hero"></div>
+          <p>Below the hero we then add a full row of metric cards and a chart, which together push the natural content height well past 720 logical pixels — the exact condition where reveal.js alone overflows.</p>
+          <div class="cards">
+            <div class="card"><h3>Renewals</h3><p>Tracked across every line of business with automated reminders.</p></div>
+            <div class="card"><h3>Endorsements</h3><p>Mid-term changes captured and priced without re-keying.</p></div>
+            <div class="card"><h3>Claims</h3><p>Status visible to the client the moment it changes.</p></div>
+          </div>
+          <div class="bars">
+            <div class="bar" style="height:40%"></div><div class="bar" style="height:65%"></div>
+            <div class="bar" style="height:52%"></div><div class="bar" style="height:88%"></div>
+            <div class="bar" style="height:100%"></div><div class="bar" style="height:73%"></div>
+          </div>
+        </div></div>
+      </section>
+
+      <!-- 3. EXTREME slide — even more content; still must fit -->
+      <section>
+        <span class="badge">extreme · expect small scale</span>
+        <div class="fit"><div class="fit-inner">
+          <h1>Extreme density stress test</h1>
+          <h2>Everything, all at once</h2>
+          <p>This slide is intentionally abusive: a big heading, a subheading, several paragraphs, a hero band, two card rows, and a chart. The point is that the guarantee must hold even when an author dumps far too much onto one slide — it shrinks, but it never spills.</p>
+          <div class="hero" style="height:180px"></div>
+          <div class="cards">
+            <div class="card"><h3>One</h3><p>Lorem ipsum dolor sit amet consectetur.</p></div>
+            <div class="card"><h3>Two</h3><p>Adipiscing elit sed do eiusmod tempor.</p></div>
+            <div class="card"><h3>Three</h3><p>Incididunt ut labore et dolore magna.</p></div>
+          </div>
+          <div class="cards">
+            <div class="card"><h3>Four</h3><p>Ut enim ad minim veniam quis nostrud.</p></div>
+            <div class="card"><h3>Five</h3><p>Exercitation ullamco laboris nisi ut.</p></div>
+            <div class="card"><h3>Six</h3><p>Aliquip ex ea commodo consequat duis.</p></div>
+          </div>
+          <div class="bars">
+            <div class="bar" style="height:40%"></div><div class="bar" style="height:65%"></div>
+            <div class="bar" style="height:52%"></div><div class="bar" style="height:88%"></div>
+            <div class="bar" style="height:100%"></div><div class="bar" style="height:73%"></div>
+          </div>
+        </div></div>
+      </section>
+
+    </div>
+  </div>
+
+  <script src="vendor/reveal.js"></script>
+  <script src="fit.js"></script>
+  <script>
+    Reveal.initialize({
+      width: 1280, height: 720, margin: 0, center: false,
+      controls: true, progress: true, hash: true,
+      transition: 'fade',
+      plugins: [ FitPlugin ]
+    });
+  </script>
+</body>
+</html>

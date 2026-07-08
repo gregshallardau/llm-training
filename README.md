@@ -1,41 +1,70 @@
-# LLM Lecture Series — Presentation
+# Presentation Framework
 
-An interactive, self-contained presentation on how large language models work and how to use them well. Built for professional audiences; industry-agnostic.
+A clean-slate project to design and build a **general-purpose, pluggable
+presentation framework** — usable for any deck, any topic, any brand.
 
-## Presenting
+This branch is intentionally empty of application content. It starts from
+**principles**, then **research**, then **design**, then **build**.
 
-The deck is a static web app — no build step, no server dependencies, no internet required (all libraries are vendored).
+## Where we are
 
-**Option A — open directly:** open `present.html` in any modern browser.
+1. **Principles** — [`PRINCIPLES.md`](./PRINCIPLES.md). What the framework is and
+   the principles it must hold to. Content-agnostic. This is the source of truth.
+2. **Research** — [`RESEARCH.md`](./RESEARCH.md). A clean, sourced landscape study
+   (unbiased: discovers the field before naming anything), adversarially fact-checked,
+   with a build-vs-adopt recommendation. **Done** — recommends *adopt-and-extend a
+   reveal.js-class engine*, add a custom fit layer for P1, use the engine's plugin
+   registry for extensions, and standardize theming on the DTCG design-token format.
+3. **Design** — [`DESIGN.md`](./DESIGN.md). Architecture + design system satisfying
+   the principles; the pivotal P1 (guaranteed fit) risk was **proven** with a
+   throwaway POC (`spikes/fit-layer/`, 0-overflow across 3 viewports × 2 themes).
+   **Done.**
+4. **Build** — **Done (first slice).** The framework is implemented and proven on a
+   content-neutral exemplar (`decks/exemplar/`): 8 slides from a single YAML config,
+   **48/48 fit checks (0-overflow) across 3 viewports × 2 themes, no console errors.**
 
-**Option B — serve locally** (better for speaker view + navigation):
+## Build & run
 
 ```bash
-python3 -m http.server 8090
-# then open http://localhost:8090/present.html
+npm install
+npm run build     # vendors reveal.js + fonts, compiles DTCG tokens→CSS (AA-validated),
+                  # compiles decks/*/deck.yaml→deck-data.js, bundles the framework
+npm run export    # also emit a self-contained single-file decks/<name>/<name>.html
+python3 -m http.server   # then open decks/exemplar/
 ```
 
-- `present.html` — the main deck (dark theme).
-- `present-work.html` — a re-skinned variant (light theme, work-branded example).
-- `index.html` — full-content reference deck (everything, long form).
-- `LLM-Series-Backup-Deck.pdf` / `backup-deck.md` — linear fallback to present from if the interactive deck ever fails.
+Everything (engine, fonts, plugins) is vendored and offline-capable (Teams-safe).
+Presenter window: press `S`. Keys: `→/←` nav · `1/2/3` depth · `?` help · `T` light/dark
+· `F` fullscreen · `Esc` overview · **`✦`** (top-left) cycles the brand theme.
 
-## Presenting tips
+Two drop-in brand themes ship — **editorial** (Fraunces serif, warm paper) and
+**corporate-navy** (Inter, navy) — proving P4: the *same* deck reskins by swapping
+tokens only. Set `theme:` in the deck, or click `✦` live.
 
-- **Speaker view:** press `S` to open speaker notes in a second window (put it on your laptop screen, the deck on the projector).
-- **Navigation:** arrow keys — `→` next concept, `↓` deeper (the three depth tracks: Plain English / Technical / PhD).
-- **Widgets & visuals:** interactive demos (tokeniser, hallucination trap, etc.) and diagrams open in-slide; some launch full-screen.
-- **Jump menu:** the overview slide links to any module.
+**Components:** layouts (`title, section, split, image, visual, content, grid,
+compare, quote, statement`), blocks (`cards, stats, list, code, callout, flow,
+timeline, table`), visuals (`chart` bar/line, `donut`, `image`).
 
-## Theming
+## How it's built (maps to the principles)
 
-`theme.css` holds all colours/fonts as CSS variables — edit the marked block to re-skin. `theme-work-example.css` shows a light/branded variant. Drop a `logo.png` beside the deck and it appears on each slide.
+| Piece | File(s) | Principle |
+|---|---|---|
+| Fixed frame + shrink-to-fit | `framework/fit.js` | P1, P13 |
+| Declarative deck config (YAML) | `decks/*/deck.yaml` → `deck-data.js` | P2, P3 |
+| DTCG tokens → CSS vars (+AA) | `framework/theme/` | P4, P11 |
+| Layouts / blocks / visuals + registry | `framework/{layouts,blocks,visuals,registry}.js` | P5, P6, P7 |
+| Renderer (config → slides) | `framework/renderer.js` | P2, P3 |
+| Presenter, depth, help, theme | `framework/presenter.js` | P8, P9, P10 |
+| Engine (adopted, vendored) | `vendor/` (reveal.js) | P9, P12, P13 |
 
-## Structure
+## Add a … (extension points, P6)
 
-- `visuals/` — per-module diagrams and interactive HTML pieces (embedded by the deck).
-- `vendor/` — pinned copies of reveal.js + mermaid + plugins (offline-safe).
+- **Layout** — `registerLayout(name, (data,ctx) => ({ mode, node }))` in `framework/layouts.js`.
+- **Block** — `registerBlock(name, (props) => Element)` in `framework/blocks.js`.
+- **Visual** — `registerVisual(name, (host,props) => dispose)` in `framework/visuals.js`.
+- **Theme** — add/point a `*.tokens.json` (DTCG); rebuild to regenerate `tokens.css`.
 
-## Content
+_Optional follow-up:_ a vendored-chart-lib adapter (native SVG covers charts today).
 
-Content spans ~24 modules (tokenisation, attention, context windows, prompting, RAG, agents, privacy, model choices, and a practical Copilot lab). Presenter adapts live; the deck carries the visuals and examples.
+> The prior LLM lecture deck that used to live here is preserved on the `main`
+> branch and in git history.
