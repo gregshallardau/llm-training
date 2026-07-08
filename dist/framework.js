@@ -454,6 +454,36 @@
       series: series.map((s) => ({ name: s.name, type: "line", smooth: true, showSymbol: false, areaStyle: s.area ? { opacity: 0.12 } : void 0, data: s.data }))
     });
   });
+  registerVisual("sankey", (host, props) => {
+    const { title, sub, nodes = [], links = [] } = props;
+    const names = nodes.map((n) => typeof n === "string" ? n : n.name);
+    const sources = new Set(links.map((l) => l.source));
+    const targets = new Set(links.map((l) => l.target));
+    return mountECharts(host, {
+      title: title ? { text: title, subtext: sub, left: 0 } : void 0,
+      tooltip: {
+        trigger: "item",
+        triggerOn: "mousemove",
+        formatter: (p) => p.dataType === "edge" ? `${p.data.source} \u2192 ${p.data.target}: ${p.data.value}` : p.name
+      },
+      series: [{
+        type: "sankey",
+        left: 8,
+        right: 8,
+        top: title ? 78 : 24,
+        bottom: 24,
+        nodeGap: 14,
+        nodeWidth: 14,
+        nodeAlign: "justify",
+        emphasis: { focus: "adjacency" },
+        data: names.map((name) => targets.has(name) && !sources.has(name) ? { name, label: { position: "left" } } : { name }),
+        links: links.map((l) => ({ source: l.source, target: l.target, value: l.value })),
+        label: { color: tok("--text"), fontFamily: tok("--font-family-sans") },
+        lineStyle: { color: "gradient", opacity: 0.35, curveness: 0.5 },
+        itemStyle: { borderColor: tok("--bg"), borderWidth: 1 }
+      }]
+    });
+  });
   registerVisual("image", (host, props) => {
     const { src, fit = "cover", focal = "center", scrim, alt = "" } = props;
     const bg = el("div.dk-img", { role: "img", "aria-label": alt, "data-fit": fit });

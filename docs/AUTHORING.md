@@ -67,6 +67,7 @@ ECharts-backed (rich, token-themed via the adapter):
 - `heatmap` — `xLabels`, `yLabels`, `data: [[row], …]`, `title`, `sub`
 - `map` — `points: [{name, lng, lat, value}]` (bubbles on a world map), `title`, `sub`
 - `timeseries` — `labels`, `series: [{name, data, area?}]`, `title`, `sub` (zoomable)
+- `sankey` — `nodes: [names]`, `links: [{source, target, value}]`, `title`, `sub` (flow diagram; nodes labelled, links gradient by flow)
 - `echarts` — `option: {…}` — a **raw ECharts option** (escape hatch for any chart type)
 
 ## Theming

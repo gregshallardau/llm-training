@@ -194,6 +194,23 @@ slides:
         - { name: Authors, data: [2, 3, 5, 7, 9, 12, 15, 19] }
     notes: ECharts time series with a zoom slider.
 
+  - layout: visual
+    component: sankey
+    props:
+      title: How attention flows
+      sub: Illustrative — sources to outcomes.
+      nodes: [Search, Social, Referral, Landing, Docs, Trial, Signup, Bounce]
+      links:
+        - { source: Search,   target: Landing, value: 40 }
+        - { source: Social,   target: Landing, value: 25 }
+        - { source: Referral, target: Docs,    value: 20 }
+        - { source: Landing,  target: Trial,   value: 35 }
+        - { source: Landing,  target: Bounce,  value: 30 }
+        - { source: Docs,     target: Trial,   value: 15 }
+        - { source: Trial,    target: Signup,  value: 32 }
+        - { source: Trial,    target: Bounce,  value: 18 }
+    notes: ECharts Sankey via the same adapter — nodes labelled, links gradient by flow.
+
   - layout: statement
     text: 'Click <span class="accent">✦</span> to reskin the whole deck — same content, different brand.'
     notes: Statement layout. The ✦ control (top-left) cycles brand theme (editorial · corporate-navy · minimal).
