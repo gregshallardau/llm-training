@@ -1,0 +1,22 @@
+title: __TITLE__
+ratio: "16:9"
+theme: editorial      # editorial · corporate-navy · minimal
+slides:
+  - layout: title
+    eyebrow: Your kicker
+    heading: Your deck title
+    subhead: One line that frames the talk.
+    notes: Speaker notes appear in the presenter window (press S).
+
+  - layout: content
+    heading: A point worth making
+    blocks:
+      - type: cards
+        items:
+          - { title: One, body: Say it plainly. }
+          - { title: Two, body: Then support it. }
+          - { title: Three, body: Then land it. }
+
+  - layout: quote
+    text: 'A closing <span class="accent">statement</span> people remember.'
+    cite: Attribution

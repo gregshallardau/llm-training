@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 import { dirname, join, resolve, extname } from 'node:path';
 import { load } from 'js-yaml';
 import { build } from 'esbuild';
+import { feature } from 'topojson-client';
 import { compileTokens } from './framework/theme/build-tokens.mjs';
 
 const root = dirname(fileURLToPath(import.meta.url));
@@ -21,6 +22,14 @@ copyFileSync(R('node_modules/reveal.js/dist/reveal.js'), R('vendor/reveal.js'));
 copyFileSync(R('node_modules/reveal.js/dist/reveal.css'), R('vendor/reveal.css'));
 copyFileSync(R('node_modules/reveal.js/dist/plugin/notes.js'), R('vendor/plugin/notes.js'));
 copyFileSync(R('node_modules/reveal.js/dist/plugin/highlight.js'), R('vendor/plugin/highlight.js'));
+copyFileSync(R('node_modules/echarts/dist/echarts.min.js'), R('vendor/echarts.min.js'));
+// world map: TopoJSON → GeoJSON → a global JS (offline, no fetch)
+mkdirSync(R('vendor/maps'), { recursive: true });
+{
+  const topo = JSON.parse(readFileSync(R('node_modules/world-atlas/countries-110m.json'), 'utf8'));
+  const geo = feature(topo, topo.objects.countries);
+  writeFileSync(R('vendor/maps/world.geo.js'), `window.__WORLD_GEO__ = ${JSON.stringify(geo)};\n`);
+}
 for (const [pkg, file] of [
   ['@fontsource-variable/fraunces', 'fraunces-latin-wght-normal.woff2'],
   ['@fontsource-variable/fraunces', 'fraunces-latin-wght-italic.woff2'],
@@ -35,6 +44,7 @@ compileTokens(R('framework/theme/tokens.css'));
 const decksDir = R('decks');
 if (existsSync(decksDir)) {
   for (const name of readdirSync(decksDir)) {
+    if (name.startsWith('_')) continue; // skip templates
     const yml = R('decks', name, 'deck.yaml');
     if (!existsSync(yml)) continue;
     const data = load(readFileSync(yml, 'utf8'));
@@ -73,12 +83,13 @@ function inlineAssets(node, deckDir) {
 }
 if (process.argv.includes('export') && existsSync(decksDir)) {
   for (const name of readdirSync(decksDir)) {
+    if (name.startsWith('_')) continue; // skip templates
     const deckDir = R('decks', name);
     if (!existsSync(join(deckDir, 'deck.yaml'))) continue;
     const data = inlineAssets(load(readFileSync(join(deckDir, 'deck.yaml'), 'utf8')), deckDir);
     const styles = ['framework/theme/fonts.css', 'vendor/reveal.css', 'framework/theme/tokens.css', 'framework/deck.css']
       .map((f) => `<style>${inlineCss(R(f))}</style>`).join('\n');
-    const scripts = ['vendor/reveal.js', 'vendor/plugin/notes.js', 'vendor/plugin/highlight.js']
+    const scripts = ['vendor/reveal.js', 'vendor/plugin/notes.js', 'vendor/plugin/highlight.js', 'vendor/echarts.min.js', 'vendor/maps/world.geo.js']
       .map((f) => `<script>${readFileSync(R(f), 'utf8')}</script>`).join('\n');
     const html = `<!DOCTYPE html><html lang="en" data-deck-theme="${data.theme || 'editorial'}"><head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">

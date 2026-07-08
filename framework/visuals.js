@@ -107,6 +107,82 @@ registerVisual('donut', (host, props) => {
   return () => host.replaceChildren();
 });
 
+/* ---- ECharts adapter (vendored global `echarts`; SVG renderer; token-themed) ---
+   The generic `echarts` visual takes a raw ECharts `option`; the heatmap/map/
+   timeseries wrappers build one from simple props. All re-theme on remount. */
+function echartsBase() {
+  const c = palette();
+  return {
+    color: c,
+    textStyle: { fontFamily: tok('--font-family-sans'), color: tok('--text-muted') },
+    title: { textStyle: { color: tok('--text'), fontFamily: tok('--font-family-sans'), fontSize: 22 }, subtextStyle: { color: tok('--text-muted') } },
+    legend: { textStyle: { color: tok('--text-muted') } },
+    tooltip: { backgroundColor: tok('--surface'), borderColor: tok('--border'), textStyle: { color: tok('--text') } }
+  };
+}
+function mountECharts(host, option) {
+  if (!window.echarts) { host.textContent = 'ECharts not loaded'; return () => {}; }
+  const box = el('div.dk-echarts');
+  host.append(box);
+  const chart = window.echarts.init(box, null, { renderer: 'svg' });
+  chart.setOption(echartsBase());
+  chart.setOption(option);
+  const resize = () => chart.resize();
+  setTimeout(resize, 0);
+  window.addEventListener('resize', resize);
+  window.addEventListener('deck-refit', resize);
+  return () => { window.removeEventListener('resize', resize); window.removeEventListener('deck-refit', resize); chart.dispose(); host.replaceChildren(); };
+}
+
+registerVisual('echarts', (host, props) => mountECharts(host, props.option || {}));
+
+registerVisual('heatmap', (host, props) => {
+  const { title, sub, xLabels = [], yLabels = [], data = [] } = props;
+  const pts = []; data.forEach((row, y) => row.forEach((v, x) => pts.push([x, y, v])));
+  const max = Math.max(1, ...pts.map((p) => p[2]));
+  return mountECharts(host, {
+    title: title ? { text: title, subtext: sub, left: 0 } : undefined,
+    tooltip: { position: 'top' },
+    grid: { left: 90, right: 24, top: title ? 74 : 24, bottom: 64, containLabel: true },
+    xAxis: { type: 'category', data: xLabels, axisLabel: { color: tok('--text-muted') }, axisLine: { lineStyle: { color: tok('--border') } }, splitArea: { show: false } },
+    yAxis: { type: 'category', data: yLabels, axisLabel: { color: tok('--text-muted') }, axisLine: { lineStyle: { color: tok('--border') } } },
+    visualMap: { min: 0, max, calculable: true, orient: 'horizontal', left: 'center', bottom: 6, inRange: { color: [tok('--surface-2'), tok('--brand')] }, textStyle: { color: tok('--text-muted') } },
+    series: [{ type: 'heatmap', data: pts, itemStyle: { borderColor: tok('--bg'), borderWidth: 2 }, emphasis: { itemStyle: { borderColor: tok('--text') } } }]
+  });
+});
+
+let mapRegistered = false;
+registerVisual('map', (host, props) => {
+  if (window.echarts && window.__WORLD_GEO__ && !mapRegistered) { window.echarts.registerMap('world', window.__WORLD_GEO__); mapRegistered = true; }
+  const { title, sub, points = [] } = props;
+  const max = Math.max(1, ...points.map((p) => p.value || 1));
+  return mountECharts(host, {
+    title: title ? { text: title, subtext: sub, left: 0 } : undefined,
+    tooltip: { trigger: 'item', formatter: (p) => `${p.name}: ${p.value ? p.value[2] : ''}` },
+    geo: { map: 'world', roam: false, itemStyle: { areaColor: tok('--surface-2'), borderColor: tok('--border') }, emphasis: { label: { show: false }, itemStyle: { areaColor: tok('--bg-deep') } } },
+    series: [{
+      type: 'effectScatter', coordinateSystem: 'geo', zlevel: 1,
+      data: points.map((p) => ({ name: p.name, value: [p.lng, p.lat, p.value || 1] })),
+      symbolSize: (v) => 8 + Math.sqrt((v[2] || 1) / max) * 28,
+      itemStyle: { color: tok('--brand') }, rippleEffect: { scale: 2.2 }
+    }]
+  });
+});
+
+registerVisual('timeseries', (host, props) => {
+  const { title, sub, labels = [], series = [] } = props;
+  return mountECharts(host, {
+    title: title ? { text: title, subtext: sub, left: 0 } : undefined,
+    tooltip: { trigger: 'axis' },
+    legend: series.length > 1 ? { top: title ? 40 : 8, right: 8, textStyle: { color: tok('--text-muted') } } : undefined,
+    grid: { left: 60, right: 28, top: title ? 78 : 44, bottom: 72, containLabel: true },
+    xAxis: { type: 'category', boundaryGap: false, data: labels, axisLine: { lineStyle: { color: tok('--border') } }, axisLabel: { color: tok('--text-muted') } },
+    yAxis: { type: 'value', splitLine: { lineStyle: { color: tok('--border') } }, axisLabel: { color: tok('--text-muted') } },
+    dataZoom: [{ type: 'inside' }, { type: 'slider', bottom: 18, height: 16, borderColor: tok('--border'), textStyle: { color: tok('--text-muted') } }],
+    series: series.map((s) => ({ name: s.name, type: 'line', smooth: true, showSymbol: false, areaStyle: s.area ? { opacity: 0.12 } : undefined, data: s.data }))
+  });
+});
+
 registerVisual('image', (host, props) => {
   const { src, fit = 'cover', focal = 'center', scrim, alt = '' } = props;
   const bg = el('div.dk-img', { role: 'img', 'aria-label': alt, 'data-fit': fit });

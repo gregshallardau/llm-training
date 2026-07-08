@@ -169,7 +169,7 @@ window.__DECK__ = {
               "label": "Layouts & blocks"
             },
             {
-              "value": "2",
+              "value": "3",
               "label": "Brand themes"
             },
             {
@@ -272,9 +272,193 @@ window.__DECK__ = {
       "notes": "The timeline block."
     },
     {
+      "layout": "content",
+      "heading": "KPIs with trend",
+      "blocks": [
+        {
+          "type": "kpi",
+          "items": [
+            {
+              "value": "98%",
+              "label": "On-time",
+              "delta": "+4pts",
+              "spark": [
+                70,
+                74,
+                80,
+                86,
+                92,
+                98
+              ]
+            },
+            {
+              "value": "1.2s",
+              "label": "Median load",
+              "delta": "-0.3s",
+              "spark": [
+                2.1,
+                1.9,
+                1.7,
+                1.5,
+                1.3,
+                1.2
+              ]
+            },
+            {
+              "value": "312",
+              "label": "Decks shipped",
+              "delta": "+41",
+              "spark": [
+                120,
+                160,
+                190,
+                240,
+                280,
+                312
+              ]
+            }
+          ]
+        }
+      ],
+      "notes": "The kpi block — value, delta and an inline sparkline."
+    },
+    {
+      "layout": "visual",
+      "component": "heatmap",
+      "props": {
+        "title": "Attention heatmap",
+        "sub": "Illustrative — where focus lands.",
+        "xLabels": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "yLabels": [
+          "Morning",
+          "Midday",
+          "Evening"
+        ],
+        "data": [
+          [
+            3,
+            6,
+            8,
+            5,
+            9
+          ],
+          [
+            5,
+            8,
+            9,
+            7,
+            6
+          ],
+          [
+            2,
+            4,
+            6,
+            8,
+            7
+          ]
+        ]
+      },
+      "notes": "ECharts heatmap via the token-themed adapter."
+    },
+    {
+      "layout": "visual",
+      "component": "map",
+      "props": {
+        "title": "Where it's presented",
+        "sub": "Illustrative reach.",
+        "points": [
+          {
+            "name": "London",
+            "lng": -0.13,
+            "lat": 51.5,
+            "value": 90
+          },
+          {
+            "name": "New York",
+            "lng": -74,
+            "lat": 40.7,
+            "value": 75
+          },
+          {
+            "name": "Singapore",
+            "lng": 103.8,
+            "lat": 1.35,
+            "value": 60
+          },
+          {
+            "name": "Sydney",
+            "lng": 151.2,
+            "lat": -33.9,
+            "value": 55
+          },
+          {
+            "name": "São Paulo",
+            "lng": -46.6,
+            "lat": -23.5,
+            "value": 40
+          }
+        ]
+      },
+      "notes": "A real geo map (ECharts + bundled world GeoJSON), bubbles by value."
+    },
+    {
+      "layout": "visual",
+      "component": "timeseries",
+      "props": {
+        "title": "Adoption over time",
+        "sub": "Illustrative — drag to zoom.",
+        "labels": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug"
+        ],
+        "series": [
+          {
+            "name": "Decks",
+            "area": true,
+            "data": [
+              5,
+              9,
+              14,
+              22,
+              31,
+              44,
+              60,
+              78
+            ]
+          },
+          {
+            "name": "Authors",
+            "data": [
+              2,
+              3,
+              5,
+              7,
+              9,
+              12,
+              15,
+              19
+            ]
+          }
+        ]
+      },
+      "notes": "ECharts time series with a zoom slider."
+    },
+    {
       "layout": "statement",
       "text": "Click <span class=\"accent\">✦</span> to reskin the whole deck — same content, different brand.",
-      "notes": "Statement layout. The ✦ control (top-left) switches brand theme (editorial ↔ corporate-navy)."
+      "notes": "Statement layout. The ✦ control (top-left) cycles brand theme (editorial · corporate-navy · minimal)."
     },
     {
       "layout": "quote",

@@ -29,7 +29,7 @@ export function initPresenter(deck, { remountVisualsIn }) {
 
   // brand theme cycle (demonstrates reskin — same deck, tokens only).
   // NB: a small control, not a key — 'B' is reveal's built-in blackout/pause.
-  const BRANDS = ['editorial', 'corporate-navy'];
+  const BRANDS = ['editorial', 'corporate-navy', 'minimal'];
   const cycleBrand = () => {
     const cur = root.getAttribute('data-deck-theme') || BRANDS[0];
     root.setAttribute('data-deck-theme', BRANDS[(BRANDS.indexOf(cur) + 1) % BRANDS.length]);
