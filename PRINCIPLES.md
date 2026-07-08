@@ -92,7 +92,7 @@ It behaves the same on every machine and screen size. No layout surprises, no
 ## 2. Non-goals (for now)
 
 - Not a WYSIWYG drag-and-drop editor.
-- Not tied to any one topic, brand, or the current LLM deck.
+- Not tied to any one topic or brand.
 - Not reinventing what a mature slide engine already does well (transitions,
   speaker view, PDF export) — we build *on* proven foundations.
 
@@ -102,16 +102,18 @@ It behaves the same on every machine and screen size. No layout surprises, no
 
 To be resolved cleanly with research + your input, **before** any building:
 
-0. **Landscape scan (do this first)** — search online for existing presentation
-   frameworks, engines, tools, and libraries we could **adopt, integrate, or build
-   on instead of reinventing**. Evaluate the field (e.g. reveal.js, Slidev, Marp,
-   Spectacle, WebSlides, remark, Motion Canvas, Sli.dev-style tooling) plus
-   component / chart / theming libraries, against these principles. Bias strongly
-   toward incorporating proven solutions; only build what nothing existing gives us.
+0. **Landscape scan (do this first, unbiased)** — search online for existing
+   presentation frameworks, engines, authoring tools, and libraries we could
+   **adopt, integrate, or build on instead of reinventing**, plus relevant
+   component / chart / theming libraries, and evaluate them against these
+   principles. The scan must be **unbiased**: do not pre-seed it with named
+   products or a curated list — discover and enumerate the field from primary
+   sources first, then assess. Bias strongly toward incorporating proven
+   solutions; only build what nothing existing gives us.
 1. **Authoring model** — how does an author declare a deck? (Structured data /
    config vs markup vs markdown.) What's the most flexible, low-friction format?
-2. **Rendering foundation** — build on an existing engine (e.g. reveal.js) or a
-   thin custom core? Trade-offs for P1/P6/P13.
+2. **Rendering foundation** — build on an existing engine or a thin custom core?
+   Trade-offs for P1/P6/P13.
 3. **Fit strategy** — how exactly do we guarantee P1 (author-to-fit vs
    auto-scale-to-fit vs both)?
 4. **Extension API** — what's the contract for plugging in a new layout, visual,
