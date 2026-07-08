@@ -15,8 +15,12 @@ This branch is intentionally empty of application content. It starts from
    with a build-vs-adopt recommendation. **Done** — recommends *adopt-and-extend a
    reveal.js-class engine*, add a custom fit layer for P1, use the engine's plugin
    registry for extensions, and standardize theming on the DTCG design-token format.
-3. **Design** — architecture + design system satisfying the principles. _Next._
-4. **Build** — implement, proving it on a small exemplar before scaling. _Pending._
+3. **Design** — [`DESIGN.md`](./DESIGN.md). Architecture + design system satisfying
+   the principles; the pivotal P1 (guaranteed fit) risk was **proven** with a
+   throwaway POC (`spikes/fit-layer/`, 0-overflow across 3 viewports × 2 themes).
+   **Done.**
+4. **Build** — implement, proving it on a small content-neutral exemplar before
+   scaling. _Next._
 
 No framework code is written until the research is done and approved.
 
