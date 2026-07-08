@@ -1,0 +1,17 @@
+/* Self-hosted variable fonts (offline / Teams-safe). Paths are relative to this
+   file (framework/theme/) → repo-root vendor/fonts/. */
+@font-face {
+  font-family: 'Fraunces Variable';
+  src: url('../../vendor/fonts/fraunces-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Fraunces Variable';
+  src: url('../../vendor/fonts/fraunces-latin-wght-italic.woff2') format('woff2-variations');
+  font-weight: 100 900; font-style: italic; font-display: swap;
+}
+@font-face {
+  font-family: 'Inter Variable';
+  src: url('../../vendor/fonts/inter-latin-wght-normal.woff2') format('woff2-variations');
+  font-weight: 100 900; font-style: normal; font-display: swap;
+}

@@ -1,0 +1,531 @@
+window.__DECK__ = {
+  "title": "DeckKit — Framework Demo",
+  "ratio": "16:9",
+  "theme": "editorial",
+  "slides": [
+    {
+      "layout": "title",
+      "eyebrow": "DeckKit",
+      "heading": "A presentation framework that just fits",
+      "subhead": "Declarative decks · a guaranteed frame · themeable · offline.",
+      "notes": "This whole deck is generated from a YAML config through the framework."
+    },
+    {
+      "layout": "image",
+      "src": "assets/hero.svg",
+      "fit": "cover",
+      "focal": "center 40%",
+      "scrim": "bottom",
+      "eyebrow": "Layout · image",
+      "heading": "One picture can carry the slide",
+      "body": "Full-bleed media with a legible scrim — declared, not hand-styled.",
+      "notes": "The image layout is full-bleed; the scrim keeps overlaid text readable."
+    },
+    {
+      "layout": "split",
+      "mediaSide": "right",
+      "text": {
+        "heading": "Text and media, balanced",
+        "body": "The split layout pairs a column of prose with any registered visual — an image here, a chart elsewhere. Both stay inside the frame."
+      },
+      "media": {
+        "component": "image",
+        "src": "assets/hero.svg",
+        "fit": "cover",
+        "focal": "center",
+        "alt": "Abstract network"
+      },
+      "notes": "Split layout with an image component in the media cell."
+    },
+    {
+      "layout": "content",
+      "heading": "Built from components",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Layouts",
+              "body": "A fixed vocabulary you choose from."
+            },
+            {
+              "title": "Blocks",
+              "body": "Cards",
+              "tables": null,
+              "callouts": null,
+              "flows.": null
+            },
+            {
+              "title": "Visuals",
+              "body": "Native SVG charts and media."
+            },
+            {
+              "title": "Themes",
+              "body": "DTCG tokens — one swap to reskin."
+            }
+          ]
+        }
+      ],
+      "notes": "Every slide is assembled from registered components."
+    },
+    {
+      "layout": "compare",
+      "heading": "Why a framework, not a template",
+      "left": {
+        "title": "Hand-built slides",
+        "items": [
+          "Bespoke CSS per slide",
+          "Overflow surprises",
+          "Reskin means rework",
+          "One-off"
+        ]
+      },
+      "right": {
+        "title": "DeckKit",
+        "items": [
+          "Declare intent",
+          "Guaranteed fit",
+          "Reskin is a token swap",
+          "Reusable"
+        ]
+      },
+      "notes": "Separation of content, layout, theme and behaviour is the whole point."
+    },
+    {
+      "layout": "visual",
+      "component": "chart",
+      "props": {
+        "type": "bar",
+        "title": "Guaranteed to fit, at any density",
+        "sub": "Illustrative — content scales to the frame, never overflows.",
+        "labels": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5"
+        ],
+        "data": [
+          12,
+          28,
+          41,
+          64,
+          92
+        ],
+        "seriesLabel": "Adoption"
+      },
+      "notes": "A native SVG chart, themed from tokens; it re-themes on toggle."
+    },
+    {
+      "layout": "content",
+      "heading": "One idea, three depths",
+      "depths": {
+        "simple": {
+          "blocks": [
+            {
+              "type": "callout",
+              "title": "Simple",
+              "body": "Pick the audience level once and the whole deck follows."
+            }
+          ]
+        },
+        "detailed": {
+          "blocks": [
+            {
+              "type": "callout",
+              "title": "Detailed",
+              "body": "Each slide can carry the same idea at simple, detailed or expert depth — switch live with 1 / 2 / 3."
+            }
+          ]
+        },
+        "expert": {
+          "blocks": [
+            {
+              "type": "callout",
+              "title": "Expert",
+              "body": "Layered content is an accessible tablist (role=tab, aria-selected), global or per-slide, persisted across the session."
+            }
+          ]
+        }
+      },
+      "notes": "Press 1 / 2 / 3 to change depth for the whole deck."
+    },
+    {
+      "layout": "section",
+      "kicker": "Part two",
+      "heading": "The extended vocabulary",
+      "subhead": "More layouts, blocks and visuals — all token-driven, all fit-guaranteed.",
+      "notes": "A section divider layout."
+    },
+    {
+      "layout": "content",
+      "heading": "Numbers that land",
+      "blocks": [
+        {
+          "type": "stats",
+          "items": [
+            {
+              "value": "13+",
+              "label": "Layouts & blocks"
+            },
+            {
+              "value": "3",
+              "label": "Brand themes"
+            },
+            {
+              "value": "0",
+              "label": "Overflowing slides"
+            },
+            {
+              "value": "100%",
+              "label": "Offline"
+            }
+          ]
+        }
+      ],
+      "notes": "The stats block — big KPI numbers."
+    },
+    {
+      "layout": "grid",
+      "heading": "Grid of anything",
+      "columns": 2,
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Compose freely",
+          "body": "The grid layout arranges any blocks N-up."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Token-driven",
+            "Accessible",
+            "Fits the frame",
+            "Reusable"
+          ]
+        }
+      ],
+      "notes": "Grid layout with a callout and a styled list."
+    },
+    {
+      "layout": "content",
+      "heading": "Code, highlighted",
+      "blocks": [
+        {
+          "type": "code",
+          "lang": "yaml",
+          "code": "- layout: visual\n  component: donut\n  props:\n    segments:\n      - { label: Framework, value: 55 }\n      - { label: Content, value: 30 }\n"
+        }
+      ],
+      "notes": "The code block, syntax-highlighted and theme-aware."
+    },
+    {
+      "layout": "visual",
+      "component": "donut",
+      "props": {
+        "title": "Where the effort goes",
+        "sub": "Illustrative split.",
+        "segments": [
+          {
+            "label": "Framework",
+            "value": 55
+          },
+          {
+            "label": "Content",
+            "value": 30
+          },
+          {
+            "label": "Theming",
+            "value": 15
+          }
+        ]
+      },
+      "notes": "A native SVG donut, themed from tokens."
+    },
+    {
+      "layout": "content",
+      "heading": "How it came together",
+      "blocks": [
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Principles",
+              "body": "What it must do."
+            },
+            {
+              "title": "Research",
+              "body": "Adopt vs build",
+              "unbiased.": null
+            },
+            {
+              "title": "Design",
+              "body": "Architecture + a proven fit layer."
+            },
+            {
+              "title": "Build",
+              "body": "This deck."
+            }
+          ]
+        }
+      ],
+      "notes": "The timeline block."
+    },
+    {
+      "layout": "content",
+      "heading": "KPIs with trend",
+      "blocks": [
+        {
+          "type": "kpi",
+          "items": [
+            {
+              "value": "98%",
+              "label": "On-time",
+              "delta": "+4pts",
+              "spark": [
+                70,
+                74,
+                80,
+                86,
+                92,
+                98
+              ]
+            },
+            {
+              "value": "1.2s",
+              "label": "Median load",
+              "delta": "-0.3s",
+              "spark": [
+                2.1,
+                1.9,
+                1.7,
+                1.5,
+                1.3,
+                1.2
+              ]
+            },
+            {
+              "value": "312",
+              "label": "Decks shipped",
+              "delta": "+41",
+              "spark": [
+                120,
+                160,
+                190,
+                240,
+                280,
+                312
+              ]
+            }
+          ]
+        }
+      ],
+      "notes": "The kpi block — value, delta and an inline sparkline."
+    },
+    {
+      "layout": "visual",
+      "component": "heatmap",
+      "props": {
+        "title": "Attention heatmap",
+        "sub": "Illustrative — where focus lands.",
+        "xLabels": [
+          "Mon",
+          "Tue",
+          "Wed",
+          "Thu",
+          "Fri"
+        ],
+        "yLabels": [
+          "Morning",
+          "Midday",
+          "Evening"
+        ],
+        "data": [
+          [
+            3,
+            6,
+            8,
+            5,
+            9
+          ],
+          [
+            5,
+            8,
+            9,
+            7,
+            6
+          ],
+          [
+            2,
+            4,
+            6,
+            8,
+            7
+          ]
+        ]
+      },
+      "notes": "ECharts heatmap via the token-themed adapter."
+    },
+    {
+      "layout": "visual",
+      "component": "map",
+      "props": {
+        "title": "Where it's presented",
+        "sub": "Illustrative reach.",
+        "points": [
+          {
+            "name": "London",
+            "lng": -0.13,
+            "lat": 51.5,
+            "value": 90
+          },
+          {
+            "name": "New York",
+            "lng": -74,
+            "lat": 40.7,
+            "value": 75
+          },
+          {
+            "name": "Singapore",
+            "lng": 103.8,
+            "lat": 1.35,
+            "value": 60
+          },
+          {
+            "name": "Sydney",
+            "lng": 151.2,
+            "lat": -33.9,
+            "value": 55
+          },
+          {
+            "name": "São Paulo",
+            "lng": -46.6,
+            "lat": -23.5,
+            "value": 40
+          }
+        ]
+      },
+      "notes": "A real geo map (ECharts + bundled world GeoJSON), bubbles by value."
+    },
+    {
+      "layout": "visual",
+      "component": "timeseries",
+      "props": {
+        "title": "Adoption over time",
+        "sub": "Illustrative — drag to zoom.",
+        "labels": [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug"
+        ],
+        "series": [
+          {
+            "name": "Decks",
+            "area": true,
+            "data": [
+              5,
+              9,
+              14,
+              22,
+              31,
+              44,
+              60,
+              78
+            ]
+          },
+          {
+            "name": "Authors",
+            "data": [
+              2,
+              3,
+              5,
+              7,
+              9,
+              12,
+              15,
+              19
+            ]
+          }
+        ]
+      },
+      "notes": "ECharts time series with a zoom slider."
+    },
+    {
+      "layout": "visual",
+      "component": "sankey",
+      "props": {
+        "title": "How attention flows",
+        "sub": "Illustrative — sources to outcomes.",
+        "nodes": [
+          "Search",
+          "Social",
+          "Referral",
+          "Landing",
+          "Docs",
+          "Trial",
+          "Signup",
+          "Bounce"
+        ],
+        "links": [
+          {
+            "source": "Search",
+            "target": "Landing",
+            "value": 40
+          },
+          {
+            "source": "Social",
+            "target": "Landing",
+            "value": 25
+          },
+          {
+            "source": "Referral",
+            "target": "Docs",
+            "value": 20
+          },
+          {
+            "source": "Landing",
+            "target": "Trial",
+            "value": 35
+          },
+          {
+            "source": "Landing",
+            "target": "Bounce",
+            "value": 30
+          },
+          {
+            "source": "Docs",
+            "target": "Trial",
+            "value": 15
+          },
+          {
+            "source": "Trial",
+            "target": "Signup",
+            "value": 32
+          },
+          {
+            "source": "Trial",
+            "target": "Bounce",
+            "value": 18
+          }
+        ]
+      },
+      "notes": "ECharts Sankey via the same adapter — nodes labelled, links gradient by flow."
+    },
+    {
+      "layout": "statement",
+      "text": "Click <span class=\"accent\">✦</span> to reskin the whole deck — same content, different brand.",
+      "notes": "Statement layout. The ✦ control (top-left) cycles brand theme (editorial · corporate-navy · minimal)."
+    },
+    {
+      "layout": "quote",
+      "text": "Reliable like PowerPoint. <span class=\"accent\">Programmable</span> like the web.",
+      "cite": "The point of the whole thing.",
+      "notes": "Close."
+    }
+  ]
+};
