@@ -5,8 +5,12 @@
 /* ---- Reveal base ---------------------------------------------------------- */
 .reveal { font-family: var(--font-sans); font-size: 28px; color: var(--text); background: var(--bg); }
 .reveal .slides { text-align: left; }
-/* reveal's own position:absolute stays intact — never override it inline. */
-.reveal .slides section { padding: var(--slide-pad); height: 100%; box-sizing: border-box; }
+/* reveal owns the <section> (transitions + positioning) — we never fight it.
+   The framework owns a `.deck-slide` canvas INSIDE each section: a fixed 16:9
+   PowerPoint-style frame it fully controls. overflow:hidden clips to the frame;
+   deck.js shrink-to-fits any canvas whose content would exceed it. */
+.reveal .slides section { padding: 0; height: 100%; box-sizing: border-box; overflow: hidden; }
+.deck-slide { position: absolute; inset: 0; padding: var(--slide-pad); box-sizing: border-box; display: flex; flex-direction: column; gap: var(--space-3); }
 .reveal ::selection { background: color-mix(in srgb, var(--brand) 30%, transparent); }
 
 /* ---- Typography ----------------------------------------------------------- */
@@ -35,22 +39,21 @@
    LAYOUTS
    ========================================================================== */
 
-/* reveal.js sets an INLINE `display:block` on the present slide via JS, which
-   beats any selector without !important. Re-assert our layout display on the
-   present slide (only) so flex/grid actually apply. Non-present slides carry no
-   .present class, so they stay hidden by reveal. */
-.reveal .slides section.present[data-layout="title"],
-.reveal .slides section.present[data-layout="quote"],
-.reveal .slides section.present[data-layout="content"],
-.reveal .slides section.present[data-layout="layers"] { display: flex !important; }
-.reveal .slides section.present[data-layout="split"] { display: grid !important; }
+/* Layout is set on `.deck-slide` (a plain div reveal never touches) — no
+   specificity fights, no !important, no inline-style clobbering. */
+.deck-slide[data-layout="title"],
+.deck-slide[data-layout="quote"],
+.deck-slide[data-layout="content"] { justify-content: center; }
+.deck-slide[data-layout="layers"] { justify-content: flex-start; }
+.deck-slide[data-layout="split"] { display: grid; grid-template-columns: var(--split, 1fr 1fr); gap: var(--space-6); align-items: center; }
+.deck-slide[data-layout="visual"],
+.deck-slide[data-layout="image"] { padding: 0; display: block; }
 
 /* --- content (generic, vertically centred) -------------------------------- */
-section[data-layout="content"] { flex-direction: column; justify-content: center; gap: var(--space-4); }
+.deck-slide[data-layout="content"] { gap: var(--space-4); }
 
 /* --- title ---------------------------------------------------------------- */
-section[data-layout="title"] {
-  display: flex; flex-direction: column; justify-content: center; gap: var(--space-3);
+.deck-slide[data-layout="title"] {
   background: radial-gradient(120% 120% at 0% 0%, color-mix(in srgb, var(--brand) 12%, var(--bg)) 0%, var(--bg) 55%);
 }
 .slide-eyebrow { font-size: var(--text-sm); font-weight: var(--weight-bold); letter-spacing: 0.14em; text-transform: uppercase; color: var(--text-dim); }
@@ -58,22 +61,19 @@ section[data-layout="title"] {
 .slide-question { font-size: var(--text-base); color: var(--text-muted); }
 
 /* --- layers (depth-tracked teaching content) ------------------------------ */
-section[data-layout="layers"] { display: flex; flex-direction: column; }
 .layers-head { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); border-bottom: var(--border-w) solid var(--border); padding-bottom: var(--space-2); margin-bottom: var(--space-3); }
 .layers-head h2 { margin: 0; }
 .layers-body { position: relative; flex: 1; }
-.depth-panel { font-size: var(--text-md); line-height: var(--leading); max-height: 62vh; overflow: auto; }
+.depth-panel { font-size: var(--text-md); line-height: var(--leading); max-height: 480px; overflow: auto; }
 .depth-panel[hidden] { display: none; }
 .depth-panel.is-animating { animation: dk-fade var(--dur) var(--ease-out); }
 @keyframes dk-fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
 
 /* --- visual (full-bleed native component) --------------------------------- */
-section[data-layout="visual"] { padding: 0; }
 .visual-stage { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: var(--slide-pad); }
 .visual-stage > * { width: 100%; height: 100%; }
 
 /* --- image (full-bleed picture + scrim) ----------------------------------- */
-section[data-layout="image"] { padding: 0; overflow: hidden; }
 .slide-bg-img { position: absolute; inset: 0; background-size: cover; background-position: center; background-repeat: no-repeat; }
 .slide-bg-img[data-fit="contain"] { background-size: contain; background-color: var(--bg-deep); }
 .slide-scrim { position: absolute; inset: 0; pointer-events: none; }
@@ -85,16 +85,19 @@ section[data-layout="image"] { padding: 0; overflow: hidden; }
 .slide-figtext h1, .slide-figtext h2, .slide-figtext p { color: #fff; text-shadow: 0 2px 12px rgba(0,0,0,0.45); }
 
 /* --- split (text + picture) ----------------------------------------------- */
-section[data-layout="split"] { display: grid; grid-template-columns: var(--split, 1fr 1fr); gap: var(--space-6); align-items: center; }
-section[data-layout="split"][data-media="left"] .split-media { order: -1; }
+.deck-slide[data-layout="split"][data-media="left"] .split-media { order: -1; }
 
 /* ============================================================================
    COMPONENTS
    ========================================================================== */
 
 /* --- figure / image (declared, not hand-styled) --------------------------- */
-.deck-figure { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; }
-.deck-figure .img-box { position: relative; aspect-ratio: 16 / 9; border-radius: var(--radius); overflow: hidden; background: var(--surface-2); }
+.deck-figure { margin: 0; display: flex; flex-direction: column; gap: var(--space-2); min-width: 0; align-items: center; }
+.deck-figure .img-box { position: relative; width: 100%; aspect-ratio: 16 / 9; max-height: 340px; border-radius: var(--radius); overflow: hidden; background: var(--surface-2); }
+.deck-figure figcaption { align-self: flex-start; }
+/* keep split media balanced and contained within the frame */
+.split-media { display: flex; justify-content: center; }
+.split-media .deck-figure { width: 100%; max-width: 560px; }
 .deck-figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .deck-figure[data-fit="contain"] img { object-fit: contain; }
 .deck-figure[data-frame="card"] .img-box { border: var(--border-w) solid var(--border); box-shadow: var(--shadow-2); }
@@ -137,7 +140,7 @@ section[data-layout="split"][data-media="left"] .split-media { order: -1; }
 .deck-callout { background: color-mix(in srgb, var(--brand) 10%, var(--surface)); border: var(--border-w) solid color-mix(in srgb, var(--brand) 35%, transparent); border-radius: var(--radius); padding: var(--space-4); }
 .deck-callout h3 { color: var(--brand); }
 .deck-callout p { color: var(--text); margin: var(--space-1) 0 0; }
-section[data-layout="quote"] { display: flex; flex-direction: column; justify-content: center; align-items: flex-start; gap: var(--space-4); }
+.deck-slide[data-layout="quote"] { align-items: flex-start; gap: var(--space-4); }
 .big-quote { font-size: var(--text-2xl); font-weight: var(--weight-bold); line-height: 1.25; max-width: 22ch; }
 .big-quote .accent { color: var(--brand); }
 
