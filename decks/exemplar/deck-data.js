@@ -1,6 +1,7 @@
 window.__DECK__ = {
   "title": "DeckKit — Framework Demo",
   "ratio": "16:9",
+  "theme": "editorial",
   "slides": [
     {
       "layout": "title",
@@ -148,6 +149,132 @@ window.__DECK__ = {
         }
       },
       "notes": "Press 1 / 2 / 3 to change depth for the whole deck."
+    },
+    {
+      "layout": "section",
+      "kicker": "Part two",
+      "heading": "The extended vocabulary",
+      "subhead": "More layouts, blocks and visuals — all token-driven, all fit-guaranteed.",
+      "notes": "A section divider layout."
+    },
+    {
+      "layout": "content",
+      "heading": "Numbers that land",
+      "blocks": [
+        {
+          "type": "stats",
+          "items": [
+            {
+              "value": "13+",
+              "label": "Layouts & blocks"
+            },
+            {
+              "value": "2",
+              "label": "Brand themes"
+            },
+            {
+              "value": "0",
+              "label": "Overflowing slides"
+            },
+            {
+              "value": "100%",
+              "label": "Offline"
+            }
+          ]
+        }
+      ],
+      "notes": "The stats block — big KPI numbers."
+    },
+    {
+      "layout": "grid",
+      "heading": "Grid of anything",
+      "columns": 2,
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Compose freely",
+          "body": "The grid layout arranges any blocks N-up."
+        },
+        {
+          "type": "list",
+          "items": [
+            "Token-driven",
+            "Accessible",
+            "Fits the frame",
+            "Reusable"
+          ]
+        }
+      ],
+      "notes": "Grid layout with a callout and a styled list."
+    },
+    {
+      "layout": "content",
+      "heading": "Code, highlighted",
+      "blocks": [
+        {
+          "type": "code",
+          "lang": "yaml",
+          "code": "- layout: visual\n  component: donut\n  props:\n    segments:\n      - { label: Framework, value: 55 }\n      - { label: Content, value: 30 }\n"
+        }
+      ],
+      "notes": "The code block, syntax-highlighted and theme-aware."
+    },
+    {
+      "layout": "visual",
+      "component": "donut",
+      "props": {
+        "title": "Where the effort goes",
+        "sub": "Illustrative split.",
+        "segments": [
+          {
+            "label": "Framework",
+            "value": 55
+          },
+          {
+            "label": "Content",
+            "value": 30
+          },
+          {
+            "label": "Theming",
+            "value": 15
+          }
+        ]
+      },
+      "notes": "A native SVG donut, themed from tokens."
+    },
+    {
+      "layout": "content",
+      "heading": "How it came together",
+      "blocks": [
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Principles",
+              "body": "What it must do."
+            },
+            {
+              "title": "Research",
+              "body": "Adopt vs build",
+              "unbiased.": null
+            },
+            {
+              "title": "Design",
+              "body": "Architecture + a proven fit layer."
+            },
+            {
+              "title": "Build",
+              "body": "This deck."
+            }
+          ]
+        }
+      ],
+      "notes": "The timeline block."
+    },
+    {
+      "layout": "statement",
+      "text": "Click <span class=\"accent\">✦</span> to reskin the whole deck — same content, different brand.",
+      "notes": "Statement layout. The ✦ control (top-left) switches brand theme (editorial ↔ corporate-navy)."
     },
     {
       "layout": "quote",

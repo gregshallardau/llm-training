@@ -28,6 +28,28 @@ registerBlock('callout', (p) =>
   )
 );
 
+registerBlock('stats', (p) =>
+  el('div.dk-stats', null, (p.items || []).map((it) =>
+    el('div.dk-stat', null,
+      el('div.dk-stat-val', null, it.value),
+      it.label && el('div.dk-stat-label', null, it.label))))
+);
+
+registerBlock('list', (p) =>
+  el('ul.dk-list', null, (p.items || []).map((i) => el('li', null, i)))
+);
+
+registerBlock('code', (p) =>
+  el('pre.dk-code', null, el('code', { class: `language-${p.lang || 'text'}` }, p.code || ''))
+);
+
+registerBlock('timeline', (p) =>
+  el('ol.dk-timeline', null, (p.items || []).map((it) =>
+    el('li.dk-tl-item', null,
+      el('div.dk-tl-dot'),
+      el('div.dk-tl-body', null, it.title && el('h4', null, it.title), it.body && el('p', null, it.body)))))
+);
+
 registerBlock('table', (p) =>
   el('table.dk-table', null,
     p.columns && el('thead', null, el('tr', null, p.columns.map((c) => el('th', null, c)))),

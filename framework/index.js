@@ -9,6 +9,7 @@ import { renderDeck } from './renderer.js';
 import { fitPlugin } from './fit.js';
 import { getVisual } from './registry.js';
 import { initPresenter, applyThemeInitial } from './presenter.js';
+import { initChrome } from './chrome.js';
 
 function mountVisualsIn(slide) {
   if (!slide) return;
@@ -33,11 +34,13 @@ function remountVisualsIn(slide) {
 function boot() {
   applyThemeInitial();
   const deckData = window.__DECK__ || { slides: [] };
+  document.documentElement.setAttribute('data-deck-theme', deckData.theme || 'editorial');
   document.title = deckData.title || 'Deck';
   renderDeck(deckData, document.querySelector('.reveal .slides'));
 
   const plugins = [fitPlugin];
   if (window.RevealNotes) plugins.push(window.RevealNotes);
+  if (window.RevealHighlight) plugins.push(window.RevealHighlight);
 
   window.Reveal.initialize({
     width: 1280, height: 720, margin: 0, minScale: 0.2, maxScale: 2,
@@ -50,6 +53,7 @@ function boot() {
   window.Reveal.on('slidechanged', (e) => afterShow(e.currentSlide));
 
   initPresenter(window.Reveal, { remountVisualsIn });
+  initChrome(window.Reveal);
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);

@@ -14,8 +14,12 @@
     if (attrs) for (const [k, v] of Object.entries(attrs)) {
       if (v == null || v === false) continue;
       if (k === "html") node.innerHTML = v;
-      else if (k === "style" && typeof v === "object") Object.assign(node.style, v);
-      else if (k in node && k !== "list") {
+      else if (k === "style" && typeof v === "object") {
+        for (const [sk, sv] of Object.entries(v)) {
+          if (sk.startsWith("--")) node.style.setProperty(sk, sv);
+          else node.style[sk] = sv;
+        }
+      } else if (k in node && k !== "list") {
         try {
           node[k] = v;
         } catch {
@@ -70,6 +74,32 @@
       p.title && el("h3", null, p.title),
       p.body && el("p", null, p.body)
     )
+  );
+  registerBlock(
+    "stats",
+    (p) => el("div.dk-stats", null, (p.items || []).map((it) => el(
+      "div.dk-stat",
+      null,
+      el("div.dk-stat-val", null, it.value),
+      it.label && el("div.dk-stat-label", null, it.label)
+    )))
+  );
+  registerBlock(
+    "list",
+    (p) => el("ul.dk-list", null, (p.items || []).map((i) => el("li", null, i)))
+  );
+  registerBlock(
+    "code",
+    (p) => el("pre.dk-code", null, el("code", { class: `language-${p.lang || "text"}` }, p.code || ""))
+  );
+  registerBlock(
+    "timeline",
+    (p) => el("ol.dk-timeline", null, (p.items || []).map((it) => el(
+      "li.dk-tl-item",
+      null,
+      el("div.dk-tl-dot"),
+      el("div.dk-tl-body", null, it.title && el("h4", null, it.title), it.body && el("p", null, it.body))
+    )))
   );
   registerBlock(
     "table",
@@ -149,6 +179,29 @@
       null,
       el("p.dk-bigquote", { html: d.text }),
       d.cite && el("p.dk-cite", null, d.cite)
+    )
+  }));
+  registerLayout("section", (d) => ({
+    mode: "flow",
+    node: el(
+      "div.dk-section",
+      null,
+      d.kicker && el("div.dk-eyebrow", null, d.kicker),
+      el("h1", null, d.heading),
+      d.subhead && el("p.dk-lead", null, d.subhead)
+    )
+  }));
+  registerLayout("statement", (d) => ({
+    mode: "flow",
+    node: el("div.dk-statement", null, el("p.dk-bigstate", { html: d.text }))
+  }));
+  registerLayout("grid", (d) => ({
+    mode: "flow",
+    node: el(
+      "div.dk-content",
+      null,
+      d.heading && el("h2", null, d.heading),
+      el("div.dk-grid", { style: { "--cols": String(d.columns || 2) } }, buildBlocks(d.blocks))
     )
   }));
   registerLayout("compare", (d) => {
@@ -245,6 +298,47 @@
     host.append(wrap);
     return () => host.replaceChildren();
   });
+  registerVisual("donut", (host, props) => {
+    const { title, sub, segments = [] } = props;
+    const colors = palette();
+    const total = segments.reduce((a, s) => a + (s.value || 0), 0) || 1;
+    const size = 280, cx = size / 2, cy = size / 2, r = 100, thick = 40, C = 2 * Math.PI * r;
+    const wrap = el(
+      "div.dk-donut",
+      null,
+      (title || sub) && el("div.dk-chart-head", null, title && el("h2", null, title), sub && el("p.dk-muted", null, sub))
+    );
+    const svg = svgEl("svg", { viewBox: `0 0 ${size} ${size}`, width: "100%", height: "100%", role: "img", "aria-label": title || "donut chart" });
+    let acc = 0;
+    segments.forEach((s, i) => {
+      const len = (s.value || 0) / total * C;
+      svg.append(svgEl("circle", {
+        cx,
+        cy,
+        r,
+        fill: "none",
+        stroke: colors[i % colors.length],
+        "stroke-width": thick,
+        "stroke-dasharray": `${len} ${C - len}`,
+        "stroke-dashoffset": -acc,
+        transform: `rotate(-90 ${cx} ${cy})`
+      }));
+      acc += len;
+    });
+    const centre = svgEl("text", { x: cx, y: cy, "text-anchor": "middle", "dominant-baseline": "central", fill: tok("--text"), "font-size": 36, "font-weight": 700 });
+    centre.textContent = String(total);
+    svg.append(centre);
+    const legend = el("div.dk-donut-legend", null, segments.map((s, i) => el(
+      "div.dk-legend-item",
+      null,
+      el("span.dk-swatch", { style: { background: colors[i % colors.length] } }),
+      el("span", null, s.label),
+      el("span.dk-legend-val", null, String(s.value))
+    )));
+    wrap.append(el("div.dk-donut-row", null, el("div.dk-donut-svg", null, svg), legend));
+    host.append(wrap);
+    return () => host.replaceChildren();
+  });
   registerVisual("image", (host, props) => {
     const { src, fit = "cover", focal = "center", scrim, alt = "" } = props;
     const bg = el("div.dk-img", { role: "img", "aria-label": alt, "data-fit": fit });
@@ -329,6 +423,16 @@
     };
     btn.addEventListener("click", toggleTheme);
     document.body.append(btn);
+    const BRANDS = ["editorial", "corporate-navy"];
+    const cycleBrand = () => {
+      const cur = root.getAttribute("data-deck-theme") || BRANDS[0];
+      root.setAttribute("data-deck-theme", BRANDS[(BRANDS.indexOf(cur) + 1) % BRANDS.length]);
+      remountVisualsIn2(deck.getCurrentSlide());
+      window.dispatchEvent(new Event("deck-refit"));
+    };
+    const brandBtn = el("button#deck-brand", { "aria-label": "Cycle brand theme", title: "Brand theme" }, "\u2726");
+    brandBtn.addEventListener("click", cycleBrand);
+    document.body.append(brandBtn);
     const help = buildHelp();
     document.body.append(help);
     const toggleHelp = () => help.classList.toggle("open");
@@ -404,7 +508,8 @@
       ["S", "Speaker window (notes + next + timer)"],
       ["F", "Fullscreen"],
       ["Esc / O", "Overview"],
-      ["T", "Light / dark"]
+      ["T", "Light / dark"],
+      ["\u2726", "Brand theme (top-left control)"]
     ];
     return el(
       "div#deck-help",
@@ -419,6 +524,19 @@
         el("p.dk-muted", { style: { marginTop: "1rem" } }, "Press ? or Esc to close.")
       )
     );
+  }
+
+  // framework/chrome.js
+  function initChrome(deck) {
+    const counter = document.createElement("div");
+    counter.id = "deck-counter";
+    document.body.append(counter);
+    const update = () => {
+      const past = typeof deck.getSlidePastCount === "function" ? deck.getSlidePastCount() : deck.getIndices().h;
+      counter.textContent = `${past + 1} / ${deck.getTotalSlides()}`;
+    };
+    deck.on("ready", update);
+    deck.on("slidechanged", update);
   }
 
   // framework/index.js
@@ -447,10 +565,12 @@
   function boot() {
     applyThemeInitial();
     const deckData = window.__DECK__ || { slides: [] };
+    document.documentElement.setAttribute("data-deck-theme", deckData.theme || "editorial");
     document.title = deckData.title || "Deck";
     renderDeck(deckData, document.querySelector(".reveal .slides"));
     const plugins = [fitPlugin];
     if (window.RevealNotes) plugins.push(window.RevealNotes);
+    if (window.RevealHighlight) plugins.push(window.RevealHighlight);
     window.Reveal.initialize({
       width: 1280,
       height: 720,
@@ -472,6 +592,7 @@
     window.Reveal.on("ready", (e) => afterShow(e.currentSlide));
     window.Reveal.on("slidechanged", (e) => afterShow(e.currentSlide));
     initPresenter(window.Reveal, { remountVisualsIn });
+    initChrome(window.Reveal);
   }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", boot);
   else boot();

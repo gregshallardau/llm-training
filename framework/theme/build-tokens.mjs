@@ -1,113 +1,89 @@
-/* DTCG (2025.10) design tokens → CSS custom properties, with WCAG-AA contrast
-   validation. Emits :root (base + light) and :root[data-theme="dark"] (dark).
-   Kept intentionally small; supports the token types this framework uses. */
-import { readFileSync, writeFileSync } from 'node:fs';
+/* DTCG (2025.10) design tokens → CSS custom properties, multi-theme, with WCAG-AA
+   contrast validation. Emits shared base + per-brand-theme semantics scoped by
+   [data-deck-theme] and [data-theme="dark"]. The default brand also fills :root so
+   the deck is styled before JS runs. */
+import { readFileSync, writeFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
 const here = dirname(fileURLToPath(import.meta.url));
-const read = (f) => JSON.parse(readFileSync(join(here, 'tokens', f), 'utf8'));
+const tokensDir = join(here, 'tokens');
+const themesDir = join(tokensDir, 'themes');
+const readJson = (p) => JSON.parse(readFileSync(p, 'utf8'));
+const DEFAULT_BRAND = 'editorial';
 
-// ---- flatten with group-level $type inheritance -------------------------------
 function flatten(node, prefix, inheritedType, out) {
   const groupType = node.$type || inheritedType;
   for (const [k, v] of Object.entries(node)) {
     if (k.startsWith('$')) continue;
     const name = prefix ? `${prefix}-${k}` : k;
-    if (v && typeof v === 'object' && '$value' in v) {
-      out[name] = { type: v.$type || groupType, value: v.$value };
-    } else if (v && typeof v === 'object') {
-      flatten(v, name, groupType, out);
-    }
+    if (v && typeof v === 'object' && '$value' in v) out[name] = { type: v.$type || groupType, value: v.$value };
+    else if (v && typeof v === 'object') flatten(v, name, groupType, out);
   }
   return out;
 }
-
 const isAlias = (v) => typeof v === 'string' && /^\{[^}]+\}$/.test(v);
 const aliasVar = (v) => `var(--${v.slice(1, -1).replaceAll('.', '-')})`;
 
 function toCss(type, value) {
   if (isAlias(value)) return aliasVar(value);
   switch (type) {
-    case 'dimension':
-    case 'duration':
-      return typeof value === 'object' ? `${value.value}${value.unit}` : String(value);
-    case 'fontFamily':
-      return (Array.isArray(value) ? value : [value])
-        .map((f) => (/\s/.test(f) ? `'${f}'` : f)).join(', ');
-    case 'cubicBezier':
-      return `cubic-bezier(${value.join(', ')})`;
-    case 'shadow': {
-      const layers = Array.isArray(value) ? value : [value];
-      return layers.map((s) => `${s.offsetX} ${s.offsetY} ${s.blur} ${s.spread} ${s.color}`).join(', ');
-    }
-    default: // color, number, fontWeight, string
-      return String(value);
+    case 'dimension': case 'duration': return typeof value === 'object' ? `${value.value}${value.unit}` : String(value);
+    case 'fontFamily': return (Array.isArray(value) ? value : [value]).map((f) => (/\s/.test(f) ? `'${f}'` : f)).join(', ');
+    case 'cubicBezier': return `cubic-bezier(${value.join(', ')})`;
+    case 'shadow': return (Array.isArray(value) ? value : [value]).map((s) => `${s.offsetX} ${s.offsetY} ${s.blur} ${s.spread} ${s.color}`).join(', ');
+    default: return String(value);
   }
 }
+const lines = (map) => Object.entries(map).map(([n, t]) => `  --${n}: ${toCss(t.type, t.value)};`).join('\n');
 
-// ---- contrast validation ------------------------------------------------------
-function hexToRgb(h) {
-  h = h.replace('#', '').slice(0, 6);
-  if (h.length === 3) h = h.split('').map((c) => c + c).join('');
-  return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255);
-}
-function luminance(hex) {
-  const [r, g, b] = hexToRgb(hex).map((c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4)));
-  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
-}
-function contrast(a, b) {
-  const [l1, l2] = [luminance(a), luminance(b)].sort((x, y) => y - x);
-  return (l1 + 0.05) / (l2 + 0.05);
-}
+// ---- contrast ---------------------------------------------------------------
+function hexRgb(h) { h = h.replace('#', '').slice(0, 6); if (h.length === 3) h = h.split('').map((c) => c + c).join(''); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16) / 255); }
+function lum(hex) { const [r, g, b] = hexRgb(hex).map((c) => (c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4))); return 0.2126 * r + 0.7152 * g + 0.0722 * b; }
+function contrast(a, b) { const [l1, l2] = [lum(a), lum(b)].sort((x, y) => y - x); return (l1 + 0.05) / (l2 + 0.05); }
 function resolveHex(value, base) {
-  if (isAlias(value)) {
-    const path = value.slice(1, -1).replaceAll('.', '-');
-    return base[path] ? resolveHex(base[path].value, base) : null;
+  if (isAlias(value)) { const p = value.slice(1, -1).replaceAll('.', '-'); return base[p] ? resolveHex(base[p].value, base) : null; }
+  return typeof value === 'string' && value.startsWith('#') ? value : null;
+}
+function validate(label, sem, base, errors, warnings) {
+  const hx = (n) => resolveHex(sem[n]?.value, base);
+  for (const [a, b] of [['text', 'bg'], ['text', 'surface'], ['on-brand', 'brand']]) {
+    const ha = hx(a), hb = hx(b); if (!ha || !hb) continue;
+    const r = contrast(ha, hb); if (r < 4.5) errors.push(`${label}: ${a} on ${b} = ${r.toFixed(2)}:1 (< 4.5)`);
   }
-  return typeof value === 'string' ? value : null;
+  for (const [a, b] of [['text-muted', 'bg'], ['text-muted', 'surface']]) {
+    const ha = hx(a), hb = hx(b); if (!ha || !hb) continue;
+    const r = contrast(ha, hb); if (r < 4.5) warnings.push(`${label}: ${a} on ${b} = ${r.toFixed(2)}:1 (< 4.5)`);
+  }
 }
 
-// ---- compile ------------------------------------------------------------------
 export function compileTokens(outPath) {
-  const base = flatten(read('base.tokens.json'), '', undefined, {});
-  const light = flatten(read('light.tokens.json'), '', undefined, {});
-  const dark = flatten(read('dark.tokens.json'), '', undefined, {});
+  const base = flatten(readJson(join(tokensDir, 'base.tokens.json')), '', undefined, {});
+  const brands = [...new Set(readdirSync(themesDir).map((f) => f.replace(/\.(light|dark)\.tokens\.json$/, '')))];
+  const themeMap = {};
+  for (const brand of brands) {
+    themeMap[brand] = {
+      light: flatten(readJson(join(themesDir, `${brand}.light.tokens.json`)), '', undefined, {}),
+      dark: flatten(readJson(join(themesDir, `${brand}.dark.tokens.json`)), '', undefined, {})
+    };
+  }
 
-  const lines = (map) => Object.entries(map)
-    .map(([name, t]) => `  --${name}: ${toCss(t.type, t.value)};`).join('\n');
-
-  const css =
-    `/* GENERATED by framework/theme/build-tokens.mjs — do not edit by hand. */\n` +
-    `:root {\n${lines(base)}\n\n${lines(light)}\n}\n\n` +
-    `:root[data-theme="dark"] {\n${lines(dark)}\n}\n`;
-
-  // AA validation — critical pairs must pass 4.5:1; others warn.
   const errors = [], warnings = [];
-  for (const [label, sem] of [['light', { ...base, ...light }], ['dark', { ...base, ...dark }]]) {
-    const hx = (n) => resolveHex(sem[n]?.value, base);
-    const critical = [['text', 'bg'], ['text', 'surface'], ['on-brand', 'brand']];
-    const soft = [['text-muted', 'bg'], ['text-muted', 'surface']];
-    for (const [a, b] of critical) {
-      const r = contrast(hx(a), hx(b));
-      if (r < 4.5) errors.push(`${label}: ${a} on ${b} = ${r.toFixed(2)}:1 (< 4.5)`);
-    }
-    for (const [a, b] of soft) {
-      const r = contrast(hx(a), hx(b));
-      if (r < 4.5) warnings.push(`${label}: ${a} on ${b} = ${r.toFixed(2)}:1 (< 4.5)`);
-    }
+  let css = `/* GENERATED by framework/theme/build-tokens.mjs — do not edit by hand. */\n`;
+  const def = themeMap[DEFAULT_BRAND];
+  css += `:root {\n${lines(base)}\n\n${lines(def.light)}\n}\n\n`;
+  css += `:root[data-theme="dark"] {\n${lines(def.dark)}\n}\n\n`;
+  for (const brand of brands) {
+    css += `:root[data-deck-theme="${brand}"] {\n${lines(themeMap[brand].light)}\n}\n`;
+    css += `:root[data-deck-theme="${brand}"][data-theme="dark"] {\n${lines(themeMap[brand].dark)}\n}\n\n`;
+    validate(`${brand}/light`, { ...base, ...themeMap[brand].light }, base, errors, warnings);
+    validate(`${brand}/dark`, { ...base, ...themeMap[brand].dark }, base, errors, warnings);
   }
+
   warnings.forEach((w) => console.warn('  ⚠ contrast', w));
-  if (errors.length) {
-    errors.forEach((e) => console.error('  ✗ contrast', e));
-    throw new Error(`Token contrast validation failed (${errors.length} AA violation(s)).`);
-  }
-
+  if (errors.length) { errors.forEach((e) => console.error('  ✗ contrast', e)); throw new Error(`Token contrast failed (${errors.length}).`); }
   writeFileSync(outPath, css);
-  console.log(`  ✓ tokens.css (${Object.keys(base).length} base + light/dark semantics, AA-validated)`);
+  console.log(`  ✓ tokens.css (${brands.length} brand themes × light/dark, AA-validated)`);
 }
 
-// run directly
-if (process.argv[1] && process.argv[1].endsWith('build-tokens.mjs')) {
-  compileTokens(join(here, 'tokens.css'));
-}
+if (process.argv[1] && process.argv[1].endsWith('build-tokens.mjs')) compileTokens(join(here, 'tokens.css'));

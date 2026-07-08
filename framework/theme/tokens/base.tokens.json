@@ -35,7 +35,22 @@
     "tint-plum":  { "$value": "#ece2f8" },
     "tint-green-d": { "$value": "#173626" },
     "tint-blue-d":  { "$value": "#1a2350" },
-    "tint-plum-d":  { "$value": "#2a1a45" }
+    "tint-plum-d":  { "$value": "#2a1a45" },
+    "navy-950": { "$value": "#081a2e" },
+    "navy-900": { "$value": "#0a2744" },
+    "navy-850": { "$value": "#0d3157" },
+    "navy-800": { "$value": "#103a68" },
+    "navy-700": { "$value": "#1a4a7a" },
+    "navy-600": { "$value": "#265f95" },
+    "navy-100": { "$value": "#eaf1f8" },
+    "navy-50":  { "$value": "#f4f8fc" },
+    "sky":      { "$value": "#1565c0" },
+    "sky-300":  { "$value": "#7db4f0" },
+    "cyan":     { "$value": "#0e7490" },
+    "cyan-300": { "$value": "#67d3e8" },
+    "slate-100":{ "$value": "#e2eaf2" },
+    "slate-300":{ "$value": "#b6c6d8" },
+    "slate-500":{ "$value": "#5a7089" }
   },
   "space": {
     "$type": "dimension",
@@ -58,8 +73,8 @@
   "font": {
     "family": {
       "$type": "fontFamily",
-      "serif": { "$value": ["Iowan Old Style", "Palatino Linotype", "Palatino", "Georgia", "serif"] },
-      "sans":  { "$value": ["Inter", "Segoe UI", "system-ui", "-apple-system", "sans-serif"] },
+      "serif": { "$value": ["Fraunces Variable", "Iowan Old Style", "Palatino Linotype", "Georgia", "serif"] },
+      "sans":  { "$value": ["Inter Variable", "Inter", "Segoe UI", "system-ui", "sans-serif"] },
       "mono":  { "$value": ["JetBrains Mono", "SFMono-Regular", "ui-monospace", "monospace"] }
     },
     "size": {

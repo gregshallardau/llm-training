@@ -27,13 +27,23 @@ This branch is intentionally empty of application content. It starts from
 
 ```bash
 npm install
-npm run build     # vendors reveal.js, compiles DTCG tokens→CSS (AA-validated),
+npm run build     # vendors reveal.js + fonts, compiles DTCG tokens→CSS (AA-validated),
                   # compiles decks/*/deck.yaml→deck-data.js, bundles the framework
-npx http-server . # or: python3 -m http.server — then open decks/exemplar/
+npm run export    # also emit a self-contained single-file decks/<name>/<name>.html
+python3 -m http.server   # then open decks/exemplar/
 ```
 
-Everything is vendored and offline-capable (Teams-safe). Presenter window: press `S`.
-Keys: `→/←` nav · `1/2/3` depth · `?` help · `T` theme · `F` fullscreen · `Esc` overview.
+Everything (engine, fonts, plugins) is vendored and offline-capable (Teams-safe).
+Presenter window: press `S`. Keys: `→/←` nav · `1/2/3` depth · `?` help · `T` light/dark
+· `F` fullscreen · `Esc` overview · **`✦`** (top-left) cycles the brand theme.
+
+Two drop-in brand themes ship — **editorial** (Fraunces serif, warm paper) and
+**corporate-navy** (Inter, navy) — proving P4: the *same* deck reskins by swapping
+tokens only. Set `theme:` in the deck, or click `✦` live.
+
+**Components:** layouts (`title, section, split, image, visual, content, grid,
+compare, quote, statement`), blocks (`cards, stats, list, code, callout, flow,
+timeline, table`), visuals (`chart` bar/line, `donut`, `image`).
 
 ## How it's built (maps to the principles)
 
@@ -54,8 +64,7 @@ Keys: `→/←` nav · `1/2/3` depth · `?` help · `T` theme · `F` fullscreen 
 - **Visual** — `registerVisual(name, (host,props) => dispose)` in `framework/visuals.js`.
 - **Theme** — add/point a `*.tokens.json` (DTCG); rebuild to regenerate `tokens.css`.
 
-_Remaining in this phase:_ single-file (inlined) export for maximum portability;
-the vendored-chart-lib adapter.
+_Optional follow-up:_ a vendored-chart-lib adapter (native SVG covers charts today).
 
 > The prior LLM lecture deck that used to live here is preserved on the `main`
 > branch and in git history.

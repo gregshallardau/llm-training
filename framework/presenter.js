@@ -27,6 +27,19 @@ export function initPresenter(deck, { remountVisualsIn }) {
   btn.addEventListener('click', toggleTheme);
   document.body.append(btn);
 
+  // brand theme cycle (demonstrates reskin — same deck, tokens only).
+  // NB: a small control, not a key — 'B' is reveal's built-in blackout/pause.
+  const BRANDS = ['editorial', 'corporate-navy'];
+  const cycleBrand = () => {
+    const cur = root.getAttribute('data-deck-theme') || BRANDS[0];
+    root.setAttribute('data-deck-theme', BRANDS[(BRANDS.indexOf(cur) + 1) % BRANDS.length]);
+    remountVisualsIn(deck.getCurrentSlide());
+    window.dispatchEvent(new Event('deck-refit'));
+  };
+  const brandBtn = el('button#deck-brand', { 'aria-label': 'Cycle brand theme', title: 'Brand theme' }, '✦');
+  brandBtn.addEventListener('click', cycleBrand);
+  document.body.append(brandBtn);
+
   // help overlay
   const help = buildHelp();
   document.body.append(help);
@@ -97,7 +110,7 @@ function buildHelp() {
     ['→ / ←', 'Next / previous'], ['↓ / ↑', 'Within a stack'],
     ['1 / 2 / 3', 'Depth for the whole deck'], ['?', 'This help'],
     ['S', 'Speaker window (notes + next + timer)'], ['F', 'Fullscreen'],
-    ['Esc / O', 'Overview'], ['T', 'Light / dark']
+    ['Esc / O', 'Overview'], ['T', 'Light / dark'], ['✦', 'Brand theme (top-left control)']
   ];
   return el('div#deck-help', { onclick: (e) => { if (e.target.id === 'deck-help') e.currentTarget.classList.remove('open'); } },
     el('div.dk-help-card', { role: 'dialog', 'aria-modal': 'true', 'aria-label': 'Keyboard shortcuts' },

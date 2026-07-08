@@ -75,6 +75,38 @@ registerVisual('chart', (host, props) => {
   return () => host.replaceChildren();
 });
 
+registerVisual('donut', (host, props) => {
+  const { title, sub, segments = [] } = props;
+  const colors = palette();
+  const total = segments.reduce((a, s) => a + (s.value || 0), 0) || 1;
+  const size = 280, cx = size / 2, cy = size / 2, r = 100, thick = 40, C = 2 * Math.PI * r;
+
+  const wrap = el('div.dk-donut', null,
+    (title || sub) && el('div.dk-chart-head', null, title && el('h2', null, title), sub && el('p.dk-muted', null, sub)));
+  const svg = svgEl('svg', { viewBox: `0 0 ${size} ${size}`, width: '100%', height: '100%', role: 'img', 'aria-label': title || 'donut chart' });
+  let acc = 0;
+  segments.forEach((s, i) => {
+    const len = (s.value || 0) / total * C;
+    svg.append(svgEl('circle', {
+      cx, cy, r, fill: 'none', stroke: colors[i % colors.length], 'stroke-width': thick,
+      'stroke-dasharray': `${len} ${C - len}`, 'stroke-dashoffset': -acc, transform: `rotate(-90 ${cx} ${cy})`
+    }));
+    acc += len;
+  });
+  const centre = svgEl('text', { x: cx, y: cy, 'text-anchor': 'middle', 'dominant-baseline': 'central', fill: tok('--text'), 'font-size': 36, 'font-weight': 700 });
+  centre.textContent = String(total);
+  svg.append(centre);
+
+  const legend = el('div.dk-donut-legend', null, segments.map((s, i) =>
+    el('div.dk-legend-item', null,
+      el('span.dk-swatch', { style: { background: colors[i % colors.length] } }),
+      el('span', null, s.label), el('span.dk-legend-val', null, String(s.value)))));
+
+  wrap.append(el('div.dk-donut-row', null, el('div.dk-donut-svg', null, svg), legend));
+  host.append(wrap);
+  return () => host.replaceChildren();
+});
+
 registerVisual('image', (host, props) => {
   const { src, fit = 'cover', focal = 'center', scrim, alt = '' } = props;
   const bg = el('div.dk-img', { role: 'img', 'aria-label': alt, 'data-fit': fit });

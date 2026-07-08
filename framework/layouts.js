@@ -64,6 +64,26 @@ registerLayout('quote', (d) => ({
     d.cite && el('p.dk-cite', null, d.cite))
 }));
 
+registerLayout('section', (d) => ({
+  mode: 'flow',
+  node: el('div.dk-section', null,
+    d.kicker && el('div.dk-eyebrow', null, d.kicker),
+    el('h1', null, d.heading),
+    d.subhead && el('p.dk-lead', null, d.subhead))
+}));
+
+registerLayout('statement', (d) => ({
+  mode: 'flow',
+  node: el('div.dk-statement', null, el('p.dk-bigstate', { html: d.text }))
+}));
+
+registerLayout('grid', (d) => ({
+  mode: 'flow',
+  node: el('div.dk-content', null,
+    d.heading && el('h2', null, d.heading),
+    el('div.dk-grid', { style: { '--cols': String(d.columns || 2) } }, buildBlocks(d.blocks)))
+}));
+
 registerLayout('compare', (d) => {
   const col = (c, tone) => el('div.dk-compare-col', { 'data-tone': tone },
     c?.title && el('h4', null, c.title),

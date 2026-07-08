@@ -12,7 +12,11 @@ export function el(spec, attrs, ...children) {
   if (attrs) for (const [k, v] of Object.entries(attrs)) {
     if (v == null || v === false) continue;
     if (k === 'html') node.innerHTML = v;
-    else if (k === 'style' && typeof v === 'object') Object.assign(node.style, v);
+    else if (k === 'style' && typeof v === 'object') {
+      for (const [sk, sv] of Object.entries(v)) {
+        if (sk.startsWith('--')) node.style.setProperty(sk, sv); else node.style[sk] = sv;
+      }
+    }
     else if (k in node && k !== 'list') { try { node[k] = v; } catch { node.setAttribute(k, v); } }
     else node.setAttribute(k, v);
   }
