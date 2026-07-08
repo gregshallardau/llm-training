@@ -131,6 +131,30 @@
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+
+/* Fix: content/diagram sections carry an inline position:relative that
+   overrides reveal.js's required position:absolute, which pushed every
+   vertical ("down") slide one screen-height below the viewport. Restore
+   absolute (reveal's own default) so down-slides render on-screen. The
+   sections still provide the positioning context their absolute children
+   (depth controls, badges, mod-num) rely on. */
+.reveal .slides section { position: absolute !important; }
+
+/* Launchpad: jump-to-depth buttons on module title slides */
+.launchpad { display: flex; align-items: center; flex-wrap: wrap; gap: 0.5em; margin-top: 1em; }
+.launchpad-label { font-size: 0.55em; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); margin-right: 0.2em; }
+.lp-btn { font-size: 0.55em; font-weight: 800; letter-spacing: 0.05em; padding: 0.5em 1.1em; border-radius: 999px; border: 1px solid var(--border); cursor: pointer; transition: all 0.15s; }
+.lp-btn:hover { transform: translateY(-1px); filter: brightness(1.08); }
+.lp-plain { background: var(--badge-plain); color: var(--badge-plain-fg); border-color: var(--badge-plain-fg); }
+.lp-tech  { background: var(--badge-tech);  color: var(--badge-tech-fg);  border-color: var(--badge-tech-fg); }
+.lp-phd   { background: var(--badge-phd);   color: var(--badge-phd-fg);   border-color: var(--badge-phd-fg); }
+
+/* Module breadcrumbs: numbered strip for multi-slide modules */
+#module-breadcrumbs { position: fixed; bottom: 14px; left: 50%; transform: translateX(-50%); display: none; align-items: center; gap: 0.4em; z-index: 40; padding: 0.35em 0.6em; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; box-shadow: 0 2px 10px rgba(0,0,0,0.25); }
+#module-breadcrumbs .bc-label { font-size: 11px; font-weight: 700; letter-spacing: 0.05em; color: var(--text-dim); margin-right: 0.15em; }
+.bc-dot { width: 22px; height: 22px; border-radius: 50%; border: 1px solid var(--border); background: transparent; color: var(--text-muted); font-size: 11px; font-weight: 800; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0; transition: all 0.15s; }
+.bc-dot:hover { border-color: var(--brand); color: var(--brand); }
+.bc-dot.active { background: var(--brand); border-color: var(--brand); color: #fff; }
 body.light .reveal { background: var(--bg); color: var(--text); }
 body.light .reveal blockquote { background: rgba(37,99,235,0.08); }
 body.light .showcase-row-plain { background: rgba(209,250,229,0.4); }
@@ -227,7 +251,7 @@ body.light #theme-toggle { background: rgba(255,255,255,0.8); }
 
 <div class="reveal">
   <div class="slides">
-<section id="deck/title" style="background:linear-gradient(135deg,var(--bg-deep) 0%,var(--bg) 50%,rgba(139,92,246,0.15) 100%)"><div class="deck-title-container"><div class="deck-series-label">THE LLM LECTURE SERIES</div><h1 class="deck-main-title">LLM Lecture Series</h1><p class="deck-subtitle">All modules · Three depth tracks · One deck</p><p class="deck-author">Greg Shallard</p><div class="deck-nav-hint">→ next · ↓ extras · [PLAIN|TECH|PhD] on-slide · ⤢ full text · ▶ interactive · 🌗 light/dark</div></div></section>
+<section id="deck/title" style="background:linear-gradient(135deg,var(--bg-deep) 0%,var(--bg) 50%,rgba(139,92,246,0.15) 100%)"><div class="deck-title-container"><div class="deck-series-label">THE LLM LECTURE SERIES</div><h1 class="deck-main-title">LLM Lecture Series</h1><p class="deck-subtitle">All modules · Three depth tracks · One deck</p><p class="deck-author">Greg Shallard</p><div class="deck-nav-hint">→ next · ↓ extras · [PLAIN|TECH|PhD] jump/switch depth · ①②③ breadcrumbs · ⤢ full text · ▶ interactive · 🌗 light/dark</div></div></section>
 
 <section id="deck/map" style="background:var(--bg)">
   <div class="map-slide-container">
@@ -268,7 +292,8 @@ body.light #theme-toggle { background: rgba(255,255,255,0.8); }
     <div class="nav-grid">
       <div class="nav-item"><div class="nav-key">→</div><div class="nav-desc">Next module</div></div>
       <div class="nav-item"><div class="nav-key">↓</div><div class="nav-desc">Extras &amp; diagrams</div></div>
-      <div class="nav-item"><div class="nav-key">[PLAIN|TECH|PhD]</div><div class="nav-desc">Switch depth on content slides</div></div>
+      <div class="nav-item"><div class="nav-key">[PLAIN|TECH|PhD]</div><div class="nav-desc">On a module's title slide, jump straight to that depth · or switch depth in place on content slides</div></div>
+      <div class="nav-item"><div class="nav-key">① ② ③</div><div class="nav-desc">Breadcrumbs (bottom) — jump between a module's slides</div></div>
       <div class="nav-item"><div class="nav-key">⤢</div><div class="nav-desc">Full text in overlay</div></div>
       <div class="nav-item"><div class="nav-key">▶</div><div class="nav-desc">Open interactive visual</div></div>
       <div class="nav-item"><div class="nav-key">🌗</div><div class="nav-desc">Light / dark theme</div></div>
@@ -6084,27 +6109,44 @@ Level 3 (integrated)    AI embedded in every significant workflow.
 <script src="vendor/highlight.js"></script>
 
 <script>
-mermaid.initialize({
-  startOnLoad: false,
-  theme: 'dark',
-  darkMode: true,
-  themeVariables: {
-    primaryColor: '#3b82f6',
-    primaryTextColor: '#f1f5f9',
-    primaryBorderColor: '#334155',
-    lineColor: '#64748b',
-    secondaryColor: '#1e293b',
-    tertiaryColor: '#0f172a',
-    background: '#0f172a',
-    mainBkg: '#1e293b',
-    nodeBorder: '#334155',
-    clusterBkg: '#1e293b',
-    titleColor: '#f1f5f9',
-    edgeLabelBackground: '#0f172a',
-    fontFamily: 'Inter, system-ui, sans-serif'
-  },
-  flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'cardinal' }
-});
+function deckInitMermaid(isLight) {
+  mermaid.initialize({
+    startOnLoad: false,
+    theme: isLight ? 'default' : 'dark',
+    darkMode: !isLight,
+    themeVariables: isLight ? {
+      primaryColor: '#dbeafe',
+      primaryTextColor: '#0f172a',
+      primaryBorderColor: '#93c5fd',
+      lineColor: '#64748b',
+      secondaryColor: '#ede9fe',
+      tertiaryColor: '#f1f5f9',
+      background: '#ffffff',
+      mainBkg: '#ffffff',
+      nodeBorder: '#cbd5e1',
+      clusterBkg: '#f1f5f9',
+      titleColor: '#0f172a',
+      edgeLabelBackground: '#ffffff',
+      fontFamily: 'Inter, system-ui, sans-serif'
+    } : {
+      primaryColor: '#3b82f6',
+      primaryTextColor: '#f1f5f9',
+      primaryBorderColor: '#334155',
+      lineColor: '#64748b',
+      secondaryColor: '#1e293b',
+      tertiaryColor: '#0f172a',
+      background: '#0f172a',
+      mainBkg: '#1e293b',
+      nodeBorder: '#334155',
+      clusterBkg: '#1e293b',
+      titleColor: '#f1f5f9',
+      edgeLabelBackground: '#0f172a',
+      fontFamily: 'Inter, system-ui, sans-serif'
+    },
+    flowchart: { useMaxWidth: true, htmlLabels: true, curve: 'cardinal' }
+  });
+}
+deckInitMermaid(false);
 Reveal.initialize({
   hash: true,
   history: true,
@@ -6183,21 +6225,23 @@ document.addEventListener('keydown', function(e) {
 
 (function() {
   var btn = document.getElementById('theme-toggle');
-  var saved = localStorage.getItem('deckTheme') || 'dark';
-  if (saved === 'light') document.body.classList.add('light');
+  var saved = localStorage.getItem('deckTheme') || 'light';
+  var startLight = saved !== 'dark';
+  if (startLight) document.body.classList.add('light');
+  deckInitMermaid(startLight);
   btn.addEventListener('click', function() {
     document.body.classList.toggle('light');
     var isLight = document.body.classList.contains('light');
     localStorage.setItem('deckTheme', isLight ? 'light' : 'dark');
+    deckInitMermaid(isLight);
     setTimeout(function() {
+      // Reset every rendered diagram so it re-themes when next shown
+      document.querySelectorAll('.mermaid[data-processed]').forEach(function(el) {
+        el.removeAttribute('data-processed');
+        el.innerHTML = el.dataset.src || el.textContent;
+      });
       var curr = Reveal.getCurrentSlide();
-      if (curr) {
-        curr.querySelectorAll('.mermaid[data-processed]').forEach(function(el) {
-          el.removeAttribute('data-processed');
-          el.innerHTML = el.dataset.src || el.textContent;
-        });
-        renderMermaidOnSlide(curr);
-      }
+      if (curr) renderMermaidOnSlide(curr);
     }, 100);
   });
 })();
@@ -6236,6 +6280,108 @@ async function renderMermaidOnSlide(slide) {
 
 Reveal.on('slidechanged', async function(event) { await renderMermaidOnSlide(event.currentSlide); });
 Reveal.on('ready', async function(event) { await renderMermaidOnSlide(event.currentSlide); });
+
+// ═══════════════ MODULE NAVIGATION (launchpad + breadcrumbs) ═══════════════
+(function() {
+  var TRACKS = [
+    { key: 'plain', label: 'PLAIN', cls: 'lp-plain' },
+    { key: 'tech',  label: 'TECH',  cls: 'lp-tech'  },
+    { key: 'phd',   label: 'PhD',   cls: 'lp-phd'   }
+  ];
+
+  // The "core" (non-extras) vertical slides of a module, in order.
+  function coreSlides(mod) {
+    var verts = Array.prototype.slice.call(mod.querySelectorAll(':scope > section'));
+    var core = [];
+    for (var i = 0; i < verts.length; i++) {
+      var s = verts[i];
+      if (s.classList.contains('extras-divider-slide')) break;
+      if ((s.id || '').indexOf('extras') > -1) continue;
+      core.push(s);
+    }
+    return core;
+  }
+
+  function jumpTo(section, sid, track) {
+    var idx = Reveal.getIndices(section);
+    Reveal.slide(idx.h, idx.v);
+    if (sid && track) {
+      setTimeout(function() { switchTrack({ stopPropagation: function() {} }, sid, track); }, 0);
+    }
+  }
+
+  // 1) Inject launchpad depth buttons onto each module title slide.
+  function buildLaunchpads() {
+    document.querySelectorAll('.slides > section[data-module-slug]').forEach(function(mod) {
+      var title = mod.querySelector(':scope > section');
+      if (!title || title.querySelector('.launchpad')) return;
+      var dc = mod.querySelector(':scope > section .depth-controls[data-sid]');
+      if (!dc) return; // module has no depth-track content to jump to
+      var sid = dc.getAttribute('data-sid');
+      var contentSection = dc.closest('section');
+
+      var lp = document.createElement('div');
+      lp.className = 'launchpad';
+      var lbl = document.createElement('span');
+      lbl.className = 'launchpad-label';
+      lbl.textContent = 'Jump to:';
+      lp.appendChild(lbl);
+      TRACKS.forEach(function(t) {
+        var b = document.createElement('button');
+        b.className = 'lp-btn ' + t.cls;
+        b.textContent = t.label;
+        b.addEventListener('click', function(e) {
+          e.stopPropagation();
+          jumpTo(contentSection, sid, t.key);
+        });
+        lp.appendChild(b);
+      });
+
+      var visualBtn = title.querySelector('.visual-launch-btn');
+      var hint = title.querySelector('.extras-hint');
+      if (visualBtn) title.insertBefore(lp, visualBtn);
+      else if (hint) title.insertBefore(lp, hint);
+      else title.appendChild(lp);
+    });
+  }
+
+  // 2) Numbered breadcrumb strip for modules with multiple core slides.
+  var bar = document.createElement('div');
+  bar.id = 'module-breadcrumbs';
+  document.querySelector('.reveal').appendChild(bar);
+
+  function updateBreadcrumbs(slide) {
+    if (!slide) { bar.style.display = 'none'; return; }
+    var mod = slide.closest('section[data-module-slug]');
+    if (!mod) { bar.style.display = 'none'; return; }
+    var core = coreSlides(mod);
+    if (core.length < 2) { bar.style.display = 'none'; return; }
+    var cur = core.indexOf(slide);
+
+    bar.innerHTML = '';
+    var lbl = document.createElement('span');
+    lbl.className = 'bc-label';
+    lbl.textContent = (mod.getAttribute('data-module-slug') || '').split('-')[0].toUpperCase() || 'STEP';
+    bar.appendChild(lbl);
+    core.forEach(function(s, i) {
+      var d = document.createElement('button');
+      d.className = 'bc-dot' + (i === cur ? ' active' : '');
+      d.textContent = (i + 1);
+      var h = s.querySelector('.content-slide-heading, .module-title-h, .diagram-heading, h1, h2, h3');
+      if (h) d.title = (i + 1) + '. ' + h.textContent.trim();
+      d.addEventListener('click', function(e) {
+        e.stopPropagation();
+        var idx = Reveal.getIndices(s);
+        Reveal.slide(idx.h, idx.v);
+      });
+      bar.appendChild(d);
+    });
+    bar.style.display = 'flex';
+  }
+
+  Reveal.on('ready', function(e) { buildLaunchpads(); updateBreadcrumbs(e.currentSlide); });
+  Reveal.on('slidechanged', function(e) { updateBreadcrumbs(e.currentSlide); });
+})();
 
 // ═══════════════════ WIDGET JS ═══════════════════════
 

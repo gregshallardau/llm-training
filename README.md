@@ -15,7 +15,7 @@ python3 -m http.server 8090
 # then open http://localhost:8090/present.html
 ```
 
-- `present.html` — the main deck (dark theme).
+- `present.html` — the main deck (defaults to light theme; press `🌗` to toggle dark).
 - `present-work.html` — a re-skinned variant (light theme, work-branded example).
 - `index.html` — full-content reference deck (everything, long form).
 - `LLM-Series-Backup-Deck.pdf` / `backup-deck.md` — linear fallback to present from if the interactive deck ever fails.
