@@ -64,9 +64,11 @@ expert) that the presenter switches between live — per slide or for the whole
 deck. This is an opt-in capability, not a requirement of every deck.
 
 **P9 — Presenter-first operation.**
-Built for someone driving it live: a coherent keyboard model, speaker/notes view,
-an on-demand shortcut/help overlay, jump-to navigation, and an overview. Operation
-must feel effortless and predictable.
+Built for someone driving it live: a coherent keyboard model, an on-demand
+shortcut/help overlay, jump-to navigation, and an overview. Operation must feel
+effortless and predictable. A dedicated **presenter window** (a separate speaker
+view — current + next slide, speaker notes, and a timer/clock) is a **required,
+retained feature**, not optional.
 
 **P10 — Slick, restrained UI.**
 Navigation and chrome are minimal and refined — no dated, clunky controls. Motion
@@ -100,6 +102,12 @@ It behaves the same on every machine and screen size. No layout surprises, no
 
 To be resolved cleanly with research + your input, **before** any building:
 
+0. **Landscape scan (do this first)** — search online for existing presentation
+   frameworks, engines, tools, and libraries we could **adopt, integrate, or build
+   on instead of reinventing**. Evaluate the field (e.g. reveal.js, Slidev, Marp,
+   Spectacle, WebSlides, remark, Motion Canvas, Sli.dev-style tooling) plus
+   component / chart / theming libraries, against these principles. Bias strongly
+   toward incorporating proven solutions; only build what nothing existing gives us.
 1. **Authoring model** — how does an author declare a deck? (Structured data /
    config vs markup vs markdown.) What's the most flexible, low-friction format?
 2. **Rendering foundation** — build on an existing engine (e.g. reveal.js) or a
@@ -118,8 +126,10 @@ To be resolved cleanly with research + your input, **before** any building:
 ## 4. How we'll work
 
 1. **Principles** (this file) — agree what we're building and why.
-2. **Research** — a clean, sourced study of the open questions above and of
-   best-in-class presentation frameworks and design practice.
+2. **Research** — a clean, sourced study that **first scans the field online for
+   existing frameworks, tools, and solutions we can incorporate or build on** (not
+   reinvent), then works through the open questions above and best-in-class design
+   practice. Output: a cited report with a clear build-vs-adopt recommendation.
 3. **Design** — an architecture + design system that satisfies these principles.
 4. **Build** — implement, proving it on a small exemplar before scaling.
 
