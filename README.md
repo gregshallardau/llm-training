@@ -19,10 +19,43 @@ This branch is intentionally empty of application content. It starts from
    the principles; the pivotal P1 (guaranteed fit) risk was **proven** with a
    throwaway POC (`spikes/fit-layer/`, 0-overflow across 3 viewports × 2 themes).
    **Done.**
-4. **Build** — implement, proving it on a small content-neutral exemplar before
-   scaling. _Next._
+4. **Build** — **Done (first slice).** The framework is implemented and proven on a
+   content-neutral exemplar (`decks/exemplar/`): 8 slides from a single YAML config,
+   **48/48 fit checks (0-overflow) across 3 viewports × 2 themes, no console errors.**
 
-No framework code is written until the research is done and approved.
+## Build & run
+
+```bash
+npm install
+npm run build     # vendors reveal.js, compiles DTCG tokens→CSS (AA-validated),
+                  # compiles decks/*/deck.yaml→deck-data.js, bundles the framework
+npx http-server . # or: python3 -m http.server — then open decks/exemplar/
+```
+
+Everything is vendored and offline-capable (Teams-safe). Presenter window: press `S`.
+Keys: `→/←` nav · `1/2/3` depth · `?` help · `T` theme · `F` fullscreen · `Esc` overview.
+
+## How it's built (maps to the principles)
+
+| Piece | File(s) | Principle |
+|---|---|---|
+| Fixed frame + shrink-to-fit | `framework/fit.js` | P1, P13 |
+| Declarative deck config (YAML) | `decks/*/deck.yaml` → `deck-data.js` | P2, P3 |
+| DTCG tokens → CSS vars (+AA) | `framework/theme/` | P4, P11 |
+| Layouts / blocks / visuals + registry | `framework/{layouts,blocks,visuals,registry}.js` | P5, P6, P7 |
+| Renderer (config → slides) | `framework/renderer.js` | P2, P3 |
+| Presenter, depth, help, theme | `framework/presenter.js` | P8, P9, P10 |
+| Engine (adopted, vendored) | `vendor/` (reveal.js) | P9, P12, P13 |
+
+## Add a … (extension points, P6)
+
+- **Layout** — `registerLayout(name, (data,ctx) => ({ mode, node }))` in `framework/layouts.js`.
+- **Block** — `registerBlock(name, (props) => Element)` in `framework/blocks.js`.
+- **Visual** — `registerVisual(name, (host,props) => dispose)` in `framework/visuals.js`.
+- **Theme** — add/point a `*.tokens.json` (DTCG); rebuild to regenerate `tokens.css`.
+
+_Remaining in this phase:_ single-file (inlined) export for maximum portability;
+the vendored-chart-lib adapter.
 
 > The prior LLM lecture deck that used to live here is preserved on the `main`
 > branch and in git history.

@@ -1,0 +1,159 @@
+window.__DECK__ = {
+  "title": "DeckKit — Framework Demo",
+  "ratio": "16:9",
+  "slides": [
+    {
+      "layout": "title",
+      "eyebrow": "DeckKit",
+      "heading": "A presentation framework that just fits",
+      "subhead": "Declarative decks · a guaranteed frame · themeable · offline.",
+      "notes": "This whole deck is generated from a YAML config through the framework."
+    },
+    {
+      "layout": "image",
+      "src": "assets/hero.svg",
+      "fit": "cover",
+      "focal": "center 40%",
+      "scrim": "bottom",
+      "eyebrow": "Layout · image",
+      "heading": "One picture can carry the slide",
+      "body": "Full-bleed media with a legible scrim — declared, not hand-styled.",
+      "notes": "The image layout is full-bleed; the scrim keeps overlaid text readable."
+    },
+    {
+      "layout": "split",
+      "mediaSide": "right",
+      "text": {
+        "heading": "Text and media, balanced",
+        "body": "The split layout pairs a column of prose with any registered visual — an image here, a chart elsewhere. Both stay inside the frame."
+      },
+      "media": {
+        "component": "image",
+        "src": "assets/hero.svg",
+        "fit": "cover",
+        "focal": "center",
+        "alt": "Abstract network"
+      },
+      "notes": "Split layout with an image component in the media cell."
+    },
+    {
+      "layout": "content",
+      "heading": "Built from components",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Layouts",
+              "body": "A fixed vocabulary you choose from."
+            },
+            {
+              "title": "Blocks",
+              "body": "Cards",
+              "tables": null,
+              "callouts": null,
+              "flows.": null
+            },
+            {
+              "title": "Visuals",
+              "body": "Native SVG charts and media."
+            },
+            {
+              "title": "Themes",
+              "body": "DTCG tokens — one swap to reskin."
+            }
+          ]
+        }
+      ],
+      "notes": "Every slide is assembled from registered components."
+    },
+    {
+      "layout": "compare",
+      "heading": "Why a framework, not a template",
+      "left": {
+        "title": "Hand-built slides",
+        "items": [
+          "Bespoke CSS per slide",
+          "Overflow surprises",
+          "Reskin means rework",
+          "One-off"
+        ]
+      },
+      "right": {
+        "title": "DeckKit",
+        "items": [
+          "Declare intent",
+          "Guaranteed fit",
+          "Reskin is a token swap",
+          "Reusable"
+        ]
+      },
+      "notes": "Separation of content, layout, theme and behaviour is the whole point."
+    },
+    {
+      "layout": "visual",
+      "component": "chart",
+      "props": {
+        "type": "bar",
+        "title": "Guaranteed to fit, at any density",
+        "sub": "Illustrative — content scales to the frame, never overflows.",
+        "labels": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5"
+        ],
+        "data": [
+          12,
+          28,
+          41,
+          64,
+          92
+        ],
+        "seriesLabel": "Adoption"
+      },
+      "notes": "A native SVG chart, themed from tokens; it re-themes on toggle."
+    },
+    {
+      "layout": "content",
+      "heading": "One idea, three depths",
+      "depths": {
+        "simple": {
+          "blocks": [
+            {
+              "type": "callout",
+              "title": "Simple",
+              "body": "Pick the audience level once and the whole deck follows."
+            }
+          ]
+        },
+        "detailed": {
+          "blocks": [
+            {
+              "type": "callout",
+              "title": "Detailed",
+              "body": "Each slide can carry the same idea at simple, detailed or expert depth — switch live with 1 / 2 / 3."
+            }
+          ]
+        },
+        "expert": {
+          "blocks": [
+            {
+              "type": "callout",
+              "title": "Expert",
+              "body": "Layered content is an accessible tablist (role=tab, aria-selected), global or per-slide, persisted across the session."
+            }
+          ]
+        }
+      },
+      "notes": "Press 1 / 2 / 3 to change depth for the whole deck."
+    },
+    {
+      "layout": "quote",
+      "text": "Reliable like PowerPoint. <span class=\"accent\">Programmable</span> like the web.",
+      "cite": "The point of the whole thing.",
+      "notes": "Close."
+    }
+  ]
+};
