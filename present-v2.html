@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM Lecture Series — DeckKit</title>
+  <link rel="stylesheet" href="vendor/reveal.css">
+  <link rel="stylesheet" href="framework/deck-tokens.css">
+  <link rel="stylesheet" href="framework/deck.css">
+</head>
+<body>
+  <button id="theme-toggle" aria-label="Toggle theme">☾</button>
+
+  <div class="reveal">
+    <div class="slides">
+
+      <!-- ═══════════════ DECK COVER ═══════════════ -->
+      <section data-layout="title" id="deck-title">
+        <div class="slide-eyebrow">The LLM Lecture Series</div>
+        <h1>How large language models really work</h1>
+        <p class="slide-hook">An interactive, industry-agnostic walk through the machine — three depth tracks, one deck.</p>
+        <p class="slide-question">Greg Shallard</p>
+        <p style="color:var(--text-dim);font-size:var(--text-sm);margin-top:var(--space-4)">→ next · ↓ within a module · <strong>1/2/3</strong> depth · <strong>?</strong> help · <strong>T</strong> theme</p>
+      </section>
+
+      <!-- ═══════════════ MAP ═══════════════ -->
+      <section class="deck-map" data-layout="content">
+        <h2>The map</h2>
+        <p style="color:var(--text-muted);font-size:var(--text-sm)">Tap a module to jump there.</p>
+        <div class="map-grid">
+          <a class="map-item" href="#/2">00 · Think of It as a Brain</a>
+          <a class="map-item" href="#/3">03 · The Attention Mechanism</a>
+          <a class="map-item" href="#/4">08 · The Base Layer ⭐</a>
+          <a class="map-item" href="#/5">＋ Component Library</a>
+        </div>
+      </section>
+
+      <!-- ═══════════════ MODULE 00 ═══════════════ -->
+      <section data-module="00" data-slug="the-brain">
+        <section data-layout="title">
+          <div class="slide-eyebrow">Module 00</div>
+          <h1>Think of It as a Brain</h1>
+          <p class="slide-hook">🧠 A brilliant new colleague on their permanent first day: vast knowledge, zero memory of you.</p>
+          <div data-launchpad-anchor></div>
+        </section>
+
+        <section data-layout="layers">
+          <div class="layers-head"><h2>The one analogy</h2></div>
+          <div class="layers-body">
+            <div class="depth-panel" data-track="plain">
+              <p>The LLM is a <strong>brilliant new colleague on their permanent first day</strong>. They have read everything ever written and write at extraordinary speed — and they have <strong>zero memory</strong> of you, your clients, or what you did yesterday.</p>
+              <p>Every conversation is day one. Your job is to write the onboarding note that makes day one productive.</p>
+            </div>
+            <div class="depth-panel" data-track="tech">
+              <p>The transformer implements functional analogues of cognition: <strong>chunked perception</strong> (tokenisation), <strong>selective attention</strong> (self-attention), a <strong>bounded working memory</strong> (context window) and <strong>sequential production</strong> (autoregressive decoding).</p>
+              <p>What's missing is <strong>episodic memory</strong> — there is no cross-session persistence. The base layer is an external memory prosthetic for that gap.</p>
+            </div>
+            <div class="depth-panel" data-track="phd">
+              <p>Attention approximates selective-attention models (Treisman 1964; Posner 1980); the context window behaves as a bounded working memory (cf. Cowan's 4±1). With <strong>no inference-time plasticity</strong>, the model forms no new associations within a session — it only leverages associations learned in training.</p>
+              <p>In-context conditioning substitutes an external episodic memory for the missing internal mechanism.</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-layout="visual" data-visual="amnesia-chat">
+          <div class="visual-stage"></div>
+          <span class="mod-num">Module 00</span>
+        </section>
+
+        <section data-layout="content">
+          <h2>Four things it does</h2>
+          <div class="deck-cards" style="margin-top:var(--space-4)">
+            <div class="deck-card"><h4><i data-lucide="book-open"></i> Reads everything</h4><p>Trained on trillions of words.</p></div>
+            <div class="deck-card"><h4><i data-lucide="share-2"></i> Knows patterns</h4><p>Statistical relationships in language.</p></div>
+            <div class="deck-card"><h4><i data-lucide="chevrons-right"></i> Predicts next</h4><p>One token at a time.</p></div>
+            <div class="deck-card"><h4><i data-lucide="eraser"></i> Has amnesia</h4><p>No memory between sessions.</p></div>
+          </div>
+          <span class="mod-num">Module 00</span>
+        </section>
+      </section>
+
+      <!-- ═══════════════ MODULE 03 ═══════════════ -->
+      <section data-module="03" data-slug="attention">
+        <section data-layout="title">
+          <div class="slide-eyebrow">Module 03</div>
+          <h1>The Attention Mechanism</h1>
+          <p class="slide-hook">🎛️ A mixing desk deciding how loud each word is in the mix.</p>
+          <div data-launchpad-anchor></div>
+        </section>
+
+        <section data-layout="layers">
+          <div class="layers-head"><h2>What attention does</h2></div>
+          <div class="layers-body">
+            <div class="depth-panel" data-track="plain">
+              <p>When you read a long file your eyes don't weight every word equally — you link <em>"the client"</em> to the name at the top of the page.</p>
+              <p>Attention is the model asking, for every word: <strong>which other words matter to me right now?</strong> — then focusing there.</p>
+            </div>
+            <div class="depth-panel" data-track="tech">
+              <p>Scaled dot-product attention: each token emits <strong>query / key / value</strong> vectors; weights are <code>softmax(QKᵀ/√d)</code> over the keys, and the output is a weighted sum of values.</p>
+              <p>Multiple <strong>heads</strong> learn different relations — syntax, coreference, position — in parallel.</p>
+            </div>
+            <div class="depth-panel" data-track="phd">
+              <p>Self-attention is content-based addressing over the sequence; <strong>causal masking</strong> makes decoding autoregressive.</p>
+              <p>Because position 0 is attendable by every later token, the system prompt exerts <strong>maximal influence</strong> — a structural reason base layers work so well.</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-layout="visual" data-visual="attention-heatmap">
+          <div class="visual-stage"></div>
+          <span class="mod-num">Module 03</span>
+        </section>
+      </section>
+
+      <!-- ═══════════════ MODULE 08 ═══════════════ -->
+      <section data-module="08" data-slug="base-layer">
+        <section data-layout="title">
+          <div class="slide-eyebrow">Module 08 ⭐</div>
+          <h1>The Base Layer</h1>
+          <p class="slide-hook">📋 The onboarding document you hand the AI every single conversation.</p>
+          <div data-launchpad-anchor></div>
+        </section>
+
+        <section data-layout="layers">
+          <div class="layers-head"><h2>Teaching the AI who you are</h2></div>
+          <div class="layers-body">
+            <div class="depth-panel" data-track="plain">
+              <p>The base layer tells the AI <strong>who it's helping</strong> — your role, your clients, your style — so you stop re-explaining yourself and every answer comes back sharper and more like you.</p>
+            </div>
+            <div class="depth-panel" data-track="tech">
+              <p>A reusable <strong>context prefix</strong> injected ahead of the task. It converts your private knowledge into in-context information, compensating for the lack of persistent memory. Written once, pasted per session or pinned via custom instructions.</p>
+            </div>
+            <div class="depth-panel" data-track="phd">
+              <p>In-context conditioning shifts <code>P(response | task)</code> toward your distribution with <strong>no weight updates</strong> — retrieval-free personalisation, the highest-leverage intervention available without fine-tuning.</p>
+            </div>
+          </div>
+        </section>
+
+        <section data-layout="content">
+          <h2>Six questions the base layer answers</h2>
+          <div class="deck-cards" style="margin-top:var(--space-4)">
+            <div class="deck-card"><h4>WHO</h4><p>Your role, team, clients.</p></div>
+            <div class="deck-card"><h4>WHAT</h4><p>Daily work, standards.</p></div>
+            <div class="deck-card"><h4>WHERE</h4><p>Industry, location.</p></div>
+            <div class="deck-card"><h4>WHEN</h4><p>Rhythms, deadlines.</p></div>
+            <div class="deck-card"><h4>WHY</h4><p>Goals, values.</p></div>
+            <div class="deck-card"><h4>HOW</h4><p>Communication style.</p></div>
+          </div>
+          <span class="mod-num">Module 08</span>
+        </section>
+
+        <section data-layout="content">
+          <h2>The difference it makes</h2>
+          <div class="deck-compare" style="margin-top:var(--space-4)">
+            <div class="compare-col is-neg">
+              <h4>Without a base layer</h4>
+              <ul><li>Explain yourself every time</li><li>Generic, templated output</li><li>The AI doesn't know you</li><li>Inconsistent results</li></ul>
+            </div>
+            <div class="compare-col is-pos">
+              <h4>With a base layer</h4>
+              <ul><li>Write once, paste once</li><li>Personalised output</li><li>The AI knows your context</li><li>Consistent, high quality</li></ul>
+            </div>
+          </div>
+          <span class="mod-num">Module 08</span>
+        </section>
+      </section>
+
+      <!-- ═══════════════ COMPONENT LIBRARY SHOWCASE ═══════════════ -->
+      <section data-module="lib" data-slug="components">
+        <section data-layout="title">
+          <div class="slide-eyebrow">DeckKit</div>
+          <h1>Component Library</h1>
+          <p class="slide-hook">Token-driven components + vendored Chart.js &amp; Lucide — all theme-aware.</p>
+          <div data-launchpad-anchor></div>
+        </section>
+
+        <section data-layout="visual" data-visual="chart-context">
+          <div class="visual-stage"></div>
+          <span class="mod-num">Charts · Chart.js</span>
+        </section>
+
+        <section data-layout="image">
+          <div class="slide-bg-img" data-image="assets/img/sample-hero.svg" data-focal="center 40%"></div>
+          <div class="slide-scrim" data-scrim="bottom"></div>
+          <div class="slide-figtext">
+            <div class="slide-eyebrow" style="color:#cbd5e1">Layout · image (full-bleed + scrim)</div>
+            <h2>One picture can carry the whole slide</h2>
+            <p style="max-width:44ch">Declared with <code>data-layout="image"</code>, <code>data-image</code>, <code>data-focal</code> and <code>data-scrim</code> — text stays legible over any picture.</p>
+          </div>
+          <span class="mod-num" style="color:#cbd5e1">Images</span>
+        </section>
+
+        <section data-layout="split" data-media="right">
+          <div class="split-text">
+            <h2>Drop a picture in — declaratively</h2>
+            <p>Every image is <strong>configured, not hand-styled</strong>: pick a fit, a focal point, a frame, add alt text. Leave the source empty and the framework shows a labelled placeholder so you can lay out first and add the asset later.</p>
+          </div>
+          <div class="split-media">
+            <figure class="deck-figure" data-frame="card">
+              <div class="img-box" data-empty="Picture — set src in the &lt;img&gt;"></div>
+              <figcaption>figure · placeholder-first authoring</figcaption>
+            </figure>
+          </div>
+        </section>
+      </section>
+
+    </div>
+  </div>
+
+  <!-- vendored libraries (offline / Teams-safe) -->
+  <script src="vendor/reveal.js"></script>
+  <script src="vendor/notes.js"></script>
+  <script src="vendor/highlight.js"></script>
+  <script src="vendor/chart.umd.min.js"></script>
+  <script src="vendor/lucide.min.js"></script>
+  <!-- framework: deck.js defines DeckVisual + boots; visuals/charts register into it -->
+  <script src="framework/deck.js"></script>
+  <script src="framework/visuals.js"></script>
+  <script src="framework/charts.js"></script>
+</body>
+</html>

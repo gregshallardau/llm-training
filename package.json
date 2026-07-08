@@ -1,0 +1,15 @@
+{
+  "name": "deckkit",
+  "version": "0.1.0",
+  "private": true,
+  "description": "DeckKit — a token-driven presentation framework on reveal.js for the LLM Lecture Series",
+  "type": "module",
+  "scripts": {
+    "build": "node framework/build.mjs",
+    "serve": "python3 -m http.server 8090"
+  },
+  "dependencies": {
+    "chart.js": "^4.5.1",
+    "lucide": "^1.23.0"
+  }
+}
