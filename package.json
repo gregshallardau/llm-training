@@ -9,6 +9,8 @@
     "serve": "python3 -m http.server 8090"
   },
   "dependencies": {
+    "@fontsource-variable/fraunces": "^5.2.9",
+    "@fontsource-variable/inter": "^5.2.8",
     "chart.js": "^4.5.1",
     "lucide": "^1.23.0"
   }
