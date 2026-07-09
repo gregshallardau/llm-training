@@ -539,6 +539,39 @@ window.__DECK__ = {
     },
     {
       "layout": "content",
+      "heading": "Build your base layer — teach Copilot who you are",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "The highest-leverage 15 minutes you'll spend",
+          "body": "Do it once and every answer gets better — less generic, more you. Copilot now has a built-in home for this, so it applies automatically without you pasting anything.\n"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Open your custom instructions",
+              "body": "In Copilot, go to Settings → Personalization → Custom instructions (“Edit instructions”). This is your built-in base layer."
+            },
+            {
+              "title": "Tell it who you are",
+              "body": "A few lines: your role, your team, who your clients are, and how you like answers — tone, length, format. Save it."
+            },
+            {
+              "title": "Keep a fuller note for the detail",
+              "body": "For richer context, keep a short “About my work” doc in OneDrive; paste it or reference it with “/” when a task needs the detail."
+            },
+            {
+              "title": "Let memory do the rest",
+              "body": "Say “remember I prefer bullet points” and it will. View, edit or delete what it's kept anytime in Settings → Personalization."
+            }
+          ]
+        }
+      ],
+      "notes": "The base-layer idea from earlier is now a real feature. Custom instructions = your\nstanding base layer, applied to every chat. Copilot Memory (on by default) also picks\nup preferences as you work — stored in your own mailbox under the usual compliance\nrules, and you can view/edit/delete it. Still rolling out: if someone doesn't see custom\ninstructions yet, the paste-a-note method works everywhere. Do this one live — build a\nreal base layer together in a few minutes; it's the highest-value exercise here.\n"
+    },
+    {
+      "layout": "content",
       "heading": "Get a table's numbers out of a PDF or a screen",
       "blocks": [
         {
