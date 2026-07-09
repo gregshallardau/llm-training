@@ -394,46 +394,79 @@ window.__DECK__ = {
       "layout": "visual",
       "component": "tree",
       "props": {
-        "title": "Which Copilot — a quick decision tree",
-        "sub": "Reach for the surface that already sits closest to the work.",
+        "title": "Which Copilot? Follow the branches",
+        "sub": "Answer the question at each fork.",
         "data": {
-          "name": "Start here",
+          "name": "Start",
           "children": [
             {
-              "name": "In a file?",
+              "name": "Already in an app?",
               "children": [
                 {
-                  "name": "Word"
+                  "name": "Yes — Copilot in the app",
+                  "children": [
+                    {
+                      "name": "Analysing data",
+                      "children": [
+                        {
+                          "name": "Excel"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Writing a document",
+                      "children": [
+                        {
+                          "name": "Word"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Building slides",
+                      "children": [
+                        {
+                          "name": "PowerPoint"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Email & calendar",
+                      "children": [
+                        {
+                          "name": "Outlook"
+                        }
+                      ]
+                    },
+                    {
+                      "name": "Meetings & chat",
+                      "children": [
+                        {
+                          "name": "Teams"
+                        }
+                      ]
+                    }
+                  ]
                 },
                 {
-                  "name": "Excel"
-                },
-                {
-                  "name": "PowerPoint"
-                },
-                {
-                  "name": "Outlook / Teams"
+                  "name": "No — Copilot Chat",
+                  "children": [
+                    {
+                      "name": "About our own work?",
+                      "children": [
+                        {
+                          "name": "Work scope"
+                        },
+                        {
+                          "name": "Web scope"
+                        }
+                      ]
+                    }
+                  ]
                 }
               ]
             },
             {
-              "name": "Across your work?",
-              "children": [
-                {
-                  "name": "Chat — Work scope"
-                }
-              ]
-            },
-            {
-              "name": "Public info only?",
-              "children": [
-                {
-                  "name": "Chat — Web scope"
-                }
-              ]
-            },
-            {
-              "name": "Repeatable job?",
+              "name": "Same task, repeatedly?",
               "children": [
                 {
                   "name": "Agent (Studio)"
@@ -443,7 +476,7 @@ window.__DECK__ = {
           ]
         }
       },
-      "notes": "The routing rule. In a file → Copilot in that app (it already has the file as\ncontext). A question across your files, mail and chats → Copilot Chat, Work scope.\nGeneral or public knowledge → Web scope. A repeatable task → build an agent in\nCopilot Studio. In-app beats chat whenever you're already in the document.\n"
+      "notes": "A real fork at each step. First: are you already in an app? If yes, use Copilot\nright there and let the task pick the app — data → Excel, writing → Word, slides →\nPowerPoint, mail → Outlook, meetings → Teams. If no, open Copilot Chat and choose\nthe scope — about our own work → Work scope; general/public → Web scope. Separate\nbranch: if it's the same task again and again, build an agent in Copilot Studio.\n"
     },
     {
       "layout": "content",
