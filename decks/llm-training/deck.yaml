@@ -262,30 +262,6 @@ slides:
       colleague who's read (only) the files you can see. Choose it on purpose.
 
   - layout: content
-    heading: "Let's do a real one: a PDF report → numbers you can use"
-    blocks:
-      - type: callout
-        title: Every job is the same three moves
-        body: >
-          Get your material in → ask in plain English → check the result. Copilot works on
-          what's already in front of it, so the first move is usually yours. Here's exactly
-          how, click by click.
-      - type: timeline
-        items:
-          - { title: "1 · Get the PDF's numbers into Excel", body: "Open Excel. On the top menu click Data, then Get Data → From File → From PDF, and choose your file." }
-          - { title: "2 · Pick the table and click Load", body: "Excel shows the tables it spotted in the PDF. Tick the one you want — the numbers drop straight into a spreadsheet. No retyping." }
-          - { title: "3 · Ask Copilot in plain English", body: "Click any cell in the data, open Copilot (top-right), and type what you want: “summarise this and show me the trend.”" }
-          - { title: "4 · Check it, then use it", body: "Read what it did, fix anything that looks off, and it's ready. You stayed in charge the whole way." }
-    notes: |
-      Teach this live if you can — share your screen and actually do it with a real file.
-      The thing people miss: getting the PDF's numbers into Excel is a normal Excel step
-      (Data → Get Data → From PDF), not a Copilot trick — Copilot takes over once the data
-      is in the grid. Works on Windows Excel with digital (not scanned) PDFs. Then
-      generalise: the same three moves — get it in, ask plainly, check — work for drafting
-      a document in Word or summarising a thread in Outlook. Offer to walk through their
-      own file next.
-
-  - layout: content
     heading: How Copilot knows things it was never trained on
     blocks:
       - type: cards
@@ -396,3 +372,111 @@ slides:
     notes: |
       Land the plane here. If they remember one line, make it this. Second rule for
       the road — before every task, ask: what KIND of problem is this?
+
+  # ═══════════════════════ APPENDIX — HANDS-ON ═══════════════════════
+  - layout: section
+    kicker: Appendix
+    heading: Let's actually do it
+    subhead: Hands-on walkthroughs — we'll do as many as time allows. Follow along on your own screen.
+    notes: |
+      These are optional and modular. Pick the ones that fit the room and the clock. Best
+      done live: share your screen and use a real (non-sensitive) file. Each one follows the
+      same three moves — get it in, ask in plain English, check the result.
+
+  - layout: content
+    heading: "Get a table's numbers out of a PDF or a screen"
+    blocks:
+      - type: callout
+        title: Easiest first — just screenshot it
+        body: >
+          You don't need anything fancy. Snip the table (Windows key + Shift + S), then either
+          paste it into Copilot and ask, or drop it into Excel. Use whatever's in front of you.
+      - type: timeline
+        items:
+          - { title: "Paste it into Copilot", body: "Snip the table, paste the picture into Copilot Chat, and type: “put this into a table I can copy into Excel.”" }
+          - { title: "Or straight into Excel", body: "In Excel: Data → From Picture → Picture From Clipboard. It reads the numbers in and flags any it's unsure about." }
+          - { title: "On your phone", body: "Microsoft 365 app → Actions → Image to Table. Point the camera at the table and snap it." }
+          - { title: "A clean digital PDF?", body: "Excel → Data → Get Data → From File → From PDF, tick the table, click Load." }
+    notes: |
+      Lead with the screenshot — anyone can do it. Copilot Chat accepts pasted images and
+      pulls the numbers out; Excel's From Picture does it inside Excel; the phone app has
+      Image to Table; Get Data → From PDF handles clean digital PDFs (Windows Excel).
+      Scanned or blurry images are hit-and-miss — always eyeball the numbers afterwards.
+
+  - layout: content
+    heading: "Make sense of it — Copilot in Excel"
+    blocks:
+      - type: callout
+        title: Once it's in a table, just ask
+        body: >
+          Click any cell in your data, open Copilot (top-right of Excel), and ask in plain
+          English. It works on what's in the grid — you don't have to write a single formula.
+      - type: timeline
+        items:
+          - { title: "Get the lay of the land", body: "“Summarise this and show me the main trends and any outliers.”" }
+          - { title: "Add a calculation", body: "“Add a column for the month-on-month % change.” It writes the formula and explains it." }
+          - { title: "See it", body: "“Chart revenue by region,” or “make a PivotTable by month.”" }
+          - { title: "Check it", body: "Copilot points to the cells it used — glance at the numbers before you rely on them." }
+    notes: |
+      Copilot in Excel needs the data as a table or tidy range; then it does summaries,
+      trends, outliers, formula columns, PivotTables and charts, and explains each formula.
+      Reinforce "check it" — grounded is not the same as infallible.
+
+  - layout: content
+    heading: "Turn notes into a written document — Word"
+    blocks:
+      - type: callout
+        title: Point Copilot at your own material
+        body: >
+          In a blank Word doc you'll see “Draft with Copilot.” The trick: type “/” and a file
+          name to point it at your notes, data or a past example — so it writes in your world,
+          not something generic.
+      - type: timeline
+        items:
+          - { title: "Start the draft", body: "New Word doc → Draft with Copilot. Say what you want: “a one-page client update.”" }
+          - { title: "Reference your files", body: "Type “/”, start the file name, and pick your notes, a spreadsheet or a previous doc. Add up to 20." }
+          - { title: "Shape it", body: "“Make it more formal,” “shorten to half a page,” “add a risks section.”" }
+          - { title: "You finish it", body: "Read it properly, fix anything, check the facts — your name's on it." }
+    notes: |
+      "Draft with Copilot" → "/" to reference files (Word, PowerPoint, PDF or TXT you can
+      access in SharePoint/OneDrive, up to 20). Referencing grounds the draft in your own
+      terminology and data. Needs a Copilot licence.
+
+  - layout: content
+    heading: "Catch up fast — a thread or a meeting"
+    blocks:
+      - type: callout
+        title: Stop reading 40 replies
+        body: >
+          Copilot can read the whole thread or meeting for you and pull out what matters —
+          the decisions, the actions, and who owns each.
+      - type: timeline
+        items:
+          - { title: "An email thread", body: "Open it in Outlook → “Summary by Copilot” at the top. Then ask: “what are the action items and who owns them?”" }
+          - { title: "A Teams meeting", body: "Open the meeting → Recap tab → “Recap the meeting.” Key points, decisions and actions — even if you missed it." }
+          - { title: "Turn it into next steps", body: "“Draft a follow-up email with the summary and the task list.”" }
+          - { title: "Sanity-check", body: "It cites where each point came from — click through on anything that matters." }
+    notes: |
+      Outlook: "Summary by Copilot" summarises a thread and can surface action items and
+      mentions. Teams: Recap tab → Recap the meeting → who said what and the action items;
+      it can draft a follow-up email with the summary + tasks. Needs a licence (and, for
+      meetings, a recording/transcript).
+
+  - layout: content
+    heading: "A document into a first-draft deck — PowerPoint"
+    blocks:
+      - type: callout
+        title: Don't start slides from a blank page
+        body: >
+          If the content already lives in a Word doc or a brief, Copilot in PowerPoint can
+          build a first-draft deck from it — slides, images and speaker notes — for you to refine.
+      - type: timeline
+        items:
+          - { title: "Start in PowerPoint", body: "New presentation → click the Copilot icon (bottom-right)." }
+          - { title: "Point it at your file", body: "Add Content → give it your Word doc or PDF. It drafts slides with speaker notes and pulls in images." }
+          - { title: "Refine", body: "“Add a summary slide,” “cut this section,” “make it eight slides.”" }
+          - { title: "Make it yours", body: "Apply your template, fix the story, and check every claim before you present." }
+    notes: |
+      PowerPoint Copilot: new deck → Copilot → Add Content → reference a Word/PDF (up to five
+      files with a Copilot licence); it generates slides + speaker notes and can use images.
+      It's a first draft — restyle and fact-check. Business/enterprise plans only.
