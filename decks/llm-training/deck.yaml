@@ -261,43 +261,29 @@ slides:
       The toggle every Copilot user has. Web scope = a smart stranger; Work scope = a
       colleague who's read (only) the files you can see. Choose it on purpose.
 
-  - layout: visual
-    component: tree
-    props:
-      title: Which Copilot? Follow the branches
-      sub: Answer the question at each fork.
-      data:
-        name: Start
-        children:
-          - name: Already in an app?
-            children:
-              - name: Yes — Copilot in the app
-                children:
-                  - name: Analysing data
-                    children: [{ name: Excel }]
-                  - name: Writing a document
-                    children: [{ name: Word }]
-                  - name: Building slides
-                    children: [{ name: PowerPoint }]
-                  - name: Email & calendar
-                    children: [{ name: Outlook }]
-                  - name: Meetings & chat
-                    children: [{ name: Teams }]
-              - name: No — Copilot Chat
-                children:
-                  - name: About our own work?
-                    children:
-                      - { name: Work scope }
-                      - { name: Web scope }
-          - name: Same task, repeatedly?
-            children:
-              - { name: Agent (Studio) }
+  - layout: content
+    heading: "Let's do a real one: a PDF report → numbers you can use"
+    blocks:
+      - type: callout
+        title: Every job is the same three moves
+        body: >
+          Get your material in → ask in plain English → check the result. Copilot works on
+          what's already in front of it, so the first move is usually yours. Here's exactly
+          how, click by click.
+      - type: timeline
+        items:
+          - { title: "1 · Get the PDF's numbers into Excel", body: "Open Excel. On the top menu click Data, then Get Data → From File → From PDF, and choose your file." }
+          - { title: "2 · Pick the table and click Load", body: "Excel shows the tables it spotted in the PDF. Tick the one you want — the numbers drop straight into a spreadsheet. No retyping." }
+          - { title: "3 · Ask Copilot in plain English", body: "Click any cell in the data, open Copilot (top-right), and type what you want: “summarise this and show me the trend.”" }
+          - { title: "4 · Check it, then use it", body: "Read what it did, fix anything that looks off, and it's ready. You stayed in charge the whole way." }
     notes: |
-      A real fork at each step. First: are you already in an app? If yes, use Copilot
-      right there and let the task pick the app — data → Excel, writing → Word, slides →
-      PowerPoint, mail → Outlook, meetings → Teams. If no, open Copilot Chat and choose
-      the scope — about our own work → Work scope; general/public → Web scope. Separate
-      branch: if it's the same task again and again, build an agent in Copilot Studio.
+      Teach this live if you can — share your screen and actually do it with a real file.
+      The thing people miss: getting the PDF's numbers into Excel is a normal Excel step
+      (Data → Get Data → From PDF), not a Copilot trick — Copilot takes over once the data
+      is in the grid. Works on Windows Excel with digital (not scanned) PDFs. Then
+      generalise: the same three moves — get it in, ask plainly, check — work for drafting
+      a document in Word or summarising a thread in Outlook. Offer to walk through their
+      own file next.
 
   - layout: content
     heading: How Copilot knows things it was never trained on
