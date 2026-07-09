@@ -1,0 +1,739 @@
+window.__DECK__ = {
+  "title": "Working with AI",
+  "ratio": "16:9",
+  "theme": "corporate-navy",
+  "slides": [
+    {
+      "layout": "title",
+      "eyebrow": "A practical guide",
+      "heading": "Working with AI",
+      "subhead": "What it is, why it behaves the way it does, and how to get real work out of Microsoft Copilot.",
+      "notes": "This isn't a tech talk. By the end you'll have a working mental model and a\nhandful of habits you can use tomorrow. One promise: it drafts, you decide.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "What are we trying to achieve?",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "It's not mainly about speed",
+          "body": "Copilot isn't here to help you do the same work faster. It's here to help you do better work — and to spend your time on the parts that actually need you. Often it takes about the same time; that time is just better spent.\n"
+        },
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Deeper work",
+              "body": "Explore more sources, angles and options than you'd ever have time to alone."
+            },
+            {
+              "title": "Higher quality",
+              "body": "Raise the floor on everything you ship — fewer misses, clearer structure, better writing."
+            },
+            {
+              "title": "Room to think",
+              "body": "Hand off the blank page and the busywork; keep your energy for judgement and clients."
+            }
+          ]
+        }
+      ],
+      "notes": "Set the goal before the how. Push back on \"AI = faster\" — the win is quality and\ndepth, and getting your head out of the grind so you can do the thinking only you\ncan do. Speed is a nice side effect, not the point.\n"
+    },
+    {
+      "layout": "statement",
+      "text": "Think of it as a <span class=\"accent\">brilliant new colleague</span> on their permanent first day.",
+      "notes": "Vast knowledge, desperate to help — and zero memory of you. Every conversation\nis day one. Your job is to write the onboarding note that makes day one productive.\nHold this picture; everything else hangs off it.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "The one mental model",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Knows a lot",
+              "body": "Read a huge slice of everything ever written. Broad, fluent, fast."
+            },
+            {
+              "title": "Remembers nothing",
+              "body": "No memory of you between chats. Each conversation starts from zero."
+            },
+            {
+              "title": "Eager to help",
+              "body": "It will always answer — even when it shouldn't. Confidence ≠ correctness."
+            }
+          ]
+        }
+      ],
+      "notes": "Three traits explain almost every quirk you'll hit. The amnesia is the big one —\nit's why context (what you tell it up front) matters more than clever wording.\n"
+    },
+    {
+      "layout": "section",
+      "kicker": "Part one",
+      "heading": "What you're actually talking to",
+      "subhead": "No maths. Just enough of the machine to use it well."
+    },
+    {
+      "layout": "split",
+      "mediaSide": "right",
+      "text": {
+        "heading": "It predicts the next word",
+        "body": "An LLM is a program that guesses the most likely next word, over and over, until it has written a full response. It isn't looking anything up — it has absorbed the patterns of how language works and is completing your sentence.\n"
+      },
+      "media": {
+        "component": "chart",
+        "type": "bar",
+        "title": "“The client's policy expires on…”",
+        "sub": "Illustrative — likelihood of the next word.",
+        "labels": [
+          "June",
+          "the",
+          "renewal",
+          "30th",
+          "Friday"
+        ],
+        "data": [
+          58,
+          21,
+          11,
+          7,
+          3
+        ],
+        "seriesLabel": "Likelihood"
+      },
+      "notes": "Demystify it: no database lookup, no reasoning engine in the human sense — a\nvery good next-word guess, repeated. Everything good and bad follows from that.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "How it's built — three stages, then frozen",
+      "blocks": [
+        {
+          "type": "flow",
+          "steps": [
+            {
+              "title": "1 · Pretraining",
+              "body": "Reads a vast slice of the internet, drilling one game a trillion times: guess the next word."
+            },
+            {
+              "title": "2 · Fine-tuning",
+              "body": "Shown good examples of following instructions, so it answers rather than rambles."
+            },
+            {
+              "title": "3 · Feedback (RLHF)",
+              "body": "Shaped by human thumbs-up / thumbs-down until it's helpful and safe."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "title": "Then the knowledge freezes",
+          "body": "Everything it learned is locked into billions of numbers called weights. It knows nothing about your company, or anything after its training cut-off — unless you tell it.\n"
+        }
+      ],
+      "notes": "The \"frozen\" point sets up two later ideas: hallucination (it fills gaps) and\nRAG (how we feed it fresh, private knowledge).\n"
+    },
+    {
+      "layout": "content",
+      "heading": "How it reads, and how it writes",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "It reads in tokens",
+              "body": "Your text is chopped into little pieces — roughly ¾ of a word each — and turned into numbers. It never sees words."
+            },
+            {
+              "title": "It weighs what matters",
+              "body": "Attention lets every word look at every other word, so “the client” links to the name three paragraphs up."
+            },
+            {
+              "title": "It writes one token at a time",
+              "body": "Like a jazz musician playing the next note — guided by everything so far, never seeing the ending."
+            }
+          ]
+        }
+      ],
+      "notes": "Keep this light. The takeaway: it works left-to-right, in pieces, weighing\nrelevance as it goes. That's why clear, well-ordered prompts help so much.\n"
+    },
+    {
+      "layout": "section",
+      "kicker": "Part two",
+      "heading": "Where it breaks",
+      "subhead": "Two limits that explain most of the frustration."
+    },
+    {
+      "layout": "split",
+      "mediaSide": "left",
+      "text": {
+        "heading": "It has a working memory — and a limit",
+        "body": "The context window is everything the model can see at once: your prompt, the documents you pasted, and the conversation so far. Go past the limit and the earliest things simply stop existing for it. Long chats drift for a reason.\n"
+      },
+      "media": {
+        "component": "donut",
+        "title": "What fills the window",
+        "sub": "Illustrative.",
+        "segments": [
+          {
+            "label": "Your documents",
+            "value": 55
+          },
+          {
+            "label": "Conversation so far",
+            "value": 30
+          },
+          {
+            "label": "Your question",
+            "value": 15
+          }
+        ]
+      },
+      "notes": "Practical tip: start a fresh chat for a new task; don't let a 40-message thread\ncarry stale context. Paste what matters, not everything.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "Why it makes things up",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "It knows what's likely, not what's true",
+          "body": "When it lacks the facts, it doesn't stop — it generates the most plausible-sounding completion. Plausible is not the same as correct. This is called a hallucination, and a confident tone is no guarantee of accuracy.\n"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Most likely when: facts are niche, recent, or specific (names, numbers, citations).",
+            "Defend yourself: ask for sources, give it the facts, and verify anything that matters.",
+            "The rule of thumb: it drafts, you decide."
+          ]
+        }
+      ],
+      "notes": "This is the single most important safety point. Don't outsource judgement —\noutsource the first draft. Verify names, numbers, quotes, and law.\n"
+    },
+    {
+      "layout": "section",
+      "kicker": "Part three",
+      "heading": "Working with it well",
+      "subhead": "The habits that separate a toy from a tool."
+    },
+    {
+      "layout": "statement",
+      "text": "A good prompt <span class=\"accent\">reduces ambiguity</span>. The less it has to guess, the better the output.",
+      "notes": "Everything in this section is a variation on this one idea. You're not casting\nspells — you're briefing a capable colleague who can't read your mind.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "The biggest unlock — a base layer",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Write it once",
+              "body": "A short note: who you are, your role, your team, your clients, and how you like to work."
+            },
+            {
+              "title": "Paste it up front",
+              "body": "Start important chats with it. Now the model “knows” you instead of guessing."
+            },
+            {
+              "title": "Everything gets better",
+              "body": "Every later prompt can be short — the context is already there. This fixes the amnesia."
+            }
+          ]
+        }
+      ],
+      "notes": "If people take one action away, it's this. A base layer turns generic answers\ninto ones that sound like they came from inside your team. We'll build one live.\n"
+    },
+    {
+      "layout": "compare",
+      "heading": "The same question, three ways",
+      "left": {
+        "title": "Raw / dump",
+        "items": [
+          "Raw: “Write an email chasing a client.” → generic, could be anyone.",
+          "Dump: paste five documents with no steer → messy, buries the point.",
+          "The model fills the gaps with averages."
+        ]
+      },
+      "right": {
+        "title": "Distilled",
+        "items": [
+          "“Here's the situation, here's what matters, here's what I need.”",
+          "Give it a recipe, not just ingredients.",
+          "Professional, on-voice, usable first time."
+        ]
+      },
+      "notes": "Distilled beats a document dump. Curating what you feed it is the skill —\nrelevance in, relevance out.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "The prompt blueprint — six questions, 30 seconds",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Role",
+              "body": "Who should it be? “You're a senior claims handler…”"
+            },
+            {
+              "title": "Task",
+              "body": "What exactly do you want done?"
+            },
+            {
+              "title": "Context",
+              "body": "What does it need to know? (Your base layer + this situation.)"
+            },
+            {
+              "title": "Format",
+              "body": "Email? Table? Bullet points? How long?"
+            },
+            {
+              "title": "Tone",
+              "body": "Formal, plain, warm? For which audience?"
+            },
+            {
+              "title": "Guardrails",
+              "body": "What to avoid, check, or leave to you."
+            }
+          ]
+        }
+      ],
+      "notes": "Not a template to fill in — a thinking habit. Run it in your head before typing\nanything important. Templates go stale; thinking adapts.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "A few power-user moves",
+      "blocks": [
+        {
+          "type": "list",
+          "items": [
+            "Ask it to show its working — “think step by step” improves reasoning on hard tasks.",
+            "Give an example of a good answer; it matches the pattern.",
+            "Ask for options, then decide — “give me three approaches and the trade-offs.”",
+            "Iterate out loud — “that's close; make it shorter and drop the jargon.”"
+          ]
+        }
+      ],
+      "notes": "Most advanced technique is just telling it HOW to think, not only WHAT to\nproduce. Treat it as a conversation, not a slot machine.\n"
+    },
+    {
+      "layout": "section",
+      "kicker": "Part four",
+      "heading": "In the real world",
+      "subhead": "Where the model gets its hands on your actual work."
+    },
+    {
+      "layout": "visual",
+      "component": "sankey",
+      "props": {
+        "title": "What actually reaches Copilot",
+        "sub": "Every Work-scope answer is built from these — and it all has to fit the context window.",
+        "nodes": [
+          "Your prompt",
+          "Base layer",
+          "The app you're in",
+          "Microsoft Graph",
+          "Context window",
+          "Answer"
+        ],
+        "links": [
+          {
+            "source": "Your prompt",
+            "target": "Context window",
+            "value": 18
+          },
+          {
+            "source": "Base layer",
+            "target": "Context window",
+            "value": 20
+          },
+          {
+            "source": "The app you're in",
+            "target": "Context window",
+            "value": 27
+          },
+          {
+            "source": "Microsoft Graph",
+            "target": "Context window",
+            "value": 35
+          },
+          {
+            "source": "Context window",
+            "target": "Answer",
+            "value": 100
+          }
+        ]
+      },
+      "notes": "This ties the whole deck together. On Work scope, Microsoft Graph (your files,\nmail, chats) is retrieved and fed in automatically — that's the grounding. The\nanswer is only ever as good as what reaches the window.\n"
+    },
+    {
+      "layout": "compare",
+      "heading": "Two scopes — Web vs Work",
+      "left": {
+        "title": "Web scope",
+        "items": [
+          "Grounded on the public web — knows nothing about our organisation.",
+          "Fine for general knowledge; treat it like a public chatbot.",
+          "Your text leaves for the web — keep it non-sensitive."
+        ]
+      },
+      "right": {
+        "title": "Work scope",
+        "items": [
+          "Grounded on our Microsoft 365 — your files, mail, chats, Teams.",
+          "Only ever sees what you already have permission to open.",
+          "Answers come back with citations you can click and check."
+        ]
+      },
+      "notes": "The toggle every Copilot user has. Web scope = a smart stranger; Work scope = a\ncolleague who's read (only) the files you can see. Choose it on purpose.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "How Copilot knows things it was never trained on",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Grounding (RAG) — built in",
+              "body": "On every Work-scope answer, Copilot retrieves the relevant bits of your SharePoint, OneDrive, Outlook and Teams through the semantic index, then answers with citations. You don't switch it on — it's how Copilot works."
+            },
+            {
+              "title": "Agents — a brain with hands",
+              "body": "In Copilot Studio you can build an agent that grounds on chosen sources and takes actions — look up, draft, update — then reports back for your sign-off."
+            }
+          ]
+        },
+        {
+          "type": "callout",
+          "title": "The catch",
+          "body": "Copilot only sees what's in Microsoft 365 and what you already have permission to open. Files on network drives or in odd formats are invisible until they're in SharePoint / OneDrive or wired up with a connector.\n"
+        }
+      ],
+      "notes": "This is the direct answer to \"does RAG work in Copilot?\" — yes; it IS Copilot.\nGrounding is automatic on Work scope. The only limiters are what's indexed and\nthe permissions you already hold.\n"
+    },
+    {
+      "layout": "section",
+      "kicker": "Part five",
+      "heading": "Guardrails & where this is going",
+      "subhead": "Use it responsibly; bet on the trajectory."
+    },
+    {
+      "layout": "content",
+      "heading": "The safe place to work is licensed Copilot",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Inside our Microsoft 365 Copilot, your data stays ours",
+          "body": "Prompts and files you use with licensed Copilot stay within our tenant, are not used to train the AI, and respect the permissions you already have. That is the whole point of the enterprise licence.\n"
+        },
+        {
+          "type": "list",
+          "items": [
+            "Do the work in Copilot — never paste work data into personal or free AI (consumer ChatGPT, Gemini, the free Copilot). Those don't have our protections.",
+            "In Web scope your text goes to the web — keep anything sensitive in Work scope.",
+            "Copilot surfaces only what you can already open — so over-shared files become easy to find. Mind what's exposed.",
+            "When in doubt, keep it in licensed Copilot — or ask first."
+          ]
+        }
+      ],
+      "notes": "The message flips from \"assume it's public\" to \"know which tool you're in.\"\nLicensed M365 Copilot = in-tenant, not training the model. The real risk is\nconsumer / free tools and Web scope. Localise with our own DLP + approved-tool list.\n"
+    },
+    {
+      "layout": "compare",
+      "heading": "When to reach for it — and when not to",
+      "left": {
+        "title": "Skip Copilot — do it yourself",
+        "items": [
+          "A one-liner you'd type faster than you'd prompt.",
+          "A judgement call — relationships, ethics, a decision you own.",
+          "Something you're accountable to understand yourself.",
+          "When you can't verify the output and it really matters."
+        ]
+      },
+      "right": {
+        "title": "Reach for Copilot",
+        "items": [
+          "Blank-page drafts and first cuts.",
+          "Summarising long threads, documents, meetings.",
+          "Analysis and options you'll then sanity-check.",
+          "Repetitive, structured, boring work."
+        ]
+      },
+      "notes": "The left column isn't a failure to adopt AI — it's good judgement. The test:\ncould you do it well in less time than briefing and checking Copilot? If so,\njust do it. Reaching for the tool on everything is its own kind of slow.\n"
+    },
+    {
+      "layout": "statement",
+      "text": "Copilot drafts. Your judgement, your relationships, your craft are <span class=\"accent\">still yours</span> — keep them sharp.",
+      "notes": "The anti-lazy beat. It's a tool, not a crutch. If you lose the ability to do the\nthing without it, that's a problem — stay in practice on the work that matters,\nand never ship what you haven't understood.\n"
+    },
+    {
+      "layout": "split",
+      "mediaSide": "right",
+      "text": {
+        "heading": "This is real, and it's accelerating",
+        "body": "Not “robots replace everyone” — more like digital photography. The darkroom jobs faded; the people who understood the craft thrived and moved faster. The ones who learn to work with AI will outrun the ones waiting to see what happens.\n"
+      },
+      "media": {
+        "component": "chart",
+        "type": "line",
+        "title": "Capability over time",
+        "sub": "Illustrative — the trajectory, not a forecast.",
+        "labels": [
+          "2019",
+          "2021",
+          "2023",
+          "2025",
+          "2027"
+        ],
+        "data": [
+          8,
+          20,
+          45,
+          72,
+          92
+        ],
+        "seriesLabel": "Capability"
+      },
+      "notes": "Aim for calm confidence, not hype or fear. The message: skill up now; the\nadvantage compounds.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "Make it stick",
+      "blocks": [
+        {
+          "type": "cards",
+          "items": [
+            {
+              "title": "Build your base layer",
+              "body": "15 minutes today. Reuse it everywhere. This is the highest-leverage thing you'll do."
+            },
+            {
+              "title": "Pick two tasks",
+              "body": "The ones that eat your week. Use AI for the first draft, automatically, starting tomorrow."
+            },
+            {
+              "title": "Always verify",
+              "body": "Names, numbers, quotes, law. It drafts; you're still the one who signs it off."
+            }
+          ]
+        }
+      ],
+      "notes": "Don't try to use it for everything. Win two recurring tasks first; the habit\nspreads on its own once people see the time back.\n"
+    },
+    {
+      "layout": "quote",
+      "text": "It drafts. <span class=\"accent\">You decide.</span>",
+      "cite": "The one rule that contains all the others.",
+      "notes": "Land the plane here. If they remember one line, make it this. Second rule for\nthe road — before every task, ask: what KIND of problem is this?\n"
+    },
+    {
+      "layout": "section",
+      "kicker": "Appendix",
+      "heading": "Let's actually do it",
+      "subhead": "Hands-on walkthroughs — we'll do as many as time allows. Follow along on your own screen.",
+      "notes": "These are optional and modular. Pick the ones that fit the room and the clock. Best\ndone live: share your screen and use a real (non-sensitive) file. Each one follows the\nsame three moves — get it in, ask in plain English, check the result.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "Build your base layer — teach Copilot who you are",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "The highest-leverage 15 minutes you'll spend",
+          "body": "Do it once and every answer gets better — less generic, more you. Copilot now has a built-in home for this, so it applies automatically without you pasting anything.\n"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Open your custom instructions",
+              "body": "In Copilot, go to Settings → Personalization → Custom instructions (“Edit instructions”). This is your built-in base layer."
+            },
+            {
+              "title": "Tell it who you are",
+              "body": "A few lines: your role, your team, who your clients are, and how you like answers — tone, length, format. Save it."
+            },
+            {
+              "title": "Keep a fuller note for the detail",
+              "body": "For richer context, keep a short “About my work” doc in OneDrive; paste it or reference it with “/” when a task needs the detail."
+            },
+            {
+              "title": "Let memory do the rest",
+              "body": "Say “remember I prefer bullet points” and it will. View, edit or delete what it's kept anytime in Settings → Personalization."
+            }
+          ]
+        }
+      ],
+      "notes": "The base-layer idea from earlier is now a real feature. Custom instructions = your\nstanding base layer, applied to every chat. Copilot Memory (on by default) also picks\nup preferences as you work — stored in your own mailbox under the usual compliance\nrules, and you can view/edit/delete it. Still rolling out: if someone doesn't see custom\ninstructions yet, the paste-a-note method works everywhere. Do this one live — build a\nreal base layer together in a few minutes; it's the highest-value exercise here.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "Get a table's numbers out of a PDF or a screen",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Easiest first — just screenshot it",
+          "body": "You don't need anything fancy. Snip the table (Windows key + Shift + S), then either paste it into Copilot and ask, or drop it into Excel. Use whatever's in front of you.\n"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Paste it into Copilot",
+              "body": "Snip the table, paste the picture into Copilot Chat, and type: “put this into a table I can copy into Excel.”"
+            },
+            {
+              "title": "Or straight into Excel",
+              "body": "In Excel: Data → From Picture → Picture From Clipboard. It reads the numbers in and flags any it's unsure about."
+            },
+            {
+              "title": "On your phone",
+              "body": "Microsoft 365 app → Actions → Image to Table. Point the camera at the table and snap it."
+            },
+            {
+              "title": "A clean digital PDF?",
+              "body": "Excel → Data → Get Data → From File → From PDF, tick the table, click Load."
+            }
+          ]
+        }
+      ],
+      "notes": "Lead with the screenshot — anyone can do it. Copilot Chat accepts pasted images and\npulls the numbers out; Excel's From Picture does it inside Excel; the phone app has\nImage to Table; Get Data → From PDF handles clean digital PDFs (Windows Excel).\nScanned or blurry images are hit-and-miss — always eyeball the numbers afterwards.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "Make sense of it — Copilot in Excel",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Once it's in a table, just ask",
+          "body": "Click any cell in your data, open Copilot (top-right of Excel), and ask in plain English. It works on what's in the grid — you don't have to write a single formula.\n"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Get the lay of the land",
+              "body": "“Summarise this and show me the main trends and any outliers.”"
+            },
+            {
+              "title": "Add a calculation",
+              "body": "“Add a column for the month-on-month % change.” It writes the formula and explains it."
+            },
+            {
+              "title": "See it",
+              "body": "“Chart revenue by region,” or “make a PivotTable by month.”"
+            },
+            {
+              "title": "Check it",
+              "body": "Copilot points to the cells it used — glance at the numbers before you rely on them."
+            }
+          ]
+        }
+      ],
+      "notes": "Copilot in Excel needs the data as a table or tidy range; then it does summaries,\ntrends, outliers, formula columns, PivotTables and charts, and explains each formula.\nReinforce \"check it\" — grounded is not the same as infallible.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "Turn notes into a written document — Word",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Point Copilot at your own material",
+          "body": "In a blank Word doc you'll see “Draft with Copilot.” The trick: type “/” and a file name to point it at your notes, data or a past example — so it writes in your world, not something generic.\n"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Start the draft",
+              "body": "New Word doc → Draft with Copilot. Say what you want: “a one-page client update.”"
+            },
+            {
+              "title": "Reference your files",
+              "body": "Type “/”, start the file name, and pick your notes, a spreadsheet or a previous doc. Add up to 20."
+            },
+            {
+              "title": "Shape it",
+              "body": "“Make it more formal,” “shorten to half a page,” “add a risks section.”"
+            },
+            {
+              "title": "You finish it",
+              "body": "Read it properly, fix anything, check the facts — your name's on it."
+            }
+          ]
+        }
+      ],
+      "notes": "\"Draft with Copilot\" → \"/\" to reference files (Word, PowerPoint, PDF or TXT you can\naccess in SharePoint/OneDrive, up to 20). Referencing grounds the draft in your own\nterminology and data. Needs a Copilot licence.\n"
+    },
+    {
+      "layout": "content",
+      "heading": "Catch up fast — a thread or a meeting",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Stop reading 40 replies",
+          "body": "Copilot can read the whole thread or meeting for you and pull out what matters — the decisions, the actions, and who owns each.\n"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "An email thread",
+              "body": "Open it in Outlook → “Summary by Copilot” at the top. Then ask: “what are the action items and who owns them?”"
+            },
+            {
+              "title": "A Teams meeting",
+              "body": "Open the meeting → Recap tab → “Recap the meeting.” Key points, decisions and actions — even if you missed it."
+            },
+            {
+              "title": "Turn it into next steps",
+              "body": "“Draft a follow-up email with the summary and the task list.”"
+            },
+            {
+              "title": "Sanity-check",
+              "body": "It cites where each point came from — click through on anything that matters."
+            }
+          ]
+        }
+      ],
+      "notes": "Outlook: \"Summary by Copilot\" summarises a thread and can surface action items and\nmentions. Teams: Recap tab → Recap the meeting → who said what and the action items;\nit can draft a follow-up email with the summary + tasks. Needs a licence (and, for\nmeetings, a recording/transcript).\n"
+    },
+    {
+      "layout": "content",
+      "heading": "A document into a first-draft deck — PowerPoint",
+      "blocks": [
+        {
+          "type": "callout",
+          "title": "Don't start slides from a blank page",
+          "body": "If the content already lives in a Word doc or a brief, Copilot in PowerPoint can build a first-draft deck from it — slides, images and speaker notes — for you to refine.\n"
+        },
+        {
+          "type": "timeline",
+          "items": [
+            {
+              "title": "Start in PowerPoint",
+              "body": "New presentation → click the Copilot icon (bottom-right)."
+            },
+            {
+              "title": "Point it at your file",
+              "body": "Add Content → give it your Word doc or PDF. It drafts slides with speaker notes and pulls in images."
+            },
+            {
+              "title": "Refine",
+              "body": "“Add a summary slide,” “cut this section,” “make it eight slides.”"
+            },
+            {
+              "title": "Make it yours",
+              "body": "Apply your template, fix the story, and check every claim before you present."
+            }
+          ]
+        }
+      ],
+      "notes": "PowerPoint Copilot: new deck → Copilot → Add Content → reference a Word/PDF (up to five\nfiles with a Copilot licence); it generates slides + speaker notes and can use images.\nIt's a first draft — restyle and fact-check. Business/enterprise plans only.\n"
+    }
+  ]
+};

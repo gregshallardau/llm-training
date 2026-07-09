@@ -1,13 +1,5 @@
-nohup.out
-deck-server.log
-__pycache__/
-*.pyc
+node_modules/
+.DS_Store
+*.log
 .venv/
-
-# Generation tooling — kept local, NOT published (pulls from private vault, holds creds)
-generate_deck.py
-generate_present.py
-profile-default.yaml
-profile-work-example.yaml
-slides-manifest.yaml
-logo.png
+__pycache__/
