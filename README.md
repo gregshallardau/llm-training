@@ -1,41 +1,56 @@
-# LLM Lecture Series — Presentation
+# Working With AI & Copilot — presentation
 
-An interactive, self-contained presentation on how large language models work and how to use them well. Built for professional audiences; industry-agnostic.
+A self-contained [reveal.js](https://revealjs.com) deck with full speaker notes.
+Everything is vendored locally under `reveal/` (reveal.js 4.5.0 + the Notes
+plugin) — **no internet connection is needed**, so it runs fine on a locked-down
+corporate network or inside Teams.
 
-## Presenting
+## Run it
 
-The deck is a static web app — no build step, no server dependencies, no internet required (all libraries are vendored).
-
-**Option A — open directly:** open `present.html` in any modern browser.
-
-**Option B — serve locally** (better for speaker view + navigation):
+The speaker view needs the deck served over `http://` (a pop-up window plus
+`localStorage` — these don't work from a bare `file://` path). Any static
+server works; from the repository root (the folder holding this `index.html`):
 
 ```bash
-python3 -m http.server 8090
-# then open http://localhost:8090/present.html
+python3 -m http.server 8000
+# then open http://localhost:8000/   ← the deck loads at the root URL
 ```
 
-- `present.html` — the main deck (dark theme).
-- `present-work.html` — a re-skinned variant (light theme, work-branded example).
-- `index.html` — full-content reference deck (everything, long form).
-- `LLM-Series-Backup-Deck.pdf` / `backup-deck.md` — linear fallback to present from if the interactive deck ever fails.
+or with Node:
 
-## Presenting tips
+```bash
+npx serve .        # then open the URL it prints
+```
 
-- **Speaker view:** press `S` to open speaker notes in a second window (put it on your laptop screen, the deck on the projector).
-- **Navigation:** arrow keys — `→` next concept, `↓` deeper (the three depth tracks: Plain English / Technical / PhD).
-- **Widgets & visuals:** interactive demos (tokeniser, hallucination trap, etc.) and diagrams open in-slide; some launch full-screen.
-- **Jump menu:** the overview slide links to any module.
+## Speaker notes
 
-## Theming
+Press **`S`** with the deck focused. A second window opens showing:
 
-`theme.css` holds all colours/fonts as CSS variables — edit the marked block to re-skin. `theme-work-example.css` shows a light/branded variant. Drop a `logo.png` beside the deck and it appears on each slide.
+- the current slide and a preview of the **next** slide,
+- your **notes** for the current slide,
+- a running **timer** and a clock.
 
-## Structure
+Drag that window to a second display (or your laptop screen while the projector
+mirrors the main deck) and present from it. Notes live in each slide's
+`<aside class="notes">…</aside>`.
 
-- `visuals/` — per-module diagrams and interactive HTML pieces (embedded by the deck).
-- `vendor/` — pinned copies of reveal.js + mermaid + plugins (offline-safe).
+## Keys
 
-## Content
+| Key | Action |
+|---|---|
+| `→` / `←` , `Space` | next / previous |
+| `S` | open the **speaker notes** window |
+| `F` | fullscreen |
+| `Esc` / `O` | slide overview |
+| `?` | keyboard-shortcut help |
 
-Content spans ~24 modules (tokenisation, attention, context windows, prompting, RAG, agents, privacy, model choices, and a practical Copilot lab). Presenter adapts live; the deck carries the visuals and examples.
+## Files
+
+```
+index.html                     the deck (content + notes inline)
+reveal/                        vendored reveal.js 4.5.0
+  reveal.min.css
+  theme/white.min.css
+  reveal.min.js
+  plugin/notes/notes.min.js    speaker-notes plugin
+```
