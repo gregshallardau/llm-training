@@ -366,6 +366,18 @@
   .ts-wlab{display:flex;justify-content:space-between;font-family:var(--font-mono);font-size:9px;color:var(--muted);margin-bottom:3px;gap:8px;}
   .ts-wtrack{height:9px;background:var(--rule);border-radius:5px;overflow:hidden;}
   .ts-wfill{height:100%;width:0;background:var(--client);border-radius:5px;transition:width .5s ease;}
+
+  /* glossary */
+  .gloss-legend{font-size:0.46em;color:var(--muted);margin:-0.1em 0 0.7em;}
+  .gloss-legend .sw{display:inline-block;width:0.7em;height:0.7em;border-radius:50%;vertical-align:middle;margin:0 0.3em 0 1.1em;}
+  .gloss-legend .sw:first-child{margin-left:0;}
+  .gloss{display:grid;grid-template-columns:1fr 1fr;gap:0 2em;max-width:calc(100% - 3.4em);}
+  .gl-h{font-family:var(--font-mono);font-size:0.44em;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--rule);padding-bottom:0.3em;margin-bottom:0.6em;}
+  .gl-h.adv{color:var(--claims);}
+  .gl{font-size:0.6em;line-height:1.34;margin:0 0 0.62em;}
+  .gl .t{font-weight:600;color:var(--ink);}
+  .glcol.adv .gl .t{color:var(--claims);}
+  .gl .d{color:var(--muted);}
 </style>
 </head>
 <body>
@@ -1019,6 +1031,38 @@
     <p class="close-try">This week: write <em>one</em> paragraph of context for a task you do often, save it, and paste it in on Monday. That's your library started.</p>
     <div class="act-tag">Close</div>
     <aside class="notes"><p>Three actions, not a recap. The "one thing this week" is deliberately tiny: one paragraph, one task, Monday. End on the action, not on thanks.</p></aside>
+  </section>
+
+  <section>
+    <div class="heading">A quick glossary &mdash; the words you'll hear</div>
+    <div class="gloss-legend"><span class="sw" style="background:var(--ink);"></span>everyday <span class="sw" style="background:var(--claims);"></span>worth knowing</div>
+    <div class="gloss">
+      <div class="glcol">
+        <div class="gl-h">Everyday</div>
+        <div class="gl fragment fade-in"><span class="t">Large Language Model (LLM)</span> &mdash; <span class="d">the kind of AI behind these tools; trained on huge amounts of text to predict the next word.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Prompt</span> &mdash; <span class="d">what you type in: your question, plus any instructions and context.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Token</span> &mdash; <span class="d">a chunk of text, often part of a word. It reads and counts in these, not letters.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Context window</span> &mdash; <span class="d">how much it can hold in mind at once &mdash; its working memory for a chat.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Hallucination</span> &mdash; <span class="d">when it states something untrue as if it were fact, sounding just as confident.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Training data</span> &mdash; <span class="d">the vast pile of text it learned patterns from &mdash; not a database it looks things up in.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Fine-tuning</span> &mdash; <span class="d">extra training that nudges a model towards a narrower job or house style.</span></div>
+      </div>
+      <div class="glcol adv">
+        <div class="gl-h adv">Worth knowing</div>
+        <div class="gl fragment fade-in"><span class="t">RAG (Retrieval-Augmented Generation)</span> &mdash; <span class="d">it looks up relevant documents first, then answers from what it found. How Copilot uses your files.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Grounding</span> &mdash; <span class="d">tying an answer to real, cited sources instead of memory &mdash; so you can check it.</span></div>
+        <div class="gl fragment fade-in"><span class="t">System prompt</span> &mdash; <span class="d">hidden instructions that set how the assistant behaves before you type a word.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Temperature</span> &mdash; <span class="d">a randomness dial: low is safe and repeatable, high is more varied and creative.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Embedding</span> &mdash; <span class="d">turning text into numbers so a machine can measure how close two things are in meaning.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Agent</span> &mdash; <span class="d">an AI that can take steps and use tools to get something done, not just reply.</span></div>
+        <div class="gl fragment fade-in"><span class="t">Multimodal</span> &mdash; <span class="d">handles more than text &mdash; images, audio, files &mdash; going in and coming out.</span></div>
+      </div>
+    </div>
+    <div class="act-tag">Reference &middot; glossary</div>
+    <aside class="notes">
+      <p>A reference backstop, not a slide to read aloud. Reveal a term at a time (arrow key) &mdash; the everyday column fills first, then the purple "worth knowing" set. Use it two ways: skim it fast at the end, or jump here whenever someone asks "what does &lsquo;hallucination&rsquo; / &lsquo;RAG&rsquo; actually mean?" during the talk.</p>
+      <p>Callbacks: <b>Token</b> and <b>context window</b> are the tokenisation and memory slides; <b>temperature</b> is the boring-vs-wild dial we played with; <b>RAG</b> and <b>grounding</b> are exactly what Copilot does with your files. If short on time, reveal the left column only and leave the right for their notes.</p>
+    </aside>
   </section>
 
 </div>
