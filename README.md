@@ -1,41 +1,53 @@
-# LLM Lecture Series — Presentation
+# Working With AI & Copilot — presentation
 
-An interactive, self-contained presentation on how large language models work and how to use them well. Built for professional audiences; industry-agnostic.
+This is the official [reveal.js](https://revealjs.com) project (v6.0.1, cloned
+from [hakimel/reveal.js](https://github.com/hakimel/reveal.js)) with the
+"Working With AI & Copilot" deck ported into `index.html`. It runs on
+reveal.js's own dev server (Vite) rather than a plain static file server, so
+you get its full toolchain — live reload, the standard build pipeline, etc.
 
-## Presenting
+The upstream project's own README is preserved at
+`README-reveal.js-upstream.md`.
 
-The deck is a static web app — no build step, no server dependencies, no internet required (all libraries are vendored).
-
-**Option A — open directly:** open `present.html` in any modern browser.
-
-**Option B — serve locally** (better for speaker view + navigation):
+## Run it
 
 ```bash
-python3 -m http.server 8090
-# then open http://localhost:8090/present.html
+npm install
+npm start        # Vite dev server → http://localhost:8000
 ```
 
-- `present.html` — the main deck (dark theme).
-- `present-work.html` — a re-skinned variant (light theme, work-branded example).
-- `index.html` — full-content reference deck (everything, long form).
-- `LLM-Series-Backup-Deck.pdf` / `backup-deck.md` — linear fallback to present from if the interactive deck ever fails.
+## Speaker notes
 
-## Presenting tips
+Press **`S`** with the deck focused. A second window opens showing:
 
-- **Speaker view:** press `S` to open speaker notes in a second window (put it on your laptop screen, the deck on the projector).
-- **Navigation:** arrow keys — `→` next concept, `↓` deeper (the three depth tracks: Plain English / Technical / PhD).
-- **Widgets & visuals:** interactive demos (tokeniser, hallucination trap, etc.) and diagrams open in-slide; some launch full-screen.
-- **Jump menu:** the overview slide links to any module.
+- the current slide and a preview of the **next** slide,
+- your **notes** for the current slide,
+- a running **timer** and a clock.
 
-## Theming
+Drag that window to a second display (or your laptop screen while a projector
+mirrors the main deck) and present from it. Notes live in each slide's
+`<aside class="notes">…</aside>`.
 
-`theme.css` holds all colours/fonts as CSS variables — edit the marked block to re-skin. `theme-work-example.css` shows a light/branded variant. Drop a `logo.png` beside the deck and it appears on each slide.
+## Keys
 
-## Structure
+| Key | Action |
+|---|---|
+| `→` / `←` , `Space` | next / previous |
+| `S` | open the **speaker notes** window |
+| `F` | fullscreen |
+| `Esc` / `O` | slide overview |
+| `?` | keyboard-shortcut help |
 
-- `visuals/` — per-module diagrams and interactive HTML pieces (embedded by the deck).
-- `vendor/` — pinned copies of reveal.js + mermaid + plugins (offline-safe).
+## What's ported vs. stock reveal.js
 
-## Content
-
-Content spans ~24 modules (tokenisation, attention, context windows, prompting, RAG, agents, privacy, model choices, and a practical Copilot lab). Presenter adapts live; the deck carries the visuals and examples.
+- `index.html` — reveal.js's own template (`dist/reset.css`, `dist/reveal.css`,
+  `dist/theme/white.css`), the deck's custom CSS inlined in a `<style>` block,
+  the deck's 28 `<section>` slides in `.slides`, and the deck's custom JS
+  (the interactive widgets — next-word game, sliders, context-layer builder,
+  folder tree, etc.) inlined after `Reveal.initialize(...)`.
+- Only the **Notes** plugin is enabled (`plugins: [ RevealNotes ]`) — the deck
+  doesn't use Markdown or syntax highlighting, so those stock plugin scripts
+  were left out.
+- Everything else (`dist/`, `css/`, `js/`, `plugin/`, `build/`,
+  `vite.config.ts`, `package.json`, …) is unmodified upstream reveal.js —
+  this stays a normal reveal.js project you can update from upstream.
