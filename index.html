@@ -15,22 +15,18 @@
 <div class="slides">
   <!-- TITLE -->
   <section class="title-slide">
-    <svg class="illo-r" width="150" height="150" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-  <rect x="34" y="6" width="4" height="14" rx="2" fill="#39536F"/><circle cx="36" cy="5" r="4" fill="#B5762C"/>
-  <rect x="18" y="20" width="84" height="66" rx="16" fill="#FAFAF7" stroke="#1C1B19" stroke-width="3"/>
-  <rect x="30" y="36" width="26" height="20" rx="8" fill="#39536F"/><circle cx="43" cy="46" r="4.5" fill="#FAFAF7"/>
-  <rect x="64" y="36" width="26" height="20" rx="8" fill="#39536F"/><circle cx="77" cy="46" r="4.5" fill="#FAFAF7"/>
-  <rect x="44" y="66" width="32" height="7" rx="3.5" fill="#B5762C"/>
-  <rect x="8" y="40" width="10" height="26" rx="5" fill="#3F6C53"/><rect x="102" y="40" width="10" height="26" rx="5" fill="#3F6C53"/>
-  <rect x="30" y="92" width="60" height="22" rx="8" fill="#FAFAF7" stroke="#1C1B19" stroke-width="3"/>
-  <rect x="40" y="100" width="8" height="6" rx="2" fill="#8A3B34"/><rect x="56" y="100" width="8" height="6" rx="2" fill="#8A3B34"/><rect x="72" y="100" width="8" height="6" rx="2" fill="#8A3B34"/>
-</svg>
+    <canvas class="hero-particles" aria-hidden="true"></canvas>
+    <svg class="hero-network" aria-hidden="true" viewBox="0 0 480 480" xmlns="http://www.w3.org/2000/svg">
+      <g class="hn-links"></g>
+      <g class="hn-nodes"></g>
+      <g class="hn-fx"></g>
+    </svg>
     <div class="eyebrow">A working session</div>
     <h1>AI at work: what it is, and how to actually use it.</h1>
     <p class="dek">A plain-English look at the AI assistants turning up in our tools — what they actually are, what makes their answers genuinely useful, and how to put them to work in your day.</p>
     <aside class="notes">
       <p>The spine of the whole session is a single predictor answering one specialty question. We meet it early giving a confident, slightly-wrong general-knowledge answer, then we add one layer of context at a time and watch that same answer climb. At the end we see the whole climb in one view. Keep pointing at the question, it never changes; only the context does.</p>
-      <p>Runs offline once loaded, press S for speaker view, click the coloured widgets live.</p>
+      <p>Runs offline once loaded, press S for speaker view, click the coloured widgets live. The title slide runs an ambient looping animation (particles + a token travelling a small network) meant to play while people join — it pauses automatically once you move past this slide.</p>
     </aside>
   </section>
 
@@ -1093,5 +1089,6 @@
   function baToggle(el){ el.classList.toggle("open"); }
   tkReset(); plReset(); initRungPanels(); dcReset(); fireReset(); tempUpdate(); cwbRender(); tsInit(); treeInit();
 </script>
+<script type="module" src="/hero.js"></script>
 </body>
 </html>
