@@ -152,6 +152,50 @@
     </aside>
   </section>
 
+  <!-- architecture pipeline: top-to-bottom, technical term + plain-English per stage -->
+  <section>
+    <div class="heading">Inside the box: how one word actually gets predicted</div>
+    <p class="w-sub">Every one of these steps happens for <em>every single word</em>, every time. The names on the left are the real technical terms, so this still holds up if anyone here has heard them before.</p>
+    <div class="pipe">
+      <div class="pipe-stage">
+        <div class="pipe-eyebrow">Input</div>
+        <div class="pipe-label">The words so far</div>
+      </div>
+      <div class="pipe-arrow">&darr;</div>
+      <div class="pipe-stage fragment">
+        <div class="pipe-eyebrow">Embedding</div>
+        <div class="pipe-label">Turned into numbers</div>
+      </div>
+      <div class="pipe-arrow">&darr;</div>
+      <div class="pipe-stage fragment">
+        <div class="pipe-eyebrow">Self-attention</div>
+        <div class="pipe-label">Weighs what matters most</div>
+      </div>
+      <div class="pipe-arrow">&darr;</div>
+      <div class="pipe-stage fragment">
+        <div class="pipe-eyebrow">Feedforward</div>
+        <div class="pipe-label">Refines the guess</div>
+      </div>
+      <div class="pipe-arrow">&darr;</div>
+      <div class="pipe-stage fragment">
+        <div class="pipe-eyebrow">Softmax</div>
+        <div class="pipe-label">Turned into odds</div>
+      </div>
+      <div class="pipe-arrow">&darr;</div>
+      <div class="pipe-stage fragment">
+        <div class="pipe-eyebrow">Output</div>
+        <div class="pipe-label">Its best next word</div>
+      </div>
+      <div class="pipe-token" aria-hidden="true"></div>
+    </div>
+    <div class="act-tag">Act 1 &middot; how it processes</div>
+    <div class="spine-tag">one word, top to bottom</div>
+    <aside class="notes">
+      <p>This is the structural version of the "predict, pick, repeat" slide right after it &mdash; that one shows the behaviour, this one shows what's actually inside the box doing it. Step through with the arrow key: the dot travels down and the current stage lights up. Reverse works too, the dot walks back up.</p>
+      <p>Real terms are shown small on the left of each stage on purpose &mdash; if someone in the room already knows "self-attention" or "softmax", this doesn't talk down to them, it just adds the plain-English reading next to it. You don't need to define embeddings or softmax mathematically, the plain-English label is the actual point: it turns words into numbers, weighs what matters, refines a guess, turns that into odds, picks the best one.</p>
+    </aside>
+  </section>
+
 
   <!-- predictor mechanism demo (optional temperature nested below) -->
   <section>
@@ -1090,5 +1134,6 @@
   tkReset(); plReset(); initRungPanels(); dcReset(); fireReset(); tempUpdate(); cwbRender(); tsInit(); treeInit();
 </script>
 <script type="module" src="/hero.js"></script>
+<script type="module" src="/pipeline.js"></script>
 </body>
 </html>

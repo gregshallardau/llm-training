@@ -298,6 +298,16 @@
   .cc-caption{font-size:var(--text-sm);color:var(--muted);margin-top:var(--space-xl);max-width:32em;line-height:1.55;}
   .cc-caption b{color:var(--ink);}
 
+  /* top-to-bottom processing pipeline: token walks down as fragments step through */
+  .pipe{position:relative;display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);margin-top:var(--space-md);max-width:20em;}
+  .pipe-stage{width:100%;box-sizing:border-box;padding:var(--space-sm) var(--space-lg);border-radius:var(--radius-md);border:1.5px solid var(--rule);background:var(--paper);text-align:center;}
+  .pipe-eyebrow{font-family:var(--font-family);font-size:var(--text-xs);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:var(--space-px-2xs);}
+  .pipe-label{font-size:var(--text-md);font-weight:600;color:var(--ink);}
+  .pipe-arrow{font-family:var(--font-family);font-size:var(--text-base);color:var(--rule);line-height:1;}
+  .pipe-stage.pipe-active{border-color:var(--prod);background:var(--prod-bg);}
+  .pipe-stage.pipe-active .pipe-eyebrow{color:var(--prod);}
+  .pipe-token{position:absolute;left:50%;top:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 4px var(--paper);pointer-events:none;}
+
   /* ===== embedded training-stages widget ===== */
   .ts{color:var(--ink);}
   .ts-tabs{display:flex;gap:var(--space-px-sm);margin:0 0 var(--space-px-lg);}
