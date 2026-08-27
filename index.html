@@ -152,56 +152,53 @@
     </aside>
   </section>
 
-  <!-- architecture pipeline: top-to-bottom, technical term + plain-English per stage -->
+  <!-- architecture hero: one giant stage at a time, mixture-of-experts branch -->
   <section>
+    <canvas class="moe-particles" aria-hidden="true"></canvas>
     <div class="heading">Inside the box: how one word actually gets predicted</div>
-    <p class="w-sub">Every one of these steps happens for <em>every single word</em>, every time. The names on the left are the real technical terms, so this still holds up if anyone here has heard them before.</p>
-    <div class="pipe">
-      <div class="pipe-stage">
-        <div class="pipe-eyebrow">Input</div>
-        <div class="pipe-label">The words so far</div>
+    <div class="moe-trail" aria-hidden="true">
+      <span class="moe-trail-dot"></span><span class="moe-trail-dot"></span><span class="moe-trail-dot"></span><span class="moe-trail-dot"></span><span class="moe-trail-dot"></span><span class="moe-trail-dot"></span><span class="moe-trail-dot"></span>
+    </div>
+    <div class="moe-stage-wrap">
+      <div class="moe-glow" aria-hidden="true"></div>
+      <div class="moe-card" data-stage="0">
+        <div class="moe-term">Input</div>
+        <div class="moe-big">The words so far</div>
       </div>
-      <div class="pipe-arrow">&darr;</div>
-      <div class="pipe-stage fragment">
-        <div class="pipe-eyebrow">Embedding</div>
-        <div class="pipe-label">Turned into numbers</div>
+      <div class="moe-card fragment" data-stage="1">
+        <div class="moe-term">Embedding</div>
+        <div class="moe-big">Turned into numbers</div>
       </div>
-      <div class="pipe-arrow">&darr;</div>
-      <div class="pipe-stage fragment">
-        <div class="pipe-eyebrow">Self-attention</div>
-        <div class="pipe-label">Weighs what matters most</div>
+      <div class="moe-card fragment" data-stage="2">
+        <div class="moe-term">Self-attention</div>
+        <div class="moe-big">Weighs what matters most</div>
       </div>
-      <div class="pipe-arrow">&darr;</div>
-      <div class="pipe-stage fragment">
-        <div class="pipe-eyebrow">Router</div>
-        <div class="pipe-label">Picks a specialist</div>
+      <div class="moe-card fragment" data-stage="3">
+        <div class="moe-term">Router</div>
+        <div class="moe-big">Picks a specialist</div>
       </div>
-      <div class="pipe-arrow">&darr;</div>
-      <div class="pipe-experts fragment" data-chosen="1">
-        <div class="pipe-expert" data-idx="0"><div class="pipe-eyebrow">Expert 1</div></div>
-        <div class="pipe-expert" data-idx="1"><div class="pipe-eyebrow">Expert 2</div></div>
-        <div class="pipe-expert" data-idx="2"><div class="pipe-eyebrow">Expert 3</div></div>
-        <div class="pipe-expert" data-idx="3"><div class="pipe-eyebrow">Expert 4</div></div>
+      <div class="moe-experts fragment" data-stage="4" data-chosen="1">
+        <div class="moe-expert" data-idx="0"><div class="moe-term">Expert 1</div></div>
+        <div class="moe-expert" data-idx="1"><div class="moe-term">Expert 2</div></div>
+        <div class="moe-expert" data-idx="2"><div class="moe-term">Expert 3</div></div>
+        <div class="moe-expert" data-idx="3"><div class="moe-term">Expert 4</div></div>
+        <p class="moe-experts-caption">Only the picked specialist actually runs &mdash; the rest sit idle. That's how a model can be huge without being slow.</p>
       </div>
-      <p class="pipe-experts-caption">Only the picked specialist actually runs &mdash; the rest sit idle. That's how a model can be huge without being slow.</p>
-      <div class="pipe-arrow">&darr;</div>
-      <div class="pipe-stage fragment">
-        <div class="pipe-eyebrow">Softmax</div>
-        <div class="pipe-label">Turned into odds</div>
+      <div class="moe-card fragment" data-stage="5">
+        <div class="moe-term">Softmax</div>
+        <div class="moe-big">Turned into odds</div>
       </div>
-      <div class="pipe-arrow">&darr;</div>
-      <div class="pipe-stage fragment">
-        <div class="pipe-eyebrow">Output</div>
-        <div class="pipe-label">Its best next word</div>
+      <div class="moe-card fragment" data-stage="6">
+        <div class="moe-term">Output</div>
+        <div class="moe-big">Its best next word</div>
       </div>
-      <div class="pipe-token" aria-hidden="true"></div>
     </div>
     <div class="act-tag">Act 1 &middot; how it processes</div>
-    <div class="spine-tag">one word, top to bottom</div>
+    <div class="spine-tag">one word, hero view</div>
     <aside class="notes">
-      <p>This is the structural version of the "predict, pick, repeat" slide right after it &mdash; that one shows the behaviour, this one shows what's actually inside the box doing it. Step through with the arrow key: the dot travels down and the current stage lights up. Reverse works too, the dot walks back up.</p>
-      <p>Real terms are shown small on each stage on purpose &mdash; if someone in the room already knows "self-attention" or "softmax", this doesn't talk down to them, it just adds the plain-English reading next to it.</p>
-      <p><b>Router/Experts step (this is the modern part, a mixture-of-experts model):</b> older models pushed every word through one fixed feedforward block. Most large models today instead have several specialist sub-networks ("experts") and a small router that, for each individual word, picks which one or two specialists should actually handle it. The dot visibly jumps to just one expert &mdash; the other three stay dim because they genuinely don't run for this word. That's the punchline to land: a model can have an enormous number of parameters in total and still be fast per word, because any single word only ever activates a small slice of it.</p>
+      <p>This is the structural version of the "predict, pick, repeat" slide right after it &mdash; that one shows the behaviour, this one shows what's actually inside the box doing it. Step through with the arrow key: each press replaces the big stage with the next one, with a glow behind the new text. Reverse works too.</p>
+      <p>Real terms are shown small above each big label on purpose &mdash; if someone in the room already knows "self-attention" or "softmax", this doesn't talk down to them, it just adds the plain-English reading next to it.</p>
+      <p><b>Router/Experts step (this is the modern part, a mixture-of-experts model):</b> older models pushed every word through one fixed feedforward block. Most large models today instead have several specialist sub-networks ("experts") and a small router that, for each individual word, picks which one or two specialists should actually handle it. Only one of the four cards lights up &mdash; the other three stay dim because they genuinely don't run for this word. That's the punchline to land: a model can have an enormous number of parameters in total and still be fast per word, because any single word only ever activates a small slice of it.</p>
     </aside>
   </section>
 

@@ -298,24 +298,26 @@
   .cc-caption{font-size:var(--text-sm);color:var(--muted);margin-top:var(--space-xl);max-width:32em;line-height:1.55;}
   .cc-caption b{color:var(--ink);}
 
-  /* top-to-bottom processing pipeline: token walks down as fragments step through */
-  .pipe{position:relative;display:flex;flex-direction:column;align-items:center;gap:var(--space-2xs);margin-top:var(--space-md);max-width:20em;}
-  .pipe-stage{width:100%;box-sizing:border-box;padding:var(--space-sm) var(--space-lg);border-radius:var(--radius-md);border:1.5px solid var(--rule);background:var(--paper);text-align:center;}
-  .pipe-eyebrow{font-family:var(--font-family);font-size:var(--text-xs);letter-spacing:0.06em;text-transform:uppercase;color:var(--muted);margin-bottom:var(--space-px-2xs);}
-  .pipe-label{font-size:var(--text-md);font-weight:600;color:var(--ink);}
-  .pipe-arrow{font-family:var(--font-family);font-size:var(--text-base);color:var(--rule);line-height:1;}
-  .pipe-stage.pipe-active{border-color:var(--prod);background:var(--prod-bg);}
-  .pipe-stage.pipe-active .pipe-eyebrow{color:var(--prod);}
-  .pipe-token{position:absolute;left:0;top:0;width:14px;height:14px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 4px var(--paper);pointer-events:none;z-index:2;}
+  /* architecture hero: one giant stage at a time, ambient particles behind it */
+  .moe-particles{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
+  .moe-stage-wrap{position:relative;height:500px;margin-top:var(--space-lg);}
+  .moe-glow{position:absolute;top:50%;left:50%;width:22em;height:22em;margin:-11em 0 0 -11em;border-radius:50%;background:radial-gradient(circle, var(--prod-bg) 0%, transparent 72%);opacity:0;pointer-events:none;}
+  .moe-card{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0;}
+  .moe-card[data-stage="0"]{opacity:1;}
+  .moe-term{font-family:var(--font-family);font-size:var(--text-md);letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);margin-bottom:var(--space-sm);}
+  .moe-big{font-size:2.2em;font-weight:700;color:var(--ink);max-width:13em;line-height:1.15;}
 
-  /* mixture-of-experts branch: a row of specialists, only one lit up */
-  .pipe-experts{width:100%;display:flex;flex-direction:row;gap:var(--space-2xs);}
-  .pipe-expert{flex:1;box-sizing:border-box;padding:var(--space-xs) var(--space-2xs);border-radius:var(--radius-md);border:1.5px solid var(--rule);background:var(--paper);text-align:center;opacity:0.4;}
-  .pipe-expert .pipe-eyebrow{margin-bottom:0;}
-  .pipe-expert.pipe-expert-active{opacity:1;border-color:var(--prod);background:var(--prod-bg);}
-  .pipe-expert.pipe-expert-active .pipe-eyebrow{color:var(--prod);}
-  .pipe-experts-caption{font-size:var(--text-sm);color:var(--muted);margin-top:var(--space-xs);max-width:20em;text-align:center;opacity:0;transition:opacity 0.4s ease;}
-  .pipe-experts.visible ~ .pipe-experts-caption{opacity:1;}
+  /* mixture-of-experts branch: a row of huge specialist cards, only one lit up */
+  .moe-experts{position:absolute;inset:0;display:flex;flex-direction:row;align-items:center;justify-content:center;gap:var(--space-lg);opacity:0;}
+  .moe-expert{width:6.5em;height:6.5em;border-radius:var(--radius-lg);border:2px solid var(--rule);display:flex;align-items:center;justify-content:center;opacity:0.35;background:var(--paper);}
+  .moe-expert .moe-term{margin-bottom:0;}
+  .moe-expert.moe-expert-active{opacity:1;border-color:var(--prod);background:var(--prod-bg);}
+  .moe-expert.moe-expert-active .moe-term{color:var(--prod);}
+  .moe-experts-caption{position:absolute;bottom:-3.2em;left:50%;transform:translateX(-50%);font-size:var(--text-md);color:var(--muted);width:28em;text-align:center;}
+
+  .moe-trail{display:flex;justify-content:center;gap:var(--space-xs);margin-top:var(--space-lg);}
+  .moe-trail-dot{width:8px;height:8px;border-radius:50%;background:var(--rule);}
+  .moe-trail-dot.moe-trail-dot-active{background:var(--prod);}
 
   /* ===== embedded training-stages widget ===== */
   .ts{color:var(--ink);}
