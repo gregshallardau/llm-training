@@ -173,9 +173,17 @@
       </div>
       <div class="pipe-arrow">&darr;</div>
       <div class="pipe-stage fragment">
-        <div class="pipe-eyebrow">Feedforward</div>
-        <div class="pipe-label">Refines the guess</div>
+        <div class="pipe-eyebrow">Router</div>
+        <div class="pipe-label">Picks a specialist</div>
       </div>
+      <div class="pipe-arrow">&darr;</div>
+      <div class="pipe-experts fragment" data-chosen="1">
+        <div class="pipe-expert" data-idx="0"><div class="pipe-eyebrow">Expert 1</div></div>
+        <div class="pipe-expert" data-idx="1"><div class="pipe-eyebrow">Expert 2</div></div>
+        <div class="pipe-expert" data-idx="2"><div class="pipe-eyebrow">Expert 3</div></div>
+        <div class="pipe-expert" data-idx="3"><div class="pipe-eyebrow">Expert 4</div></div>
+      </div>
+      <p class="pipe-experts-caption">Only the picked specialist actually runs &mdash; the rest sit idle. That's how a model can be huge without being slow.</p>
       <div class="pipe-arrow">&darr;</div>
       <div class="pipe-stage fragment">
         <div class="pipe-eyebrow">Softmax</div>
@@ -192,7 +200,8 @@
     <div class="spine-tag">one word, top to bottom</div>
     <aside class="notes">
       <p>This is the structural version of the "predict, pick, repeat" slide right after it &mdash; that one shows the behaviour, this one shows what's actually inside the box doing it. Step through with the arrow key: the dot travels down and the current stage lights up. Reverse works too, the dot walks back up.</p>
-      <p>Real terms are shown small on the left of each stage on purpose &mdash; if someone in the room already knows "self-attention" or "softmax", this doesn't talk down to them, it just adds the plain-English reading next to it. You don't need to define embeddings or softmax mathematically, the plain-English label is the actual point: it turns words into numbers, weighs what matters, refines a guess, turns that into odds, picks the best one.</p>
+      <p>Real terms are shown small on each stage on purpose &mdash; if someone in the room already knows "self-attention" or "softmax", this doesn't talk down to them, it just adds the plain-English reading next to it.</p>
+      <p><b>Router/Experts step (this is the modern part, a mixture-of-experts model):</b> older models pushed every word through one fixed feedforward block. Most large models today instead have several specialist sub-networks ("experts") and a small router that, for each individual word, picks which one or two specialists should actually handle it. The dot visibly jumps to just one expert &mdash; the other three stay dim because they genuinely don't run for this word. That's the punchline to land: a model can have an enormous number of parameters in total and still be fast per word, because any single word only ever activates a small slice of it.</p>
     </aside>
   </section>
 

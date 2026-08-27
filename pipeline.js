@@ -7,48 +7,86 @@ function initPipeline() {
   if (!pipe) return;
 
   const token = pipe.querySelector('.pipe-token');
-  const stages = Array.from(pipe.querySelectorAll('.pipe-stage'));
+  const steps = Array.from(pipe.querySelectorAll('.pipe-stage, .pipe-experts'));
   const section = pipe.closest('section');
 
-  function stageCenterY(stage) {
-    return stage.offsetTop + stage.offsetHeight / 2 - token.offsetHeight / 2;
+  // for a plain stage, the token targets its own center; for the experts row,
+  // the token targets the *chosen* expert's center (branching, not the group average)
+  function targetEl(step) {
+    if (step.classList.contains('pipe-experts')) {
+      const chosenIdx = Number(step.dataset.chosen || 0);
+      return step.querySelector(`.pipe-expert[data-idx="${chosenIdx}"]`) || step;
+    }
+    return step;
   }
 
-  function setActive(activeStage) {
-    stages.forEach((s) => s.classList.toggle('pipe-active', s === activeStage));
+  // offsetTop/offsetLeft are relative to the nearest positioned ancestor; for an
+  // expert box that's `.pipe-experts` (not `.pipe`), so walk up and add parents' offsets
+  // for a normal stage box the token sits centred (there's room around the two-line
+  // label); for a narrow expert box that same centring collides with its short label,
+  // so the token sits just below the expert row instead
+  function centerPosRelativeToPipe(el, opts) {
+    let x = 0, y = 0, node = el;
+    while (node && node !== pipe) {
+      x += node.offsetLeft;
+      y += node.offsetTop;
+      node = node.offsetParent;
+      if (!pipe.contains(node)) break;
+    }
+    const yOffset = opts && opts.below ? el.offsetHeight + 4 : el.offsetHeight / 2 - token.offsetHeight / 2;
+    return { x: x + el.offsetWidth / 2 - token.offsetWidth / 2, y: y + yOffset };
   }
 
-  function goTo(stage, animate) {
-    setActive(stage);
-    const y = stageCenterY(stage);
+  function setActive(step) {
+    steps.forEach((s) => {
+      if (s.classList.contains('pipe-experts')) {
+        const chosenIdx = Number(s.dataset.chosen || 0);
+        s.querySelectorAll('.pipe-expert').forEach((ex, i) => {
+          ex.classList.toggle('pipe-expert-active', s === step && i === chosenIdx);
+        });
+      } else {
+        s.classList.toggle('pipe-active', s === step);
+      }
+    });
+  }
+
+  function goTo(step, animate) {
+    setActive(step);
+    const isExperts = step.classList.contains('pipe-experts');
+    const { x, y } = centerPosRelativeToPipe(targetEl(step), { below: isExperts });
     if (animate && !REDUCED_MOTION) {
-      gsap.to(token, { y, duration: 0.5, ease: 'power2.inOut' });
+      gsap.to(token, { x, y, duration: 0.5, ease: 'power2.inOut' });
     } else {
-      gsap.set(token, { y });
+      gsap.set(token, { x, y });
     }
   }
 
-  function currentlyShownStages() {
-    // a stage with no "fragment" class is always shown; a fragment stage counts once reveal has marked it visible
-    return stages.filter((s) => !s.classList.contains('fragment') || s.classList.contains('visible'));
+  function currentlyShownSteps() {
+    // a step with no "fragment" class is always shown; a fragment step counts once reveal has marked it visible
+    return steps.filter((s) => !s.classList.contains('fragment') || s.classList.contains('visible'));
   }
 
   function syncToState(animate) {
-    const shown = currentlyShownStages();
-    goTo(shown[shown.length - 1] || stages[0], animate);
+    const shown = currentlyShownSteps();
+    goTo(shown[shown.length - 1] || steps[0], animate);
+  }
+
+  function stepFor(fragmentEl) {
+    if (!fragmentEl || !fragmentEl.closest) return null;
+    return fragmentEl.closest('.pipe-stage, .pipe-experts');
   }
 
   function onFragmentShown(e) {
-    const stage = e.fragment && e.fragment.closest && e.fragment.closest('.pipe-stage');
-    if (!stage || !stages.includes(stage)) return;
-    goTo(stage, true);
+    const step = stepFor(e.fragment);
+    if (!step || !steps.includes(step)) return;
+    goTo(step, true);
   }
 
   function onFragmentHidden(e) {
-    const stage = e.fragment && e.fragment.closest && e.fragment.closest('.pipe-stage');
-    if (!stage || !stages.includes(stage)) return;
-    const idx = stages.indexOf(stage);
-    goTo(stages[Math.max(0, idx - 1)], true);
+    const step = stepFor(e.fragment);
+    if (!step || !steps.includes(step)) return;
+    const idx = steps.indexOf(step);
+    goTo(steps[Math.max(0, idx - 1)], true);
   }
 
   window.Reveal.on('fragmentshown', onFragmentShown);

@@ -306,7 +306,16 @@
   .pipe-arrow{font-family:var(--font-family);font-size:var(--text-base);color:var(--rule);line-height:1;}
   .pipe-stage.pipe-active{border-color:var(--prod);background:var(--prod-bg);}
   .pipe-stage.pipe-active .pipe-eyebrow{color:var(--prod);}
-  .pipe-token{position:absolute;left:50%;top:0;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 4px var(--paper);pointer-events:none;}
+  .pipe-token{position:absolute;left:0;top:0;width:14px;height:14px;border-radius:50%;background:var(--ink);box-shadow:0 0 0 4px var(--paper);pointer-events:none;z-index:2;}
+
+  /* mixture-of-experts branch: a row of specialists, only one lit up */
+  .pipe-experts{width:100%;display:flex;flex-direction:row;gap:var(--space-2xs);}
+  .pipe-expert{flex:1;box-sizing:border-box;padding:var(--space-xs) var(--space-2xs);border-radius:var(--radius-md);border:1.5px solid var(--rule);background:var(--paper);text-align:center;opacity:0.4;}
+  .pipe-expert .pipe-eyebrow{margin-bottom:0;}
+  .pipe-expert.pipe-expert-active{opacity:1;border-color:var(--prod);background:var(--prod-bg);}
+  .pipe-expert.pipe-expert-active .pipe-eyebrow{color:var(--prod);}
+  .pipe-experts-caption{font-size:var(--text-sm);color:var(--muted);margin-top:var(--space-xs);max-width:20em;text-align:center;opacity:0;transition:opacity 0.4s ease;}
+  .pipe-experts.visible ~ .pipe-experts-caption{opacity:1;}
 
   /* ===== embedded training-stages widget ===== */
   .ts{color:var(--ink);}
